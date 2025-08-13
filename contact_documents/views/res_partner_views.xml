@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Extensión de la vista formulario de contactos -->
+    <record id="res_partner_form_view_inherit" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Documentos" name="documents">
+                    <field name="document_ids">
+                        <list string="Documentos" editable="bottom">
+                            <field name="document_type_id" options="{'no_create': True, 'no_create_edit': True}"/>
+                            <field name="file" widget="binary" filename="file_name"/>
+                            <field name="file_name"/>
+                            <button name="action_approve" type="object" icon="fa-check" title="Aprobar" 
+                                    invisible="state == 'approved'"/>
+                            <button name="action_reject" type="object" icon="fa-times" title="Rechazar" 
+                                    invisible="state == 'rejected'"/>
+                            <field name="state" widget="badge"  string="Estado"
+                                   decoration-success="state == 'approved'" 
+                                   decoration-danger="state == 'rejected'" 
+                                   decoration-info="state == 'new'"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
