@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_inherit_birth_date" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.birth_date</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+
+        <xpath expr="//field[@name='phone']/ancestor::group[1]" position="after">
+            <group>
+                <field name="birth_date"/>
+            </group>
+        </xpath>
+
+        <xpath expr="//notebook" position="inside">
+            <page string="Contactos Adicionales">
+            <field name="related_contact_ids" context="{'default_partner_id': id}">
+                <list editable="bottom">
+                <field name="name"/>
+                <field name="position"/>
+                <field name="birthdate"/>
+                <field name="phone" widget="phone"/>
+                <field name="mobile" widget="phone"/>
+                <field name="email" widget="email"/>
+                </list>
+            </field>
+            </page>
+        </xpath>
+        </field>
+    </record>
+</odoo>
