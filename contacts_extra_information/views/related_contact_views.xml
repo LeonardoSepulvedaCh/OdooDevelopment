@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Lista para Contacto Relacionado -->
+    <record id="view_related_contact_list" model="ir.ui.view">
+        <field name="name">related.contact.list</field>
+        <field name="model">related.contact</field>
+        <field name="arch" type="xml">
+            <list string="Contactos Adicionales">
+                <field name="name"/>
+                <field name="position"/>
+                <field name="phone"/>
+                <field name="mobile"/>
+                <field name="email"/>
+                <field name="partner_id" invisible="context.hide_partner_id"/>
+            </list>
+        </field>
+    </record>
+    
+    <!-- Acción para Contacto Relacionado -->
+    <record id="action_related_contact" model="ir.actions.act_window">
+        <field name="name">Contactos Adicionales</field>
+        <field name="res_model">related.contact</field>
+        <field name="view_mode">list</field>
+    </record>
+</odoo>
