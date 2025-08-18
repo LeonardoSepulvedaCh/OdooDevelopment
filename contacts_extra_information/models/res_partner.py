@@ -12,10 +12,11 @@ class ResPartner(models.Model):
 
     birth_date = fields.Date(string="Fecha de Nacimiento", help="Fecha de nacimiento del contacto")
     related_contact_ids = fields.One2many('related.contact', 'partner_id', string='Contactos Adicionales')
+    card_code = fields.Char(string="Código de Contacto", help="Código del contacto", compute='_compute_card_code')
 
+    # Funciones para el cron de cumpleaños
     @api.model
     def _partners_with_bday_on(self, check_date):
-        """Búsqueda eficiente por MM-DD usando SQL (devuelve res.partner)."""
         if not check_date:
             return self.browse()
         mmdd = check_date.strftime('%m-%d')
@@ -166,3 +167,13 @@ class ResPartner(models.Model):
                 _logger.exception("send_birthday_notifications: fallo al postear en canal '%s': %s", channel_name, e)
 
         return True
+    
+    # Funciones para el campo card_code. Si el cliente no es una empresa, el codigo es CNL-(vat) de lo contrario es PNL-(vat)
+    def _compute_card_code(self):
+        for partner in self:
+            vat_code = partner.vat or ''
+            if partner.is_company:
+                partner.card_code = 'PNL-' + vat_code
+            else:
+                partner.card_code = 'CNL-' + vat_code
+
