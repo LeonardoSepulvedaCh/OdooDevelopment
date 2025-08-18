@@ -8,6 +8,7 @@
         - Contactos adicionales relacionados (solo para información)
         - Fecha de nacimiento en los contactos
         - Notificaciones de cumpleaños
+        - Campo para codigo de contacto CNL (Cliente), PNL (Proveedor)
     """,
     'author': '@LeonardoSepulvedaCh',
     'license': 'OPL-1',

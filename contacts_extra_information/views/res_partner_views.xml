@@ -9,6 +9,7 @@
         <xpath expr="//field[@name='phone']/ancestor::group[1]" position="after">
             <group>
                 <field name="birth_date"/>
+                <field name="card_code" readonly="1"/>
             </group>
         </xpath>
 
