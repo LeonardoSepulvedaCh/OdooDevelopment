@@ -13,6 +13,7 @@ class ResPartner(models.Model):
     birth_date = fields.Date(string="Fecha de Nacimiento", help="Fecha de nacimiento del contacto")
     related_contact_ids = fields.One2many('related.contact', 'partner_id', string='Contactos Adicionales')
     card_code = fields.Char(string="Código de Contacto", help="Código del contacto", compute='_compute_card_code')
+    warehouse_id = fields.Many2one('stock.warehouse', string="Bodega asignada", help="Bodega de la cual se despacharán pedidos al cliente", ondelete='set null')
 
     # Funciones para el cron de cumpleaños
     @api.model
@@ -171,9 +172,15 @@ class ResPartner(models.Model):
     # Funciones para el campo card_code. Si el cliente no es una empresa, el codigo es CNL-(vat) de lo contrario es PNL-(vat)
     def _compute_card_code(self):
         for partner in self:
-            vat_code = partner.vat or ''
-            if partner.is_company:
-                partner.card_code = 'PNL-' + vat_code
+            vat_full = partner.vat or ''
+            
+            # Extraer solo la parte numérica antes del guión (sin dígito verificador)
+            if '-' in vat_full:
+                vat_code = vat_full.split('-')[0]
             else:
-                partner.card_code = 'CNL-' + vat_code
-
+                vat_code = vat_full
+            
+            if partner.is_company:
+                partner.card_code = 'pnl' + vat_code
+            else:
+                partner.card_code = 'cnl' + vat_code

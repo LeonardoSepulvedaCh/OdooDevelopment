@@ -12,7 +12,7 @@
     """,
     'author': '@LeonardoSepulvedaCh',
     'license': 'OPL-1',
-    'depends': ['base', 'contacts', 'mail', 'bus'],
+    'depends': ['base', 'contacts', 'mail', 'bus', 'stock'],
     'data': [
         'security/ir.model.access.csv',
         'data/ir_cron_data.xml',
