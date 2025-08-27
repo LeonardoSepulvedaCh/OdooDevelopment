@@ -8,16 +8,17 @@
         - Contactos adicionales relacionados (solo para información)
         - Fecha de nacimiento en los contactos
         - Notificaciones de cumpleaños
-        - Campo para codigo de contacto CNL (Cliente), PNL (Proveedor)
+        - Campo para codigo de contacto CNL (Cliente), PNL (Proveedor), E (Empleado)
     """,
     'author': '@LeonardoSepulvedaCh',
     'license': 'OPL-1',
-    'depends': ['base', 'contacts', 'mail', 'bus', 'stock'],
+    'depends': ['base', 'contacts', 'mail', 'bus', 'stock', 'hr'],
     'data': [
         'security/ir.model.access.csv',
         'data/ir_cron_data.xml',
         'views/res_partner_views.xml',
         'views/related_contact_views.xml',
+        'views/contacts_filter_views.xml',
     ],
     'installable': True,
     'auto_install': False,
