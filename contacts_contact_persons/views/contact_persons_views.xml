@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_contact_persons_form" model="ir.ui.view">
+        <field name="name">contact.persons.form</field>
+        <field name="model">contact.persons</field>
+        <field name="arch" type="xml">
+            <form string="Contacto Adicional">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" required="1"/>
+                            <field name="identity_number"/>
+                            <field name="position"/>
+                            <field name="birthdate"/>
+                            <field name="partner_id" options="{'no_create': True}"/>
+                        </group>
+                        <group>
+                            <field name="phone" widget="phone"/>
+                            <field name="phone2" widget="phone"/>
+                            <field name="mobile" widget="phone"/>
+                            <field name="email" widget="email"/>
+                            <field name="address"/>
+                        </group>
+                    </group>
+                    <group string="Notas">
+                        <field name="notes" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_contact_persons_list" model="ir.ui.view">
+        <field name="name">contact.persons.list</field>
+        <field name="model">contact.persons</field>
+        <field name="arch" type="xml">
+            <list string="Contactos Adicionales" default_order="name">
+                <field name="name"/>
+                <field name="position"/>
+                <field name="identity_number"/>
+                <field name="partner_id" string="Contacto Principal"/>
+                <field name="phone" widget="phone" optional="show"/>
+                <field name="phone2" widget="phone" optional="show"/>
+                <field name="mobile" widget="phone" optional="show"/>
+                <field name="email" widget="email" optional="show"/>
+                <field name="address" optional="show"/>
+                <field name="birthdate" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_contact_persons_search" model="ir.ui.view">
+        <field name="name">contact.persons.search</field>
+        <field name="model">contact.persons</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Contactos Adicionales">
+                <field name="name" string="Nombre"/>
+                <field name="position" string="Cargo"/>
+                <field name="partner_id" string="Contacto Principal"/>
+                <field name="email" string="Email"/>
+                <field name="phone" string="Teléfono"/>
+                <field name="mobile" string="Móvil"/>
+                <separator/>
+                <filter string="Con Email" name="with_email" domain="[('email', '!=', False)]"/>
+                <filter string="Con Teléfono" name="with_phone" domain="['|', ('phone', '!=', False), ('mobile', '!=', False)]"/>
+                <separator/>
+                <group expand="0" string="Agrupar por">
+                    <filter string="Contacto Principal" name="group_partner" context="{'group_by': 'partner_id'}"/>
+                    <filter string="Cargo" name="group_position" context="{'group_by': 'position'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_contact_persons" model="ir.actions.act_window">
+        <field name="name">Contactos Adicionales</field>
+        <field name="res_model">contact.persons</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                ¡Crea tu primera persona de contacto adicional!
+            </p>
+            <p>
+                Las personas de contacto adicionales te permiten gestionar múltiples contactos
+                asociados a un contacto principal.
+            </p>
+        </field>
+    </record>
+</odoo>

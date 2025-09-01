@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Menú raíz de la aplicación -->
+    <menuitem id="menu_contact_persons_root" 
+              name="Personas de Contacto" 
+              web_icon="contacts_contact_persons,static/description/icon.png" 
+              sequence="65"/>
+    
+    <!-- Submenú principal -->
+    <menuitem id="menu_contact_persons" 
+              name="Contactos Adicionales" 
+              parent="menu_contact_persons_root" 
+              action="contacts_contact_persons.action_contact_persons" 
+              sequence="10"/>
+    
+</odoo>

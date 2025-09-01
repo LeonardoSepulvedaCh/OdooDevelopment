@@ -14,10 +14,8 @@
     'license': 'OPL-1',
     'depends': ['base', 'contacts', 'mail', 'bus', 'stock', 'hr'],
     'data': [
-        'security/ir.model.access.csv',
         'data/ir_cron_data.xml',
         'views/res_partner_views.xml',
-        'views/related_contact_views.xml',
         'views/contacts_filter_views.xml',
     ],
     'installable': True,

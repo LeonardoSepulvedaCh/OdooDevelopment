@@ -9,24 +9,10 @@
         <xpath expr="//field[@name='phone']/ancestor::group[1]" position="after">
             <group>
                 <field name="birth_date"/>
-                <field name="card_code" readonly="1"/>
+                <field name="card_code"/>
             </group>
         </xpath>
 
-        <xpath expr="//notebook" position="inside">
-            <page string="Contactos Adicionales">
-            <field name="related_contact_ids" context="{'default_partner_id': id}">
-                <list editable="bottom">
-                <field name="name"/>
-                <field name="position"/>
-                <field name="birthdate"/>
-                <field name="phone" widget="phone"/>
-                <field name="mobile" widget="phone"/>
-                <field name="email" widget="email"/>
-                </list>
-            </field>
-            </page>
-        </xpath>
         <xpath expr="//group[@name='sale']" position="inside">
             <field name="warehouse_id" domain="[('active', '=', True)]" options="{'no_create': True, 'no_open': True}"/>
         </xpath>

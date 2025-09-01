@@ -61,7 +61,6 @@ class ResPartner(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        """Override create para formatear el VAT con dígito verificador"""
         for vals in vals_list:
             if 'vat' in vals and vals['vat']:
                 formatted_vat = self._format_vat_with_digit(vals['vat'])
@@ -70,15 +69,14 @@ class ResPartner(models.Model):
         return super().create(vals_list)
 
     def write(self, vals):
-        """Override write para formatear el VAT con dígito verificador"""
         if 'vat' in vals and vals['vat']:
             formatted_vat = self._format_vat_with_digit(vals['vat'])
             if formatted_vat != vals['vat']:
                 vals['vat'] = formatted_vat
         return super().write(vals)
+    
 
     def _format_vat_with_digit(self, vat_value):
-        """Formatea el VAT con el dígito verificador"""
         if not vat_value:
             return vat_value
             

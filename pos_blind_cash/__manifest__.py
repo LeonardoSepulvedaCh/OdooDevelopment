@@ -9,6 +9,7 @@
     'author': '@LeonardoSepulvedaCh',
     'website': 'https://github.com/LeonardoSepulvedaCh',
     'depends': ['point_of_sale'],
+    'license': 'OPL-1',
     'data': [
         'views/pos_config_views.xml',
     ],
