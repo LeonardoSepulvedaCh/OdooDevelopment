@@ -45,6 +45,9 @@
                         <div class="client-name">
                             <span class="fw-bold">Cliente:</span> <t t-out="order.partner_id.name"/>
                         </div>
+                        <div class="client-vat">
+                            <span class="fw-bold">Identificación:</span> <t t-out="order.partner_id.vat"/>
+                        </div>
                         <div t-if="order.partner_id.street" class="client-address">
                             <span class="fw-bold">Dirección:</span> <t t-out="order.partner_id.street"/>
                         </div>

@@ -26,8 +26,29 @@
             <attribute name="t-if">!order.config.use_custom_receipt</attribute>
         </xpath>
 
-        
-        <!-- Ocultar el texto "Powered by Odoo" y reemplazar con contenido personalizado -->
+        <!-- Información de facturación electrónica (QR y CUFE) -->
+        <xpath expr="//div[@class='pos-receipt-order-data text-center pt-3']" position="before">
+            <t t-if="order.config.use_custom_receipt and order.account_move and order.account_move.l10n_co_edi_cufe_cude_ref and order.company.country_id and order.company.country_id.code == 'CO'">
+                <div class="electronic-invoice-info text-center pt-3">
+
+                    <!-- Información adicional -->
+                    <t t-if="order.account_move.name">
+                        <div class="electronic-info-footer">
+                            <div>Factura Electrónica: <span t-esc="order.account_move.name"/></div>
+                        </div>
+                    </t>
+
+                    <!-- Información del CUFE -->
+                    <div class="cufe-info">
+                        <div class="fw-bold">CUFE:</div>
+                        <div class="cufe-value" t-esc="order.account_move.l10n_co_edi_cufe_cude_ref"/>
+                    </div>
+                    
+                </div>
+            </t>
+        </xpath>
+
+        <!-- Reemplazar el texto "Powered by Odoo" con contenido personalizado -->
         <xpath expr="//div[@class='pos-receipt-order-data text-center pt-3']" position="replace">
             <div class="pos-receipt-order-data text-center pt-3">
                 <t t-if="order.config.use_custom_receipt and order.config.custom_receipt_footer">
@@ -36,7 +57,7 @@
                     </div>
                     <div class="footer-tiem">
                         <span>Industrias Bicicletas Milán S.A.</span>
-                        <span>Web: <a t-attf-href="'%s' % {{ order.company.website }}" style="text-decoration:none; color: #454748;" t-out="order.company.website"/></span>
+                        <span t-if="order.company.website">Web: <span t-esc="order.company.website"/></span>
                     </div>
                     <div class="footer-tiem">
                         <span>Fabricante de software Odoo © - 2025</span>
@@ -44,6 +65,5 @@
                 </t>
             </div>
         </xpath>
-
     </t>
 </templates>

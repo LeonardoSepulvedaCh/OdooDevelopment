@@ -20,10 +20,9 @@
     ''',
     'author': '@LeonardoSepulvedaCh',
     'website': 'https://github.com/LeonardoSepulvedaCh',
-    'depends': ['point_of_sale'],
+    'depends': ['point_of_sale', 'l10n_co_dian'],
     'data': [
         'views/pos_config_views.xml',
-        'data/pos_config_data.xml',
     ],
     'assets': {
         'point_of_sale._assets_pos': [
