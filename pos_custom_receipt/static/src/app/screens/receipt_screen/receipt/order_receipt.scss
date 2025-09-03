@@ -1,0 +1,41 @@
+.custom-change-info {
+    width: 100%;
+    padding: 5px 0;
+    text-align: center;
+}
+
+.render-container .pos-receipt{
+    font-size: 10px !important;
+}
+
+.pos-receipt-taxes{
+    width: 100%;
+    border-top: 2px dotted #c7c7c7;
+}
+
+.paymentlines {
+    width: 100%;
+    border-top: .5px solid #c7c7c7;
+    margin-top: 10px;
+}
+
+.pos-receipt-amount{
+    margin-bottom: 10px;
+}
+
+.after-footer{
+    margin: 10px 0;
+    border-top: .5px solid #c7c7c7;
+}
+
+.pos-receipt-order-data {
+    white-space: pre-line;
+    word-wrap: break-word;
+}
+
+.pos-receipt-order-data{
+    .footer-tiem{
+        margin-bottom: 8px !important;
+    }
+}
+

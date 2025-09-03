@@ -15,16 +15,57 @@
             <xpath expr="//notebook" position="inside">
                 <page string="Contactos Adicionales">
                     <field name="contact_persons_ids" context="{'default_partner_id': id}">
-                        <list editable="bottom">
+                        <kanban>
                             <field name="name"/>
                             <field name="position"/>
                             <field name="identity_number"/>
                             <field name="birthdate"/>
                             <field name="address"/>
-                            <field name="phone" widget="phone"/>
-                            <field name="mobile" widget="phone"/>
-                            <field name="email" widget="email"/>
-                        </list>
+                            <field name="phone"/>
+                            <field name="mobile"/>
+                            <field name="email"/>
+                            <field name="notes"/>
+                            <templates>
+                                <t t-name="card" class="flex-row">
+                                    <aside class="o_kanban_aside_full">
+                                        <div class="o_kanban_image_fill w-100 d-flex align-items-center justify-content-center bg-light" style="min-height: 80px;">
+                                            <i class="fa fa-user fa-3x text-muted"/>
+                                        </div>
+                                    </aside>
+                                    <main class="ps-2 ps-md-0">
+                                        <field name="name" invisible="not name" class="fw-bold"/>
+                                        <div t-if="record.position.raw_value" class="text-muted">
+                                            <i class="fa fa-fw me-1 fa-briefcase text-primary" title="Cargo"/>
+                                            <field name="position"/>
+                                        </div>
+                                        <div t-if="record.identity_number.raw_value" class="text-truncate">
+                                            <i class="fa fa-fw me-1 fa-id-card-o text-info" title="Identificación"/>
+                                            <field name="identity_number"/>
+                                        </div>
+                                        <div t-if="record.email.raw_value" class="text-truncate">
+                                            <i class="fa fa-fw me-1 fa-envelope text-primary" title="Email"/>
+                                            <field name="email"/>
+                                        </div>
+                                        <div t-if="record.phone.raw_value">
+                                            <i class="fa fa-fw me-1 fa-phone text-success" title="Teléfono"/>
+                                            <field name="phone"/>
+                                        </div>
+                                        <div t-if="record.mobile.raw_value">
+                                            <i class="fa fa-fw me-1 fa-mobile text-success" title="Móvil"/>
+                                            <field name="mobile"/>
+                                        </div>
+                                        <div t-if="record.birthdate.raw_value">
+                                            <i class="fa fa-fw me-1 fa-birthday-cake text-warning" title="Fecha de Nacimiento"/>
+                                            <field name="birthdate"/>
+                                        </div>
+                                        <div t-if="record.address.raw_value" class="text-truncate">
+                                            <i class="fa fa-fw me-1 fa-map-marker text-danger" title="Dirección"/>
+                                            <field name="address"/>
+                                        </div>
+                                    </main>
+                                </t>
+                            </templates>
+                        </kanban>
                     </field>
                 </page>
             </xpath>

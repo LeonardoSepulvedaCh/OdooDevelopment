@@ -13,6 +13,7 @@ class ResPartner(models.Model):
     birth_date = fields.Date(string="Fecha de Nacimiento", help="Fecha de nacimiento del contacto")
     card_code = fields.Char(string="Código de Contacto", help="Código del contacto",  store=True, index=True)
     warehouse_id = fields.Many2one('stock.warehouse', string="Bodega asignada", help="Bodega de la cual se despacharán pedidos al cliente", ondelete='set null')
+    mobile = fields.Char(string="Celular", help="Celular del contacto")
 
     # Funciones para el cron de cumpleaños
     @api.model

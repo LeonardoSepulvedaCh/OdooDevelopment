@@ -10,7 +10,7 @@
     <menuitem id="menu_contact_persons" 
               name="Contactos Adicionales" 
               parent="menu_contact_persons_root" 
-              action="contacts_contact_persons.action_contact_persons" 
+              action="action_contact_persons" 
               sequence="10"/>
     
 </odoo>

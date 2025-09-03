@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Heredar la vista de filtro de contactos para agregar filtro de empleados -->
+    <!-- Heredar la vista de filtro de contactos para agregar filtros de empleados -->
     <record id="view_res_partner_filter_inherit_employees" model="ir.ui.view">
         <field name="name">res.partner.filter.inherit.employees</field>
         <field name="model">res.partner</field>
@@ -8,12 +8,13 @@
         <field name="arch" type="xml">
             <filter name="type_company" position="after">
                 <filter string="Empleados" name="type_employee" domain="[('employee_ids', '!=', False)]"/>
+                <filter string="Sin Empleados" name="type_no_employee" domain="[('employee_ids', '=', False)]"/>
             </filter>
         </field>
     </record>
 
-    <!-- Heredar la acción de contactos para excluir empleados por defecto pero permitir búsquedas -->
+    <!-- Heredar la acción de contactos para excluir empleados por defecto -->
     <record id="contacts.action_contacts" model="ir.actions.act_window">
-        <field name="context">{'default_is_company': True, 'search_default_type_person': 1, 'search_default_type_company': 1}</field>
+        <field name="context">{'default_is_company': True, 'search_default_type_no_employee': 1}</field>
     </record>
 </odoo>

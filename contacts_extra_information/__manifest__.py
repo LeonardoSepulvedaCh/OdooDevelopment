@@ -1,6 +1,6 @@
 {
     'name': 'Información Extra - Contactos',
-    'version': '18.0.0.0.1',
+    'version': '18.5.0.0.1',
     'category': 'Milan/Contactos',
     'summary': 'Añade contactos adicionales y funcionalidad de cumpleaños',
     'description': """

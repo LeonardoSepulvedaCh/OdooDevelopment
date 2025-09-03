@@ -60,13 +60,9 @@
                 <field name="email" string="Email"/>
                 <field name="phone" string="Teléfono"/>
                 <field name="mobile" string="Móvil"/>
-                <separator/>
-                <filter string="Con Email" name="with_email" domain="[('email', '!=', False)]"/>
-                <filter string="Con Teléfono" name="with_phone" domain="['|', ('phone', '!=', False), ('mobile', '!=', False)]"/>
-                <separator/>
-                <group expand="0" string="Agrupar por">
-                    <filter string="Contacto Principal" name="group_partner" context="{'group_by': 'partner_id'}"/>
-                    <filter string="Cargo" name="group_position" context="{'group_by': 'position'}"/>
+                <group colspan="4" col="4">
+                    <filter string="Contacto Principal" name="group_partner" domain="[]" context="{'group_by': 'partner_id'}"/>
+                    <filter string="Cargo" name="group_position" domain="[]" context="{'group_by': 'position'}"/>
                 </group>
             </search>
         </field>
@@ -76,6 +72,7 @@
         <field name="name">Contactos Adicionales</field>
         <field name="res_model">contact.persons</field>
         <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_contact_persons_search"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 ¡Crea tu primera persona de contacto adicional!

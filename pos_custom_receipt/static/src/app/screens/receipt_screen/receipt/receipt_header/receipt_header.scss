@@ -1,0 +1,26 @@
+.custom-receipt-header {
+    width: 100%;
+}
+
+.custom-ticket-info .company-info {
+    padding: 5px 0;
+    border-bottom: .5px solid #c7c7c7;
+    text-align: center;
+    .company-name {
+        font-weight: bold;
+    }
+}
+
+.custom-client-info {
+    width: 100%;
+    padding: 5px 0;
+    text-align: center;
+    border-bottom: 2px dotted #c7c7c7;
+}
+
+.custom-header-content {
+    width: 100%;
+    white-space: pre-line;
+    word-wrap: break-word;
+    text-align: center;
+}

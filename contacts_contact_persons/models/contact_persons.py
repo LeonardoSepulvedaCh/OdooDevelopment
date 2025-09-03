@@ -20,13 +20,6 @@ class ContactPersons(models.Model):
     partner_id = fields.Many2one('res.partner', string='Contacto Principal', ondelete='cascade', required=True, index=True)
     birthdate = fields.Date(string='Fecha de Nacimiento')
     
-    
-    @api.constrains('email')
-    def _check_email(self):
-        for record in self:
-            if record.email and not self._is_valid_email(record.email):
-                raise ValidationError(_("El formato del correo electrónico no es válido."))
-    
     def _is_valid_email(self, email):
         pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
         return re.match(pattern, email) is not None

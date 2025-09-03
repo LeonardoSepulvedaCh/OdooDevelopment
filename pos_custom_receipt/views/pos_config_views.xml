@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pos_config_form_inherit_custom_receipt" model="ir.ui.view">
+        <field name="name">pos.config.form.inherit.custom.receipt</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//setting[@id='other_devices']" position="after">
+                <setting string="Recibo personalizado" help="Activa el uso del recibo personalizado con diseño mejorado y información adicional">
+                    <field name="use_custom_receipt"/>
+                </setting>
+                <setting string="Encabezado personalizado" 
+                         help="Contenido personalizado para el encabezado del recibo"
+                         invisible="not use_custom_receipt">
+                    <field name="custom_receipt_header" 
+                           placeholder="Ingrese el contenido del encabezado personalizado..."
+                           widget="text"/>
+                </setting>
+                <setting string="Pie de página personalizado" 
+                         help="Contenido personalizado para el pie de página del recibo"
+                         invisible="not use_custom_receipt">
+                    <field name="custom_receipt_footer" 
+                           placeholder="Ingrese el contenido del pie de página personalizado..."
+                           widget="text"/>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.ReceiptHeader" t-inherit="point_of_sale.ReceiptHeader" t-inherit-mode="extension">
+
+        <!-- Ocultar el logo original -->
+        <xpath expr="//img[@class='pos-receipt-logo']" position="attributes">
+            <attribute name="t-if">!order.config.use_custom_receipt</attribute>
+        </xpath>
+
+        <!-- Personalización de la información de la empresa -->
+        <xpath expr="//div[@class='text-center pt-3']" position="after">
+            <t t-if="order.config.use_custom_receipt">
+                <div class="custom-ticket-info company-info text-center">
+                    <!-- Nombre de la empresa, NIT, dirección y teléfono -->
+                    <div class="company-info">
+                        <div class="company-name">
+                            <t t-out="order.company.name"/>
+                        </div>
+                        <t t-if="order.config.use_custom_receipt and order.config.custom_receipt_header">
+                            <div class="custom-header-content">
+                                <t t-out="order.config.custom_receipt_header"/>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+
+        <!-- Ocultar la información original del ticket cuando está personalizado -->
+        <xpath expr="//div[@class='text-center pt-3']" position="attributes">
+            <attribute name="t-if">!order.config.use_custom_receipt</attribute>
+        </xpath>
+
+        <!-- Ocultar la información original del contacto cuando está personalizado -->
+        <xpath expr="//div[@class='pos-receipt-contact']" position="attributes">
+            <attribute name="t-if">!order.config.use_custom_receipt</attribute>
+        </xpath>
+
+        <!-- Toda la información personalizada en un solo bloque -->
+        <xpath expr="//div[@class='pos-receipt-contact']" position="after">
+            <t t-if="order.config.use_custom_receipt">
+                <!-- Información del cliente (solo si existe) -->
+                <div t-if="order.partner_id and order.partner_id.name != 'Cliente Genérico'" class="custom-client-info text-center">
+                    <div class="client-info">
+                        <div class="client-name">
+                            <span class="fw-bold">Cliente:</span> <t t-out="order.partner_id.name"/>
+                        </div>
+                        <div t-if="order.partner_id.street" class="client-address">
+                            <span class="fw-bold">Dirección:</span> <t t-out="order.partner_id.street"/>
+                        </div>
+                    </div>
+                    <!-- Responsable de la venta -->
+                    <div class="custom-seller-info text-center">
+                        <span><span class="fw-bold">Vendedor:</span> <t t-out="order.getCashierName()"/></span>
+                    </div>
+
+                    <!-- Fecha de la orden -->
+                    <div class="custom-date text-center">
+                        <span class="fw-bold">Fecha y hora:</span> <span t-out="order.formatDateOrTime('date_order')"/>
+                    </div>
+
+                    <!-- Número de ticket personalizado -->
+                    <div class="ticket-number">
+                        <span class="pos-receipt-vat">
+                            <span class="fw-bold">Ticket N°:</span> <t t-out="order.pos_reference"/>
+                        </span>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+    </t>
+</templates>

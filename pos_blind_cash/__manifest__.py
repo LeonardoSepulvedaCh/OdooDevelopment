@@ -1,6 +1,6 @@
 {
     'name': 'POS - Cierre de caja ciego',
-    'version': '18.0.0.0.1',
+    'version': '18.5.0.0.1',
     'category': 'Milan/POS',
     'summary': 'Cierre de caja ciego',
     'description': """

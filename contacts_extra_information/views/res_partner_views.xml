@@ -6,7 +6,14 @@
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
 
-        <xpath expr="//field[@name='phone']/ancestor::group[1]" position="after">
+        <xpath expr="//div[@class='d-flex align-items-baseline w-md-50'][2]" position="after">
+            <div class="d-flex align-items-baseline w-md-50">
+                <i class="fa fa-fw me-1 fa-mobile text-primary" title="Mobile"/>
+                <field name="mobile" class="w-100" widget="phone" placeholder="Mobile"/>
+            </div>
+        </xpath>
+
+        <xpath expr="//group[1]" position="inside">
             <group>
                 <field name="birth_date"/>
                 <field name="card_code"/>
