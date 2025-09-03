@@ -34,7 +34,7 @@
                     <!-- Información adicional -->
                     <t t-if="order.account_move.name">
                         <div class="electronic-info-footer">
-                            <div>Factura Electrónica: <span t-esc="order.account_move.name"/></div>
+                            <div><span class="fw-bold">Factura Electrónica:</span> <span t-esc="order.account_move.name"/></div>
                         </div>
                     </t>
 
@@ -43,7 +43,17 @@
                         <div class="fw-bold">CUFE:</div>
                         <div class="cufe-value" t-esc="order.account_move.l10n_co_edi_cufe_cude_ref"/>
                     </div>
-                    
+
+                    <!-- Código QR de facturación electrónica -->
+                    <t t-if="order.account_move.l10n_co_dian_state == 'invoice_accepted' and order.account_move.pos_qr_barcode_src">
+                        <div class="qr-code-section text-center mb-3">
+                            <div class="qr-code-container">
+                                <img class="qr-code-image" 
+                                     t-att-src="order.account_move.pos_qr_barcode_src"
+                                     alt="Código QR Factura Electrónica"/>
+                            </div>
+                        </div>
+                    </t>
                 </div>
             </t>
         </xpath>

@@ -3,9 +3,9 @@
     <t t-name="point_of_sale.ReceiptHeader" t-inherit="point_of_sale.ReceiptHeader" t-inherit-mode="extension">
 
         <!-- Ocultar el logo original -->
-        <xpath expr="//img[@class='pos-receipt-logo']" position="attributes">
+        <!-- <xpath expr="//img[@class='pos-receipt-logo']" position="attributes">
             <attribute name="t-if">!order.config.use_custom_receipt</attribute>
-        </xpath>
+        </xpath> -->
 
         <!-- Personalización de la información de la empresa -->
         <xpath expr="//div[@class='text-center pt-3']" position="after">
