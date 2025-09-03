@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pos_config_form_inherit_default_customer" model="ir.ui.view">
+        <field name="name">pos.config.form.inherit.default.customer</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//setting[@id='other_devices']" position="after">
+                <setting string="Cliente Predeterminado en el POS" help="Elegir un cliente que se mostrará por defecto en el POS al seleccionar un cliente">
+                    <field name="pos_default_customer_id" 
+                           options="{'no_create': True, 'no_create_edit': True}"
+                           context="{'search_default_customer': 1}"/>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>
