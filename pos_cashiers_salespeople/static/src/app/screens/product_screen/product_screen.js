@@ -1,0 +1,192 @@
+import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
+import { patch } from "@web/core/utils/patch";
+
+patch(ProductScreen.prototype, {
+    
+    async setup() {
+        super.setup(...arguments);
+        await this._loadCashierSalespersonData();
+    },
+
+    async _loadCashierSalespersonData() {
+        try {
+            // Cargar datos de cajeros y vendedores desde el servidor
+            const result = await this.env.services.orm.read('pos.config', [this.pos.config.id], ['cashier_user_ids', 'salesperson_user_ids']);
+            if (result && result.length > 0) {
+                this.pos.config.cashier_user_ids = result[0].cashier_user_ids || [];
+                this.pos.config.salesperson_user_ids = result[0].salesperson_user_ids || [];
+                
+                // Inspeccionar el contenido de los Proxy objects
+                if (this.pos.config.salesperson_user_ids && typeof this.pos.config.salesperson_user_ids === 'object') {
+                    for (let key in this.pos.config.salesperson_user_ids) {
+                        const user = this.pos.config.salesperson_user_ids[key];
+                        console.log(`Key: ${key}, User:`, user);
+                        if (user && typeof user === 'object') {
+                            console.log(`User ID: ${user.id}, Name: ${user.name}`);
+                        }
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('Error loading cashier/salesperson data:', error);
+            this.pos.config.cashier_user_ids = [];
+            this.pos.config.salesperson_user_ids = [];
+        }
+    },
+    
+    /**
+     * Verificar si el usuario actual es cajero en este POS
+     * @returns {boolean}
+     */
+    isCurrentUserCashier() {
+        if (!this.pos.user || !this.pos.config) {
+            return false;
+        }
+        const currentUserId = this.pos.user.id;
+        const cashierIds = this.pos.config.cashier_user_ids || [];
+        
+        // Extraer IDs reales de los objetos user
+        let cashierUserIds = [];
+        if (Array.isArray(cashierIds)) {
+            cashierUserIds = cashierIds.map(user => user.id || user);
+        } else if (cashierIds && typeof cashierIds === 'object') {
+            // Si es un Proxy object, extraer IDs de los users
+            for (let key in cashierIds) {
+                const user = cashierIds[key];
+                if (user && user.id) {
+                    cashierUserIds.push(user.id);
+                } else if (typeof user === 'number') {
+                    cashierUserIds.push(user);
+                }
+            }
+        }
+        console.log('El usuario actual es cajero:', cashierUserIds.includes(currentUserId));
+        return cashierUserIds.includes(currentUserId);
+    },
+
+    /**
+     * Verificar si el usuario actual es vendedor en este POS
+     * @returns {boolean}
+     */
+    isCurrentUserSalesperson() {
+        if (!this.pos.user || !this.pos.config) {
+            return false;
+        }
+        const currentUserId = this.pos.user.id;
+        const salespersonIds = this.pos.config.salesperson_user_ids || [];
+        
+        // Extraer IDs reales de los objetos user
+        let salespersonUserIds = [];
+        if (Array.isArray(salespersonIds)) {
+            salespersonUserIds = salespersonIds.map(user => user.id || user);
+        } else if (salespersonIds && typeof salespersonIds === 'object') {
+            // Si es un Proxy object, extraer IDs de los users
+            for (let key in salespersonIds) {
+                const user = salespersonIds[key];
+                if (user && user.id) {
+                    salespersonUserIds.push(user.id);
+                } else if (typeof user === 'number') {
+                    salespersonUserIds.push(user);
+                }
+            }
+        }
+        console.log('El usuario actual es vendedor? :', salespersonUserIds.includes(currentUserId));
+        return salespersonUserIds.includes(currentUserId);
+    },
+
+    /**
+     * Crear un pedido (order) en lugar de ir al pago
+     * Esta función guarda el pedido en la base de datos y limpia la vista actual
+     */
+    async createOrder() {
+        const currentOrder = this.pos.getOrder();
+        if (!currentOrder) {
+            console.warn("No hay orden activa.");
+            return;
+        }
+
+        // Verificar que la orden no esté vacía
+        if (currentOrder.isEmpty()) {
+            console.warn("No se puede crear un pedido vacío.");
+            return;
+        }
+        
+        try {
+            // Preparar los datos de las líneas de la orden
+            const orderlines = currentOrder.getOrderlines();
+            const orderLinesData = orderlines.map(line => ({
+                product_id: line.product_id.id,
+                product_name: line.product_id.display_name || line.product_id.name,
+                quantity: line.quantity || line.qty,
+                price_unit: line.price_unit,
+                discount: line.discount || 0,
+                subtotal: line.getPriceWithTax ? line.getPriceWithTax() : (line.price_unit * line.quantity),
+                tax_amount: line.getTax ? line.getTax() : 0
+            }));
+
+            // Preparar los datos del pedido para guardar
+            const orderData = {
+                name: currentOrder.name || `Pedido-${new Date().getTime()}`,
+                pos_reference: currentOrder.pos_reference || '',
+                salesperson_id: this.pos.user.id,
+                partner_id: currentOrder.partner_id ? currentOrder.partner_id.id : false,
+                date_order: this.formatDateForOdoo(new Date()),
+                amount_total: currentOrder.getTotalWithTax(),
+                amount_untaxed: currentOrder.getTotalWithoutTax(),
+                amount_tax: currentOrder.getTotalTax(),
+                order_lines: JSON.stringify(orderLinesData),
+                pos_config_id: this.pos.config.id,
+                status: 'pending'
+            };
+
+            console.log('Guardando pedido:', orderData);
+
+            // Guardar el pedido en la base de datos
+            const result = await this.env.services.orm.create('pos.order.pending', [orderData]);
+            
+            if (result && result.length > 0) {
+                console.log('Pedido guardado exitosamente con ID:', result[0]);
+                
+                // Mostrar notificación de éxito
+                this.env.services.notification.add('Pedido creado exitosamente', {
+                    type: 'success',
+                    sticky: false,
+                });
+
+                // Limpiar la orden actual y crear una nueva
+                this.pos.removeOrder(currentOrder);
+                this.pos.addNewOrder();
+                
+                console.log('Pantalla limpiada y nueva orden creada');
+            } else {
+                throw new Error('No se pudo guardar el pedido');
+            }
+
+        } catch (error) {
+            console.error('Error al crear el pedido:', error);
+            
+            // Mostrar notificación de error
+            this.env.services.notification.add('Error al crear el pedido: ' + error.message, {
+                type: 'danger',
+                sticky: true,
+            });
+        }
+    },
+
+    /**
+     * Formatear fecha para Odoo en formato YYYY-MM-DD HH:MM:SS
+     * @param {Date} date - Fecha a formatear
+     * @returns {string} - Fecha formateada para Odoo
+     */
+    formatDateForOdoo(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const seconds = String(date.getSeconds()).padStart(2, '0');
+        
+        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    },
+
+});

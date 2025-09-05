@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.ProductScreen" t-inherit="point_of_sale.ProductScreen" t-inherit-mode="extension">
+        
+        <!-- Reemplazar el botón de pago cuando el usuario es solo vendedor -->
+        <xpath expr="//button[hasclass('pay-button')]" position="replace">
+            <!-- Botón para vendedores (sin ser cajeros) -->
+            <button t-if="!pos.scanning and this.isCurrentUserSalesperson() and !this.isCurrentUserCashier()" 
+                class="btn-switchpane pay-button btn btn-lg flex-grow-1" 
+                t-attf-class="{{ currentOrder.isEmpty() ? 'btn-secondary' : 'btn-primary' }}" 
+                t-on-click="() => this.createOrder()">
+                <span class="d-block">Realizar pedido</span>
+                <span t-esc="total" />
+            </button>
+            
+            <!-- Botón normal de pago para cajeros y otros usuarios -->
+            <button t-if="!pos.scanning and (!this.isCurrentUserSalesperson() or this.isCurrentUserCashier())" 
+                class="btn-switchpane pay-button btn btn-lg flex-grow-1" 
+                t-attf-class="{{ currentOrder.isEmpty() ? 'btn-secondary' : 'btn-primary' }}" 
+                t-on-click="() => this.pos.pay()">
+                <span class="d-block">Pay</span>
+                <span t-esc="total" />
+            </button>
+        </xpath>
+
+        <!-- Reemplazar el ActionpadWidget cuando el usuario es solo vendedor -->
+        <xpath expr="//ActionpadWidget" position="replace">
+            <!-- ActionpadWidget para vendedores (sin ser cajeros) -->
+            <ActionpadWidget t-if="this.isCurrentUserSalesperson() and !this.isCurrentUserCashier()"
+                partner="currentOrder?.getPartner()" 
+                onClickMore.bind="displayAllControlPopup"
+                actionName="'Realizar pedido'"
+                actionToTrigger="() => this.createOrder()"
+                showActionButton="!currentOrder?.isEmpty()"
+                fastValidate="(paymentMethod) => this.fastValidate(paymentMethod)"
+            />
+            
+            <!-- ActionpadWidget normal para cajeros y otros usuarios -->
+            <ActionpadWidget t-if="!this.isCurrentUserSalesperson() or this.isCurrentUserCashier()"
+                partner="currentOrder?.getPartner()" 
+                onClickMore.bind="displayAllControlPopup"
+                actionName.translate="Payment"
+                actionToTrigger="() => pos.pay()"
+                showActionButton="!currentOrder?.isEmpty()"
+                fastValidate="(paymentMethod) => this.fastValidate(paymentMethod)"
+            />
+        </xpath>
+
+    </t>
+</templates>
