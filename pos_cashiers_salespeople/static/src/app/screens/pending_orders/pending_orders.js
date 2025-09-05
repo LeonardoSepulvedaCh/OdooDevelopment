@@ -53,7 +53,6 @@ export class PendingOrdersScreen extends Component {
                 formatted_date: this.formatDate(order.date_order)
             }));
 
-            console.log('Órdenes pendientes cargadas:', this.state.pendingOrders);
         } catch (error) {
             console.error('Error cargando órdenes pendientes:', error);
             this.state.pendingOrders = [];
@@ -104,11 +103,8 @@ export class PendingOrdersScreen extends Component {
 
     async loadOrderToPos(order) {
         try {
-            console.log('Cargando orden al POS:', order);
-            
             // Crear una nueva orden en el POS con los datos de la orden pendiente
             const newOrder = this.pos.addNewOrder();
-            console.log('Nueva orden creada:', newOrder);
             
             // Establecer el cliente si existe
             if (order.partner_id && order.partner_id[0]) {
@@ -117,7 +113,6 @@ export class PendingOrdersScreen extends Component {
                     const partnerId = order.partner_id[0];
                     const partner = this.pos.models["res.partner"].getBy("id", partnerId);
                     if (partner) {
-                        console.log('Cliente encontrado:', partner);
                         this.pos.setPartnerToCurrentOrder(partner);
                     } else {
                         console.warn('Cliente no encontrado en la base de datos del POS');
@@ -127,16 +122,36 @@ export class PendingOrdersScreen extends Component {
                 }
             }
 
+            // Establecer el vendedor si existe
+            if (order.salesperson_id && order.salesperson_id[0]) {
+                try {
+                    // Crear objeto de vendedor compatible con el POS
+                    const salesperson = {
+                        id: order.salesperson_id[0],
+                        name: order.salesperson_id[1]
+                    };
+                    
+                    // Establecer el vendedor en la orden actual
+                    newOrder.salesperson_id = salesperson;
+                    
+                    // Establecer el user_id de la orden POS como el vendedor
+                    newOrder.user_id = salesperson.id;
+                    
+                    console.log('Vendedor establecido:', salesperson.name);
+                    console.log('user_id establecido:', salesperson.id);
+                } catch (salespersonError) {
+                    console.warn('Error al establecer vendedor:', salespersonError);
+                }
+            }
+
             // Agregar las líneas de productos
             const orderLines = this.parseOrderLines(order.order_lines);
-            console.log('Líneas de la orden a cargar:', orderLines);
             
             for (const line of orderLines) {
                 try {
                     // Buscar el producto en la base de datos del POS usando la API correcta
                     const product = this.pos.models["product.product"].getBy("id", line.product_id);
                     if (product) {
-                        console.log('Producto encontrado:', product);
                         
                         // Agregar el producto a la orden usando la API correcta del POS
                         const vals = {
@@ -152,7 +167,6 @@ export class PendingOrdersScreen extends Component {
                         if (orderLine) {
                             // Establecer la cantidad después de crear la línea
                             orderLine.setQuantity(line.quantity);
-                            console.log(`Producto ${product.display_name} agregado a la orden:`, orderLine);
                         }
                     } else {
                         console.warn(`Producto con ID ${line.product_id} no encontrado en la base de datos del POS`);
@@ -164,7 +178,6 @@ export class PendingOrdersScreen extends Component {
 
             // Marcar la orden como completada en la base de datos
             await this.orm.write('pos.order.pending', [order.id], { status: 'completed' });
-            console.log('Orden marcada como completada en la base de datos');
 
             // Actualizar la lista de órdenes pendientes
             await this.loadPendingOrders();

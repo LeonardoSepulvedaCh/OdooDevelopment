@@ -82,22 +82,51 @@ patch(ProductScreen.prototype, {
 
     /**
      * Generar un nombre para el pedido con las dos primeras letras del nombre del vendedor, el numero del dia y un consecutivo de las ordenes creadas por el vendedor
+     * @param {number} salespersonId - ID del vendedor (opcional, usa el de la orden actual si no se proporciona)
      * @returns {string}
      */
-    async generateOrderName() {
+    async generateOrderName(salespersonId = null) {
         try {
+            const currentOrder = this.pos.getOrder();
+            
+            // Determinar el vendedor - usar el parámetro, el de la orden actual, o el usuario actual
+            let targetSalespersonId = salespersonId;
+            if (!targetSalespersonId && currentOrder && currentOrder.getSalesperson()) {
+                targetSalespersonId = currentOrder.getSalesperson().id;
+            }
+            if (!targetSalespersonId) {
+                targetSalespersonId = this.pos.user.id;
+            }
+            
+            // Obtener información del vendedor
+            let salespersonName = 'US'; // Default fallback
+            if (targetSalespersonId === this.pos.user.id) {
+                salespersonName = this.pos.user.name || 'US';
+            } else if (currentOrder && currentOrder.getSalesperson() && currentOrder.getSalesperson().id === targetSalespersonId) {
+                salespersonName = currentOrder.getSalesperson().name || 'US';
+            } else {
+                // Obtener el nombre del vendedor desde la base de datos
+                try {
+                    const salespersonData = await this.env.services.orm.read('res.users', [targetSalespersonId], ['name']);
+                    if (salespersonData && salespersonData.length > 0) {
+                        salespersonName = salespersonData[0].name || 'US';
+                    }
+                } catch (userError) {
+                    console.warn('No se pudo obtener el nombre del vendedor:', userError);
+                }
+            }
+            
             // Obtener las dos primeras letras del nombre del vendedor
-            const salespersonName = this.pos.user.name || 'US';
             const salesperson = salespersonName.split(' ')[0].toUpperCase().slice(0, 2);
             
             // Obtener el día del mes
             const date = new Date().getDate().toString().padStart(2, '0');
             
-            // Contar órdenes pendientes del vendedor actual
+            // Contar órdenes pendientes del vendedor
             const existingOrders = await this.env.services.orm.searchRead(
                 'pos.order.pending',
                 [
-                    ['salesperson_id', '=', this.pos.user.id],
+                    ['salesperson_id', '=', targetSalespersonId],
                     ['status', '=', 'pending']
                 ],
                 ['id'],
@@ -143,11 +172,16 @@ patch(ProductScreen.prototype, {
                 tax_amount: line.getTax ? line.getTax() : 0
             }));
 
+            // Determinar el vendedor - usar el seleccionado en la orden o el usuario actual como fallback
+            const salespersonId = currentOrder.getSalesperson() ? 
+                currentOrder.getSalesperson().id : 
+                this.pos.user.id;
+
             // Preparar los datos del pedido para guardar 
             const orderData = {
-                name: await this.generateOrderName(),
+                name: await this.generateOrderName(salespersonId),
                 pos_reference: currentOrder.pos_reference || '',
-                salesperson_id: this.pos.user.id,
+                salesperson_id: salespersonId,
                 partner_id: currentOrder.partner_id ? currentOrder.partner_id.id : false,
                 date_order: this.formatDateForOdoo(new Date()),
                 amount_total: currentOrder.getTotalWithTax(),

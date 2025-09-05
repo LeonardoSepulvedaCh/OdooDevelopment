@@ -20,6 +20,12 @@ patch(PosOrder.prototype, {
     serialize() {
         const result = super.serialize(...arguments);
         result.salesperson_id = this.salesperson_id ? this.salesperson_id.id : null;
+        
+        // Si hay un vendedor seleccionado, establecerlo como el user_id responsable
+        if (this.salesperson_id) {
+            result.user_id = this.salesperson_id.id;
+        }
+        
         return result;
     }
 });
