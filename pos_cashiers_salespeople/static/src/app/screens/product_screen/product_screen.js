@@ -95,6 +95,40 @@ patch(ProductScreen.prototype, {
     },
 
     /**
+     * Generar un nombre para el pedido con las dos primeras letras del nombre del vendedor, el numero del dia y un consecutivo de las ordenes creadas por el vendedor
+     * @returns {string}
+     */
+    async generateOrderName() {
+        try {
+            // Obtener las dos primeras letras del nombre del vendedor
+            const salespersonName = this.pos.user.name || 'US';
+            const salesperson = salespersonName.split(' ')[0].toUpperCase().slice(0, 2);
+            
+            // Obtener el día del mes
+            const date = new Date().getDate().toString().padStart(2, '0');
+            
+            // Contar órdenes pendientes del vendedor actual
+            const existingOrders = await this.env.services.orm.searchRead(
+                'pos.order.pending',
+                [
+                    ['salesperson_id', '=', this.pos.user.id],
+                    ['status', '=', 'pending']
+                ],
+                ['id'],
+                { limit: 1 }
+            );
+            
+            const consecutive = existingOrders.length + 1;
+            return `${salesperson} - ${date} - ${consecutive}`;
+        } catch (error) {
+            console.error('Error generando nombre de orden:', error);
+            // Fallback si hay error
+            const timestamp = new Date().getTime();
+            return `PEDIDO - ${timestamp}`;
+        }
+    },
+
+    /**
      * Crear un pedido (order) en lugar de ir al pago
      * Esta función guarda el pedido en la base de datos y limpia la vista actual
      */
@@ -112,7 +146,6 @@ patch(ProductScreen.prototype, {
         }
         
         try {
-            // Preparar los datos de las líneas de la orden
             const orderlines = currentOrder.getOrderlines();
             const orderLinesData = orderlines.map(line => ({
                 product_id: line.product_id.id,
@@ -124,9 +157,9 @@ patch(ProductScreen.prototype, {
                 tax_amount: line.getTax ? line.getTax() : 0
             }));
 
-            // Preparar los datos del pedido para guardar
+            // Preparar los datos del pedido para guardar 
             const orderData = {
-                name: currentOrder.name || `Pedido-${new Date().getTime()}`,
+                name: await this.generateOrderName(),
                 pos_reference: currentOrder.pos_reference || '',
                 salesperson_id: this.pos.user.id,
                 partner_id: currentOrder.partner_id ? currentOrder.partner_id.id : false,
@@ -143,27 +176,20 @@ patch(ProductScreen.prototype, {
             const result = await this.env.services.orm.create('pos.order.pending', [orderData]);
             
             if (result && result.length > 0) {
-                console.log('Pedido guardado exitosamente con ID:', result[0]);
-                
-                // Mostrar notificación de éxito
                 this.env.services.notification.add('Pedido creado exitosamente', {
                     type: 'success',
                     sticky: false,
                 });
 
-                // Limpiar la orden actual y crear una nueva
                 this.pos.removeOrder(currentOrder);
                 this.pos.addNewOrder();
                 
-                console.log('Pantalla limpiada y nueva orden creada');
             } else {
                 throw new Error('No se pudo guardar el pedido');
             }
 
         } catch (error) {
             console.error('Error al crear el pedido:', error);
-            
-            // Mostrar notificación de error
             this.env.services.notification.add('Error al crear el pedido: ' + error.message, {
                 type: 'danger',
                 sticky: true,

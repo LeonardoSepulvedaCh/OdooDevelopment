@@ -9,7 +9,7 @@
                         <div class="buttons d-flex gap-1">
                             <h3 class="mb-0 d-flex align-items-center">
                                 <i class="fa fa-clock-o me-2"></i>
-                                Pedidos Pendientes
+                                Pedidos Por Pagar
                             </h3>
                         </div>
                         <div class="buttons d-flex gap-1">
@@ -39,29 +39,35 @@
                                         <div class="flex-grow-1">
                                             <h5 class="mb-1 text-primary">
                                                 <i class="fa fa-file-text-o me-2"></i>
-                                                <t t-esc="order.name"/>
+                                                <span class="fw-bold"><t t-esc="order.name"/></span>
                                             </h5>
                                             <p class="mb-1 text-muted small">
                                                 <i class="fa fa-user me-1"></i>
-                                                Vendedor: <t t-esc="order.salesperson_name"/>
+                                                <span class="fw-bold">Vendedor:</span> <t t-esc="order.salesperson_name"/>
                                             </p>
                                             <p class="mb-1 text-muted small">
                                                 <i class="fa fa-user-o me-1"></i>
-                                                Cliente: <t t-esc="order.partner_name"/>
+                                                <span class="fw-bold">Cliente:</span> <t t-esc="order.partner_name"/>
                                             </p>
                                             <p class="mb-1 text-muted small">
                                                 <i class="fa fa-calendar me-1"></i>
-                                                <t t-esc="order.formatted_date"/>
+                                                <span class="fw-bold">Fecha y Hora:</span> <t t-esc="order.formatted_date"/>
                                             </p>
                                         </div>
                                         <div class="text-end">
                                             <h4 class="mb-0 text-success">
                                                 $<t t-esc="order.amount_total.toFixed(2)"/>
                                             </h4>
-                                            <small class="text-muted">
+                                            <small class="text-muted d-block mb-1">
                                                 <t t-esc="order.orderLinesData.length"/> productos
                                             </small>
+                                            <div class="text-end mt-2">
+                                                <button class="btn btn-delete btn-sm" t-on-click.stop="() => this.deleteOrder(order)">
+                                                    <i class="fa fa-trash me-1"></i>
+                                                </button>
+                                            </div>
                                         </div>
+
                                     </div>
                                 </div>
                             </t>
@@ -75,7 +81,7 @@
                         <div class="buttons d-flex gap-1">
                             <h3 class="mb-0 d-flex align-items-center">
                                 <i class="fa fa-info-circle me-2"></i>
-                                Detalle de la Orden
+                                Detalle del Pedido
                             </h3>
                         </div>
                     </div>
@@ -111,7 +117,7 @@
 
                             <!-- Líneas de productos -->
                             <div class="card mb-3">
-                                <div class="card-header bg-secondary text-white">
+                                <div class="card-header">
                                     <h6 class="mb-0">
                                         <i class="fa fa-shopping-cart me-2"></i>
                                         Productos
@@ -119,7 +125,7 @@
                                 </div>
                                 <div class="card-body p-0">
                                     <div class="table-responsive">
-                                        <table class="table table-striped mb-0">
+                                        <table class="table table-hover mb-0">
                                             <thead class="table-light">
                                                 <tr>
                                                     <th>Producto</th>
@@ -171,8 +177,8 @@
                             <!-- Botón para cargar la orden al POS -->
                             <div class="text-center">
                                 <button class="btn btn-success btn-lg" t-on-click="() => this.loadOrderToPos(selectedOrder)">
-                                    <i class="fa fa-arrow-right me-2"></i>
-                                    Cargar Orden al POS para Pago
+                                    <i class="fa fa-cart-plus me-2"></i>
+                                    Cargar Orden
                                 </button>
                             </div>
 

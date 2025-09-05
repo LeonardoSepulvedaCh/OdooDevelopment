@@ -8,6 +8,10 @@
     overflow: hidden;
 }
 
+.card{
+    border-radius: 10px;
+}
+
 .pending-orders-screen .screen-full-width {
     width: 100%;
     height: 100%;
@@ -15,6 +19,21 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+
+tbody{
+    border:none;
+    border-color: transparent;
+}
+
+.btn-delete i{
+    color: #d40000;
+    border: none;
+    font-size: 16px;
+    &:hover{
+        color: #f30000;
+        cursor: pointer;
+    }
 }
 
 .controls{

@@ -2,6 +2,8 @@ import { registry } from "@web/core/registry";
 import { Component, useState, onWillStart } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useService } from "@web/core/utils/hooks";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { _t } from "@web/core/l10n/translation";
 
 export class PendingOrdersScreen extends Component {
     static template = "pos_cashiers_salespeople.PendingOrdersScreen";
@@ -12,6 +14,7 @@ export class PendingOrdersScreen extends Component {
         this.pos = usePos();
         this.ui = useService("ui");
         this.orm = useService("orm");
+        this.dialog = useService("dialog");
         this.state = useState({
             pendingOrders: [],
             selectedOrder: null,
@@ -178,6 +181,45 @@ export class PendingOrdersScreen extends Component {
             console.error('Error cargando orden al POS:', error);
             this.env.services.notification.add('Error al cargar la orden: ' + error.message, {
                 type: 'danger'
+            });
+        }
+    }
+
+    async deleteOrder(order) {
+        try {
+            // Mostrar diálogo de confirmación usando la API correcta
+            this.dialog.add(ConfirmationDialog, {
+                title: _t("¿Está seguro?"),
+                body: _t("¿Está seguro de eliminar el pedido '%s'?", order.name),
+                confirm: async () => {
+                    try {
+                        await this.orm.unlink('pos.order.pending', [order.id]);
+                        await this.loadPendingOrders();
+                        // Limpiar selección si el pedido eliminado estaba seleccionado
+                        if (this.state.selectedOrder && this.state.selectedOrder.id === order.id) {
+                            this.state.selectedOrder = null;
+                        }
+                        this.env.services.notification.add(_t('Pedido eliminado exitosamente'), {
+                            type: 'success',
+                            sticky: false,
+                        });
+                    } catch (deleteError) {
+                        console.error('Error eliminando pedido:', deleteError);
+                        this.env.services.notification.add(_t('Error al eliminar el pedido: %s', deleteError.message), {
+                            type: 'danger',
+                            sticky: true,
+                        });
+                    }
+                },
+                cancel: () => {
+                    // No hacer nada si se cancela
+                }
+            });
+        } catch (error) {
+            console.error('Error mostrando diálogo:', error);
+            this.env.services.notification.add(_t('Error al mostrar diálogo de confirmación'), {
+                type: 'danger',
+                sticky: true,
             });
         }
     }

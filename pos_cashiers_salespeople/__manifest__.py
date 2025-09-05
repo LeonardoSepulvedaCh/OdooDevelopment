@@ -27,6 +27,7 @@
             'pos_cashiers_salespeople/static/src/app/screens/product_screen/product_screen.xml',
             'pos_cashiers_salespeople/static/src/app/components/navbar/navbar.js',
             'pos_cashiers_salespeople/static/src/app/components/navbar/navbar.xml',
+            'pos_cashiers_salespeople/static/src/app/components/navbar/navbar.scss',
             'pos_cashiers_salespeople/static/src/app/screens/pending_orders/pending_orders.js',
             'pos_cashiers_salespeople/static/src/app/screens/pending_orders/pending_orders.xml',
             'pos_cashiers_salespeople/static/src/app/screens/pending_orders/pending_orders.scss',
