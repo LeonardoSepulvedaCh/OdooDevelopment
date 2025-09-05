@@ -14,17 +14,6 @@ patch(ProductScreen.prototype, {
             if (result && result.length > 0) {
                 this.pos.config.cashier_user_ids = result[0].cashier_user_ids || [];
                 this.pos.config.salesperson_user_ids = result[0].salesperson_user_ids || [];
-                
-                // Inspeccionar el contenido de los Proxy objects
-                if (this.pos.config.salesperson_user_ids && typeof this.pos.config.salesperson_user_ids === 'object') {
-                    for (let key in this.pos.config.salesperson_user_ids) {
-                        const user = this.pos.config.salesperson_user_ids[key];
-                        console.log(`Key: ${key}, User:`, user);
-                        if (user && typeof user === 'object') {
-                            console.log(`User ID: ${user.id}, Name: ${user.name}`);
-                        }
-                    }
-                }
             }
         } catch (error) {
             console.error('Error loading cashier/salesperson data:', error);
@@ -59,7 +48,6 @@ patch(ProductScreen.prototype, {
                 }
             }
         }
-        console.log('El usuario actual es cajero:', cashierUserIds.includes(currentUserId));
         return cashierUserIds.includes(currentUserId);
     },
 
@@ -89,7 +77,6 @@ patch(ProductScreen.prototype, {
                 }
             }
         }
-        console.log('El usuario actual es vendedor? :', salespersonUserIds.includes(currentUserId));
         return salespersonUserIds.includes(currentUserId);
     },
 

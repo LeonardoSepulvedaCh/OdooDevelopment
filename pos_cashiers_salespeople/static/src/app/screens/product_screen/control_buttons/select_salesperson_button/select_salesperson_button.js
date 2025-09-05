@@ -12,13 +12,11 @@ export class SelectSalespersonButton extends Component {
     }
     
     get currentSalesperson() {
-        // Obtener el vendedor actual de la orden
         const currentOrder = this.pos.getOrder();
         return currentOrder?.salesperson_id || null;
     }
     
     async onClickSelectSalesperson() {
-        // Llamar al método selectSalesperson que crearemos en el POS store
         await this.pos.selectSalesperson();
     }
 }

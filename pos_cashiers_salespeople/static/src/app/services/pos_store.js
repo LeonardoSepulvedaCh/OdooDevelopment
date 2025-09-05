@@ -8,30 +8,44 @@ patch(PosStore.prototype, {
     
     async selectSalesperson() {
         try {
+            let salespersonUsers = [];
             
-            const salespersonIds = this.config.salesperson_user_ids || [];
-            
-            console.log('=== SELECT SALESPERSON DEBUG ===');
-            console.log('this.config.salesperson_user_ids:', this.config.salesperson_user_ids);
-            console.log('salespersonIds array:', salespersonIds);
-            console.log('salespersonIds length:', salespersonIds.length);
+            try {
+                const configResult = await this.env.services.orm.read('pos.config', [this.config.id], ['salesperson_user_ids']);
+                
+                if (configResult && configResult.length > 0) {
+                    const salespersonIds = configResult[0].salesperson_user_ids || [];
+                    
+                    if (salespersonIds.length === 0) {
+                        this.env.services.notification.add(_t('No hay vendedores configurados para este POS'), {
+                            type: 'warning'
+                        });
+                        return;
+                    }
+                    
+                    salespersonUsers = await this.env.services.orm.read('res.users', salespersonIds, ['id', 'name', 'active']);
+                    
+                    salespersonUsers = salespersonUsers.filter(user => user.active);
+                } else {
+                    throw new Error('No se pudo cargar la configuración del POS');
+                }
+            } catch (loadError) {
+                console.error('Error cargando vendedores:', loadError);
+                this.env.services.notification.add(_t('Error cargando la lista de vendedores'), {
+                    type: 'danger'
+                });
+                return;
+            }
 
-            /* imprimer el nombre y id de los vendedores configurados */
-            salespersonIds.forEach((salesperson, index) => {
-                console.log(`salesperson[${index}]:`, salesperson.id, salesperson.name, salesperson);
-            });
-
-            if (salespersonIds.length === 0) {
-                this.env.services.notification.add(_t('No hay vendedores configurados para este POS'), {
+            if (salespersonUsers.length === 0) {
+                this.env.services.notification.add(_t('No hay vendedores activos configurados para este POS'), {
                     type: 'warning'
                 });
                 return;
             }
             
-            // Preparar la lista de selección
             const selectionList = [];
             
-            // Opción para no seleccionar vendedor
             selectionList.push({
                 id: null,
                 label: _t("Sin vendedor"),
@@ -39,8 +53,7 @@ patch(PosStore.prototype, {
                 item: null,
             });
             
-            // Agregar vendedores configurados en salespersonIds
-            for (const salesperson of salespersonIds) {
+            for (const salesperson of salespersonUsers) {
                 selectionList.push({
                     id: salesperson.id,
                     label: salesperson.name,
@@ -48,29 +61,22 @@ patch(PosStore.prototype, {
                     item: salesperson,
                 });
             }
-
-            selectionList.forEach(selection => {
-                console.log('Vendedor: ', selection.id, selection.label, selection.isSelected, selection.item);
-            });
             
-            // Mostrar popup de selección
             const selectedSalesperson = await makeAwaitable(this.env.services.dialog, SelectionPopup, {
                 title: _t("Seleccionar Vendedor"),
                 list: selectionList,
             });
             
             if (selectedSalesperson !== undefined) {
-                // Establecer el vendedor en la orden actual
                 const currentOrder = this.getOrder();
                 if (currentOrder) {
                     currentOrder.salesperson_id = selectedSalesperson;
-                    console.log('Vendedor seleccionado:', selectedSalesperson);
                 }
             }
             
         } catch (error) {
             console.error('Error seleccionando vendedor:', error);
-            this.env.services.notification.add(_t('Error al seleccionar vendedor'), {
+            this.env.services.notification.add(_t('Error al seleccionar vendedor: ' + error.message), {
                 type: 'danger'
             });
         }
