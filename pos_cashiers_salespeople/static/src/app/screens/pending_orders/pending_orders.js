@@ -112,10 +112,10 @@ export class PendingOrdersScreen extends Component {
                 try {
                     // Buscar el cliente en la base de datos del POS usando la API correcta
                     const partnerId = order.partner_id[0];
-                    const partner = this.pos.db.get_partner_by_id(partnerId);
+                    const partner = this.pos.models["res.partner"].getBy("id", partnerId);
                     if (partner) {
                         console.log('Cliente encontrado:', partner);
-                        newOrder.set_partner(partner);
+                        this.pos.setPartnerToCurrentOrder(partner);
                     } else {
                         console.warn('Cliente no encontrado en la base de datos del POS');
                     }
@@ -131,17 +131,26 @@ export class PendingOrdersScreen extends Component {
             for (const line of orderLines) {
                 try {
                     // Buscar el producto en la base de datos del POS usando la API correcta
-                    const product = this.pos.db.get_product_by_id(line.product_id);
+                    const product = this.pos.models["product.product"].getBy("id", line.product_id);
                     if (product) {
                         console.log('Producto encontrado:', product);
                         
-                        // Agregar el producto a la orden con los datos guardados
-                        const orderLine = newOrder.addProduct(product, {
-                            quantity: line.quantity,
-                            price: line.price_unit,
-                            discount: line.discount
-                        });
-                        console.log(`Producto ${product.display_name} agregado a la orden:`, orderLine);
+                        // Agregar el producto a la orden usando la API correcta del POS
+                        const vals = {
+                            product_id: product,
+                            product_tmpl_id: product.product_tmpl_id,
+                            price_unit: line.price_unit,
+                            discount: line.discount || 0
+                        };
+                        
+                        // Usar addLineToCurrentOrder que es el método correcto
+                        const orderLine = await this.pos.addLineToCurrentOrder(vals, {}, false);
+                        
+                        if (orderLine) {
+                            // Establecer la cantidad después de crear la línea
+                            orderLine.setQuantity(line.quantity);
+                            console.log(`Producto ${product.display_name} agregado a la orden:`, orderLine);
+                        }
                     } else {
                         console.warn(`Producto con ID ${line.product_id} no encontrado en la base de datos del POS`);
                     }
@@ -158,7 +167,7 @@ export class PendingOrdersScreen extends Component {
             await this.loadPendingOrders();
 
             // Volver a la pantalla principal del POS
-            this.pos.showScreen('ProductScreen');
+            this.pos.navigateToOrderScreen(newOrder);
 
             // Mostrar notificación
             this.env.services.notification.add('Orden cargada exitosamente en el POS', {

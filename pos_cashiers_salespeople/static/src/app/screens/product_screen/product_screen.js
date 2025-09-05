@@ -139,8 +139,6 @@ patch(ProductScreen.prototype, {
                 status: 'pending'
             };
 
-            console.log('Guardando pedido:', orderData);
-
             // Guardar el pedido en la base de datos
             const result = await this.env.services.orm.create('pos.order.pending', [orderData]);
             

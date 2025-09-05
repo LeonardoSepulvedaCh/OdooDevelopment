@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
     <t t-name="pos_cashiers_salespeople.Navbar" t-inherit="point_of_sale.Navbar" t-inherit-mode="extension">
         <xpath expr="//div[@class='navbar-menu d-flex']" position="inside">
-            <button class="btn btn-light btn-lg lh-lg" t-on-click="onClickPendingOrders">
+            <button class="btn btn-light btn-lg lh-lg" t-on-click="onClickPendingOrders" t-attf-class="{'active': mainButton === 'pending_orders'}">
                 Pedidos Pendientes
             </button>
         </xpath>
