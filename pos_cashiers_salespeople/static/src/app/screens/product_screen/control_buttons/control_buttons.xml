@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_cashiers_salespeople.ControlButtons" t-inherit="point_of_sale.ControlButtons" t-inherit-mode="extension">
+        <!-- Agregar el botón de seleccionar vendedor después del botón de cliente -->
+        <xpath expr="//SelectPartnerButton" position="after">
+            <SelectSalespersonButton salesperson="currentSalesperson" t-if="!props.showRemainingButtons"/>
+        </xpath>
+    </t>
+</templates>

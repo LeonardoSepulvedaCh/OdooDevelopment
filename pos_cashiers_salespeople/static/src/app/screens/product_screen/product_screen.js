@@ -10,7 +10,6 @@ patch(ProductScreen.prototype, {
 
     async _loadCashierSalespersonData() {
         try {
-            // Cargar datos de cajeros y vendedores desde el servidor
             const result = await this.env.services.orm.read('pos.config', [this.pos.config.id], ['cashier_user_ids', 'salesperson_user_ids']);
             if (result && result.length > 0) {
                 this.pos.config.cashier_user_ids = result[0].cashier_user_ids || [];
