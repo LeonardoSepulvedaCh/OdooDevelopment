@@ -40,6 +40,5 @@ class PosOrderPending(models.Model):
         return []
     
     def set_order_lines_data(self, lines_data):
-        """Establece las líneas de la orden desde una lista de diccionarios"""
         self.order_lines = json.dumps(lines_data) if lines_data else False
     

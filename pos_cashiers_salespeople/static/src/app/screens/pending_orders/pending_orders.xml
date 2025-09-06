@@ -174,9 +174,9 @@
                                 </div>
                             </div>
 
-                            <!-- Botón para cargar la orden al POS -->
+                            <!-- Botón para cargar la orden al POS unicamente si el usuario es cajero -->
                             <div class="text-center">
-                                <button class="btn btn-success btn-lg" t-on-click="() => this.loadOrderToPos(selectedOrder)">
+                                <button class="btn btn-success btn-lg" t-if="this.isCurrentUserCashier" t-on-click="() => this.loadOrderToPos(selectedOrder)">
                                     <i class="fa fa-cart-plus me-2"></i>
                                     Cargar Orden
                                 </button>

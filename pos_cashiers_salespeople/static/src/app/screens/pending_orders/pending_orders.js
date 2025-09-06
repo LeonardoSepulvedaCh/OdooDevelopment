@@ -4,6 +4,7 @@ import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useService } from "@web/core/utils/hooks";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
+import { useUserRoleService } from "@pos_cashiers_salespeople/app/services/user_role_service";
 
 export class PendingOrdersScreen extends Component {
     static template = "pos_cashiers_salespeople.PendingOrdersScreen";
@@ -15,13 +16,17 @@ export class PendingOrdersScreen extends Component {
         this.ui = useService("ui");
         this.orm = useService("orm");
         this.dialog = useService("dialog");
+        this.userRoleService = useUserRoleService();
         this.state = useState({
             pendingOrders: [],
             selectedOrder: null,
-            loading: true
+            loading: true,
+            isUserCashier: false
         });
 
         onWillStart(async () => {
+            // Verificar si el usuario actual es cajero
+            this.state.isUserCashier = await this.userRoleService.isUserCashier(this.pos);
             await this.loadPendingOrders();
         });
     }
@@ -91,6 +96,10 @@ export class PendingOrdersScreen extends Component {
 
     get selectedOrder() {
         return this.state.selectedOrder;
+    }
+
+    get isCurrentUserCashier() {
+        return this.state.isUserCashier;
     }
 
     selectOrder(order) {
@@ -200,7 +209,6 @@ export class PendingOrdersScreen extends Component {
 
     async deleteOrder(order) {
         try {
-            // Mostrar diálogo de confirmación usando la API correcta
             this.dialog.add(ConfirmationDialog, {
                 title: _t("¿Está seguro?"),
                 body: _t("¿Está seguro de eliminar el pedido '%s'?", order.name),
@@ -208,7 +216,6 @@ export class PendingOrdersScreen extends Component {
                     try {
                         await this.orm.unlink('pos.order.pending', [order.id]);
                         await this.loadPendingOrders();
-                        // Limpiar selección si el pedido eliminado estaba seleccionado
                         if (this.state.selectedOrder && this.state.selectedOrder.id === order.id) {
                             this.state.selectedOrder = null;
                         }
@@ -225,7 +232,6 @@ export class PendingOrdersScreen extends Component {
                     }
                 },
                 cancel: () => {
-                    // No hacer nada si se cancela
                 }
             });
         } catch (error) {
@@ -236,6 +242,7 @@ export class PendingOrdersScreen extends Component {
             });
         }
     }
+
 }
 
 registry.category("pos_pages").add("PendingOrdersScreen", {

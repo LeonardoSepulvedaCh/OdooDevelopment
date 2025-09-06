@@ -6,7 +6,7 @@
     'description': 'Campo adicional para seleccionar determinar si el cliente es visible en el POS',
     'author': '@LeonardoSepulvedaCh',
     'website': 'https://github.com/LeonardoSepulvedaCh',
-    'depends': ['point_of_sale', 'sale', 'contacts'],
+    'depends': ['point_of_sale', 'sale', 'contacts', 'contacts_extra_information'],
     'data': [
         'views/res_partner_view.xml',
     ],

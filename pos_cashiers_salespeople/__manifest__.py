@@ -23,6 +23,12 @@
     ],
     'assets': {
         'point_of_sale._assets_pos': [
+            # Servicios primero (para evitar problemas de dependencias)
+            'pos_cashiers_salespeople/static/src/app/services/user_role_service.js',
+            'pos_cashiers_salespeople/static/src/app/services/pos_store.js',
+            # Modelos
+            'pos_cashiers_salespeople/static/src/app/models/pos_order.js',
+            # Pantallas y componentes
             'pos_cashiers_salespeople/static/src/app/screens/product_screen/product_screen.js',
             'pos_cashiers_salespeople/static/src/app/screens/product_screen/product_screen.xml',
             'pos_cashiers_salespeople/static/src/app/components/navbar/navbar.js',
@@ -31,8 +37,7 @@
             'pos_cashiers_salespeople/static/src/app/screens/pending_orders/pending_orders.js',
             'pos_cashiers_salespeople/static/src/app/screens/pending_orders/pending_orders.xml',
             'pos_cashiers_salespeople/static/src/app/screens/pending_orders/pending_orders.scss',
-            'pos_cashiers_salespeople/static/src/app/services/pos_store.js',
-            'pos_cashiers_salespeople/static/src/app/models/pos_order.js',
+            # Control buttons (dependen del servicio)
             'pos_cashiers_salespeople/static/src/app/screens/product_screen/control_buttons/control_buttons.js',
             'pos_cashiers_salespeople/static/src/app/screens/product_screen/control_buttons/control_buttons.xml',
             'pos_cashiers_salespeople/static/src/app/screens/product_screen/control_buttons/select_salesperson_button/select_salesperson_button.js',
