@@ -52,7 +52,7 @@ class PosCashReportController(ReportController):
             return request.not_found()
 
     @http.route(['/pos/cash_report/generate/<int:session_id>'], 
-                type='json', auth="user", methods=['POST'])
+                type='jsonrpc', auth="user", methods=['POST'])
     def generate_cash_report_json(self, session_id, **kwargs):
         """Endpoint JSON para generar el reporte desde el frontend"""
         try:

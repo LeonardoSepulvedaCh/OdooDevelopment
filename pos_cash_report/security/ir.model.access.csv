@@ -1,3 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_pos_session_cash_report_user,pos.session.cash.report.user,point_of_sale.model_pos_session,point_of_sale.group_pos_user,1,0,0,0
 access_pos_session_cash_report_manager,pos.session.cash.report.manager,point_of_sale.model_pos_session,point_of_sale.group_pos_manager,1,1,1,0
+access_pos_session_cash_denominations_user,pos.session.cash.denominations.user,point_of_sale.model_pos_session,point_of_sale.group_pos_user,1,0,0,0
+access_pos_session_cash_denominations_manager,pos.session.cash.denominations.manager,point_of_sale.model_pos_session,point_of_sale.group_pos_manager,1,1,1,0

@@ -1,19 +1,41 @@
+.page {
+    font-size: 0.85rem;
+    line-height: 1.2;
+    .report-title{
+        color: #000000;
+    }
+}
+
+.header-image {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 15px;
+}
+
+.datetime-info {
+    font-size: 0.8rem;
+    margin-bottom: 6px;
+}
+
 .general-information{
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     .content{
         text-align: center;
-        padding: 10px;
+        padding: 6px;
         display: flex;
         flex-wrap: wrap;
-        gap: 10px;
+        gap: 6px;
         background: rgb(243, 243, 243);
         border: 1px solid #dee2e6;
-        border-radius: 8px;
+        border-radius: 6px;
+        font-size: 0.85rem;
     }
 }
 
 
-.payment-methods-table, .cash-movements-table, .summary-orders-table{
+.payment-methods-table, .cash-movements-table, .summary-orders-table, .denominations-table{
+    font-size: 0.8rem;
+    margin-bottom: 8px;
     tbody{
         border:none !important;
         border-color: transparent !important;
@@ -21,5 +43,134 @@
             border:none !important;
             border-color: transparent !important;
         }
+    }
+    
+    th, td {
+        padding: 4px 6px !important;
+        font-size: 0.8rem;
+    }
+}
+
+.denominations-table {
+    .table-secondary {
+        background-color: #f8f9fa !important;
+        font-weight: bold;
+    }
+    
+    th {
+        background-color: #343a40 !important;
+        color: white !important;
+        border: none !important;
+        padding: 3px 6px !important;
+        font-size: 0.75rem;
+    }
+    
+    td {
+        border: none !important;
+        padding: 3px 6px !important;
+        font-size: 0.8rem;
+    }
+}
+
+.denominations-section {
+    margin-bottom: 8px;
+    
+    h5 {
+        font-size: 1rem;
+        margin-bottom: 6px;
+    }
+    
+    h6 {
+        margin-bottom: 6px;
+        color: #495057;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+    
+    .alert-info {
+        background-color: #d1ecf1;
+        border-color: #bee5eb;
+        color: #0c5460;
+        margin-bottom: 0;
+        padding: 6px 12px;
+        font-size: 0.85rem;
+    }
+}
+
+.denominations-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 15px;
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+.denominations-column {
+    flex: 1;
+    justify-content: space-between;
+    min-width: 0;
+    
+    h6 {
+        margin-bottom: 6px;
+        color: #495057;
+        font-weight: 600;
+        text-align: center;
+        font-size: 0.9rem;
+    }
+    
+    table {
+        width: 95%;
+        margin-bottom: 0;
+    }
+}
+
+.total-general-container {
+    margin-top: 8px;
+    width: 100%;
+}
+
+.financial-summary table {
+    margin-bottom: 6px;
+}
+
+.summary-orders-table {
+    margin-bottom: 6px;
+}
+p {
+    margin-bottom: 4px !important;
+}
+
+.table-sm th, .table-sm td {
+    padding: 2px 4px !important;
+}
+
+.signatures-section {
+    margin-top: 20px;
+    padding-top: 15px;
+    
+    .signature-item {
+        margin-bottom: 30px;
+        
+        p {
+            margin-bottom: 5px !important;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+        
+        .signature-line {
+            width: 100%;
+            height: 1px;
+            background-color: #000;
+            margin-top: 5px;
+        }
+    }
+    
+    .row {
+        margin: 0;
+    }
+    
+    .col-6 {
+        padding: 0 10px;
     }
 }
