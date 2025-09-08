@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+     <!-- Template principal del reporte -->
+    <template id="report_cash_closing">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="pos_cash_report.cash_closing_document" t-lang="doc.config_id.company_id.partner_id.lang"/>
+            </t>
+        </t>
+    </template>
+
+    <!-- Template del documento -->
+    <template id="cash_closing_document">
+        <t t-call="web.external_layout">
+            <div class="page">
+                <!-- Encabezado -->
+                <div class="text-center mb-3">
+                    <h2><span class="fw-bold">REPORTE DE CIERRE DE CAJA</span></h2>
+                    <h4><span t-out="doc.config_id.name"/></h4>
+
+                    <p><span class="fw-bold">Sesión:</span> <span t-out="doc.name"/><br/></p>
+
+                    <p class="d-flex justify-content-center datetime-info">
+                        <span class="fw-bold">Fecha de Apertura: </span> <span t-out="doc.start_at" t-options="{'widget': 'datetime'}"/><br/>
+                        <span class="fw-bold">Fecha de Cierre: </span> <span t-out="doc.stop_at" t-options="{'widget': 'datetime'}"/>
+                    </p>
+                </div>
+
+                <!-- Información general -->
+                <div class="row mb-4">
+                    <div class="col-6">
+                        <h5><strong>Información General</strong></h5>
+                        <table class="table table-sm table-borderless">
+                            <tr>
+                                <td><strong>Usuario:</strong></td>
+                                <td><span t-out="doc.user_id.name"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Punto de Venta:</strong></td>
+                                <td><span t-out="doc.config_id.name"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Estado:</strong></td>
+                                <td>
+                                    <span t-if="doc.state == 'closed'" class="badge bg-success">Cerrada</span>
+                                    <span t-elif="doc.state == 'closing_control'" class="badge bg-warning">Cerrando</span>
+                                    <span t-else="" class="badge bg-info"><span t-out="doc.state"/></span>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-6">
+                        <h5><strong>Resumen Financiero</strong></h5>
+                        <table class="table table-sm table-borderless">
+                            <tr>
+                                <td><strong>Total de Ventas:</strong></td>
+                                <td class="text-end">
+                                    <span t-esc="'{:,.2f}'.format(sum(doc.order_ids.filtered(lambda o: o.state in ['paid', 'done', 'invoiced']).mapped('amount_total')))"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Total de Gastos:</strong></td>
+                                <td class="text-end">
+                                    <span t-esc="'{:,.2f}'.format(abs(sum(doc.statement_line_ids.filtered(lambda l: l.amount &lt; 0).mapped('amount'))))"/>
+                                </td>
+                            </tr>
+                            <tr class="border-top">
+                                <td><strong>Efectivo Inicial:</strong></td>
+                                <td class="text-end">
+                                    <span t-out="doc.cash_register_balance_start" t-options="{'widget': 'float', 'precision': 2}"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Efectivo Final (Teórico):</strong></td>
+                                <td class="text-end">
+                                    <span t-out="doc.cash_register_balance_end" t-options="{'widget': 'float', 'precision': 2}"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Efectivo Final (Real):</strong></td>
+                                <td class="text-end">
+                                    <span t-out="doc.cash_register_balance_end_real" t-options="{'widget': 'float', 'precision': 2}"/>
+                                </td>
+                            </tr>
+                            <tr class="border-top">
+                                <td><strong>Diferencia:</strong></td>
+                                <td class="text-end">
+                                    <span t-out="doc.cash_register_difference" 
+                                            t-options="{'widget': 'float', 'precision': 2}"
+                                            t-attf-class="#{doc.cash_register_difference != 0 and 'text-danger fw-bold' or ''}"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Métodos de Pago -->
+                <div class="mb-4">
+                    <h5><strong>Resumen por Métodos de Pago</strong></h5>
+                    <t t-set="payment_methods" t-value="{}"/>
+                    <t t-foreach="doc.order_ids.filtered(lambda o: o.state in ['paid', 'done', 'invoiced']).mapped('payment_ids')" t-as="payment">
+                        <t t-set="method_name" t-value="payment.payment_method_id.name"/>
+                        <t t-if="method_name not in payment_methods" t-set="payment_methods" t-value="{**payment_methods, method_name: {'count': 0, 'total': 0.0}}"/>
+                        <t t-set="payment_methods" t-value="{**payment_methods, method_name: {'count': payment_methods[method_name]['count'] + 1, 'total': payment_methods[method_name]['total'] + payment.amount}}"/>
+                    </t>
+                    
+                    <table class="table table-sm table-striped">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Método de Pago</th>
+                                <th class="text-center">Cantidad de Transacciones</th>
+                                <th class="text-end">Monto Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="payment_methods.items()" t-as="method_data">
+                                <tr>
+                                    <td><strong t-esc="method_data[0]"/></td>
+                                    <td class="text-center"><span t-esc="method_data[1]['count']"/></td>
+                                    <td class="text-end">
+                                        <span t-esc="'{:,.2f}'.format(method_data[1]['total'])"/>
+                                    </td>
+                                </tr>
+                            </t>
+                            <tr class="table-dark fw-bold">
+                                <td><strong>TOTAL</strong></td>
+                                <td class="text-center"><span t-esc="sum([data['count'] for data in payment_methods.values()])"/></td>
+                                <td class="text-end">
+                                    <span t-esc="'{:,.2f}'.format(sum([data['total'] for data in payment_methods.values()]))"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Desglose de Efectivo -->
+                <t t-if="doc.config_id.cash_control">
+                    <div class="mb-4">
+                        <h5><strong>Movimientos de Efectivo</strong></h5>
+                        <t t-set="cash_lines" t-value="doc.statement_line_ids.filtered(lambda l: l.amount != 0)"/>
+                        <t t-if="cash_lines">
+                            <table class="table table-sm table-striped">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Descripción</th>
+                                        <th class="text-center">Fecha</th>
+                                        <th class="text-end">Monto</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="cash_lines" t-as="line">
+                                        <tr>
+                                            <td><span t-out="line.payment_ref or line.name or 'Movimiento de efectivo'"/></td>
+                                            <td class="text-center"><span t-out="line.date" t-options="{'widget': 'date'}"/></td>
+                                            <td class="text-end">
+                                                <span t-out="line.amount" 
+                                                        t-options="{'widget': 'float', 'precision': 2}"
+                                                        t-attf-class="#{line.amount &lt; 0 and 'text-danger' or 'text-success'}"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <tr class="table-secondary fw-bold">
+                                        <td><strong>TOTAL MOVIMIENTOS</strong></td>
+                                        <td></td>
+                                        <td class="text-end">
+                                            <span t-esc="'{:,.2f}'.format(sum(cash_lines.mapped('amount')))" 
+                                                    t-attf-class="#{sum(cash_lines.mapped('amount')) &lt; 0 and 'text-danger' or 'text-success'}"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </t>
+                        <t t-else="">
+                            <p class="text-muted">No hay movimientos de efectivo registrados.</p>
+                        </t>
+                    </div>
+                </t>
+
+                <!-- Órdenes de la sesión -->
+                <div class="mb-4">
+                    <h5><strong>Resumen de Órdenes</strong></h5>
+                    <t t-set="paid_orders" t-value="doc.order_ids.filtered(lambda o: o.state in ['paid', 'done', 'invoiced'])"/>
+                    <table class="table table-sm table-borderless">
+                        <tr>
+                            <td><strong>Total de Órdenes:</strong></td>
+                            <td t-esc="len(paid_orders)"/>
+                        </tr>
+                        <tr>
+                            <td><strong>Órdenes Canceladas:</strong></td>
+                            <td t-esc="len(doc.order_ids.filtered(lambda o: o.state == 'cancel'))"/>
+                        </tr>
+                        <tr>
+                            <td><strong>Ticket Promedio:</strong></td>
+                            <td>
+                                <span t-esc="'{:,.2f}'.format(len(paid_orders) and sum(paid_orders.mapped('amount_total')) / len(paid_orders) or 0)"/>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- Pie de página -->
+                <div class="text-center mt-5 pt-3 border-top">
+                    <p>
+                        <small>
+                            Reporte generado el <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y %H:%M:%S')"/><br/>
+                            Sistema: Odoo 18 - Módulo de Reporte de Cierre de Caja
+                        </small>
+                    </p>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

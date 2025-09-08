@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Formato de papel personalizado para reducir márgenes -->
+        <record id="paperformat_cash_report" model="report.paperformat">
+            <field name="name">Formato Reporte de Caja</field>
+            <field name="default" eval="True"/>
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">20</field>
+            <field name="margin_bottom">20</field>
+            <field name="margin_left">7</field>
+            <field name="margin_right">7</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">20</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <!-- Definición del reporte PDF -->
+        <record id="action_cash_report" model="ir.actions.report">
+            <field name="name">Reporte de Cierre de Caja</field>
+            <field name="model">pos.session</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">pos_cash_report.report_cash_closing</field>
+            <field name="report_file">pos_cash_report.report_cash_closing</field>
+            <field name="binding_model_id" ref="point_of_sale.model_pos_session"/>
+            <field name="binding_view_types">form</field>
+            <!-- Configuración de márgenes para reducir espacios en blanco -->
+            <field name="paperformat_id" ref="pos_cash_report.paperformat_cash_report"/>
+        </record>
+
+        <!-- Botón en la vista de sesión POS -->
+        <record id="view_pos_session_form_cash_report" model="ir.ui.view">
+            <field name="name">pos.session.form.cash.report</field>
+            <field name="model">pos.session</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_session_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button name="generate_cash_report_manual" 
+                            type="object" 
+                            class="oe_stat_button" 
+                            icon="fa-file-pdf-o"
+                            invisible="state not in ('closing_control', 'closed')">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_text">Reporte</span>
+                            <span class="o_stat_text">de Cierre</span>
+                        </div>
+                    </button>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
