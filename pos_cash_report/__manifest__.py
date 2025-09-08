@@ -21,7 +21,7 @@ Incluye:
     ],
     'assets': {
         'web.report_assets_common': [
-            'pos_cash_report/static/src/css/cash_report.css',
+            'pos_cash_report/static/src/css/pos_cash_report.scss',
         ],
     },
     'installable': True,

@@ -17,83 +17,67 @@
                 <div class="text-center mb-3">
                     <h2><span class="fw-bold">REPORTE DE CIERRE DE CAJA</span></h2>
                     <h4><span t-out="doc.config_id.name"/></h4>
-
-                    <p><span class="fw-bold">Sesión:</span> <span t-out="doc.name"/><br/></p>
-
                     <p class="d-flex justify-content-center datetime-info">
-                        <span class="fw-bold">Fecha de Apertura: </span> <span t-out="doc.start_at" t-options="{'widget': 'datetime'}"/><br/>
+                        <span class="fw-bold">Fecha de Apertura: </span> <span t-out="doc.start_at" t-options="{'widget': 'datetime'}"/>    
                         <span class="fw-bold">Fecha de Cierre: </span> <span t-out="doc.stop_at" t-options="{'widget': 'datetime'}"/>
                     </p>
                 </div>
 
-                <!-- Información general -->
-                <div class="row mb-4">
-                    <div class="col-6">
-                        <h5><strong>Información General</strong></h5>
-                        <table class="table table-sm table-borderless">
-                            <tr>
-                                <td><strong>Usuario:</strong></td>
-                                <td><span t-out="doc.user_id.name"/></td>
-                            </tr>
-                            <tr>
-                                <td><strong>Punto de Venta:</strong></td>
-                                <td><span t-out="doc.config_id.name"/></td>
-                            </tr>
-                            <tr>
-                                <td><strong>Estado:</strong></td>
-                                <td>
-                                    <span t-if="doc.state == 'closed'" class="badge bg-success">Cerrada</span>
-                                    <span t-elif="doc.state == 'closing_control'" class="badge bg-warning">Cerrando</span>
-                                    <span t-else="" class="badge bg-info"><span t-out="doc.state"/></span>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="col-6">
-                        <h5><strong>Resumen Financiero</strong></h5>
-                        <table class="table table-sm table-borderless">
-                            <tr>
-                                <td><strong>Total de Ventas:</strong></td>
-                                <td class="text-end">
-                                    <span t-esc="'{:,.2f}'.format(sum(doc.order_ids.filtered(lambda o: o.state in ['paid', 'done', 'invoiced']).mapped('amount_total')))"/>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><strong>Total de Gastos:</strong></td>
-                                <td class="text-end">
-                                    <span t-esc="'{:,.2f}'.format(abs(sum(doc.statement_line_ids.filtered(lambda l: l.amount &lt; 0).mapped('amount'))))"/>
-                                </td>
-                            </tr>
-                            <tr class="border-top">
-                                <td><strong>Efectivo Inicial:</strong></td>
-                                <td class="text-end">
-                                    <span t-out="doc.cash_register_balance_start" t-options="{'widget': 'float', 'precision': 2}"/>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><strong>Efectivo Final (Teórico):</strong></td>
-                                <td class="text-end">
-                                    <span t-out="doc.cash_register_balance_end" t-options="{'widget': 'float', 'precision': 2}"/>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><strong>Efectivo Final (Real):</strong></td>
-                                <td class="text-end">
-                                    <span t-out="doc.cash_register_balance_end_real" t-options="{'widget': 'float', 'precision': 2}"/>
-                                </td>
-                            </tr>
-                            <tr class="border-top">
-                                <td><strong>Diferencia:</strong></td>
-                                <td class="text-end">
-                                    <span t-out="doc.cash_register_difference" 
-                                            t-options="{'widget': 'float', 'precision': 2}"
-                                            t-attf-class="#{doc.cash_register_difference != 0 and 'text-danger fw-bold' or ''}"/>
-                                </td>
-                            </tr>
-                        </table>
+                <div class="general-information">
+                    <h5><strong>Información General</strong></h5>
+                    <div class="content d-flex flex-row flex-wrap">
+                        <p class="mb-1 me-3"><strong>Cajero:</strong> <span t-out="doc.user_id.name"/></p>
+                        <p class="mb-1 me-3"><strong>Punto de Venta:</strong> <span t-out="doc.config_id.name"/></p>
+                        <p class="mb-0 me-3"><strong>Estado de la Sesión:</strong> <span t-out="doc.state"/></p>
+                        <p class="me-3"><span class="fw-bold">Sesión:</span> <span t-out="doc.name"/><br/></p>
                     </div>
                 </div>
 
+
+                <div class="financial-summary">
+                    <h5><strong>Resumen Financiero</strong></h5>
+                    <table class="table table-sm table-borderless">
+                        <tr>
+                            <td><strong>Total de Ventas:</strong></td>
+                            <td class="text-end">
+                                <span t-esc="'{:,.2f}'.format(sum(doc.order_ids.filtered(lambda o: o.state in ['paid', 'done', 'invoiced']).mapped('amount_total')))"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Total de Gastos:</strong></td>
+                            <td class="text-end">
+                                <span t-esc="'{:,.2f}'.format(abs(sum(doc.statement_line_ids.filtered(lambda l: l.amount &lt; 0).mapped('amount'))))"/>
+                            </td>
+                        </tr>
+                        <tr class="border-top">
+                            <td><strong>Efectivo Inicial:</strong></td>
+                            <td class="text-end">
+                                <span t-out="doc.cash_register_balance_start" t-options="{'widget': 'float', 'precision': 2}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Efectivo Final (Esperado):</strong></td>
+                            <td class="text-end">
+                                <span t-out="doc.cash_register_balance_end" t-options="{'widget': 'float', 'precision': 2}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Efectivo Final (Real):</strong></td>
+                            <td class="text-end">
+                                <span t-out="doc.cash_register_balance_end_real" t-options="{'widget': 'float', 'precision': 2}"/>
+                            </td>
+                        </tr>
+                        <tr class="border-top">
+                            <td><strong>Diferencia:</strong></td>
+                            <td class="text-end">
+                                <span t-out="doc.cash_register_difference" 
+                                        t-options="{'widget': 'float', 'precision': 2}"
+                                        t-attf-class="#{doc.cash_register_difference != 0 and 'text-danger fw-bold' or ''}"/>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+             
                 <!-- Métodos de Pago -->
                 <div class="mb-4">
                     <h5><strong>Resumen por Métodos de Pago</strong></h5>
@@ -104,7 +88,7 @@
                         <t t-set="payment_methods" t-value="{**payment_methods, method_name: {'count': payment_methods[method_name]['count'] + 1, 'total': payment_methods[method_name]['total'] + payment.amount}}"/>
                     </t>
                     
-                    <table class="table table-sm table-striped">
+                    <table class="table table-sm table-striped payment-methods-table">
                         <thead class="table-dark">
                             <tr>
                                 <th>Método de Pago</th>
@@ -122,7 +106,7 @@
                                     </td>
                                 </tr>
                             </t>
-                            <tr class="table-dark fw-bold">
+                            <tr class="fw-bold">
                                 <td><strong>TOTAL</strong></td>
                                 <td class="text-center"><span t-esc="sum([data['count'] for data in payment_methods.values()])"/></td>
                                 <td class="text-end">
@@ -139,7 +123,7 @@
                         <h5><strong>Movimientos de Efectivo</strong></h5>
                         <t t-set="cash_lines" t-value="doc.statement_line_ids.filtered(lambda l: l.amount != 0)"/>
                         <t t-if="cash_lines">
-                            <table class="table table-sm table-striped">
+                            <table class="table table-sm table-striped cash-movements-table">
                                 <thead class="table-dark">
                                     <tr>
                                         <th>Descripción</th>
@@ -180,7 +164,7 @@
                 <div class="mb-4">
                     <h5><strong>Resumen de Órdenes</strong></h5>
                     <t t-set="paid_orders" t-value="doc.order_ids.filtered(lambda o: o.state in ['paid', 'done', 'invoiced'])"/>
-                    <table class="table table-sm table-borderless">
+                    <table class="table table-sm table-borderless summary-orders-table">
                         <tr>
                             <td><strong>Total de Órdenes:</strong></td>
                             <td t-esc="len(paid_orders)"/>
@@ -199,11 +183,11 @@
                 </div>
 
                 <!-- Pie de página -->
-                <div class="text-center mt-5 pt-3 border-top">
+                <div class="text-center mt-5 pt-3">
                     <p>
                         <small>
                             Reporte generado el <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y %H:%M:%S')"/><br/>
-                            Sistema: Odoo 18 - Módulo de Reporte de Cierre de Caja
+                            Industrias Bicicletas Milán S.A.
                         </small>
                     </p>
                 </div>

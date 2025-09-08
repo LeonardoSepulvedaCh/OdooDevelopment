@@ -1,0 +1,25 @@
+.general-information{
+    margin-bottom: 20px;
+    .content{
+        text-align: center;
+        padding: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        background: rgb(243, 243, 243);
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+    }
+}
+
+
+.payment-methods-table, .cash-movements-table, .summary-orders-table{
+    tbody{
+        border:none !important;
+        border-color: transparent !important;
+        tr{
+            border:none !important;
+            border-color: transparent !important;
+        }
+    }
+}
