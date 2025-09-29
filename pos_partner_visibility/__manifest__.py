@@ -1,6 +1,6 @@
 {
-    'name': 'Cliente POS',
-    'version': '18.5.0.0.1',
+    'name': 'Contactos - Cliente POS',
+    'version': '19.1.0.0.0',
     'category': 'Milan/POS',
     'summary': 'Campo adicional para seleccionar determinar si el cliente es visible en el POS',
     'description': 'Campo adicional para seleccionar determinar si el cliente es visible en el POS',

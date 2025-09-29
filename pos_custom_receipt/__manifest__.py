@@ -1,6 +1,6 @@
 {
     'name': 'POS - Recibo Personalizado',
-    'version': '18.5.0.0.1',
+    'version': '19.1.0.0.0',
     'category': 'Milan/POS',
     'summary': 'Personalización completa del recibo de venta del POS',
     'description': '''

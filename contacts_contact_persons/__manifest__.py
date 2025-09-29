@@ -1,6 +1,6 @@
 {
-    'name': 'Personas de Contacto Adicionales - Contactos',
-    'version': '18.5.0.0.1',
+    'name': 'Contactos Adicionales',
+    'version': '19.1.0.0.0',
     'category': 'Milan/Contactos',
     'summary': 'Añade personas de contacto adicionales a los contactos',
     'description': """

@@ -1,6 +1,6 @@
 {
     'name': 'POS - Cliente Predeterminado',
-    'version': '18.5.0.0.1',
+    'version': '19.1.0.0.0',
     'category': 'Milan/POS',
     'summary': 'Cliente Predeterminado en el POS',
     'description': 'Elegir un cliente que se mostrará por defecto en el POS al seleccionar un cliente',
