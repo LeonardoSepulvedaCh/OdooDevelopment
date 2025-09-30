@@ -31,8 +31,8 @@
                     <h5><strong>Información General</strong></h5>
                     <div class="content d-flex flex-row flex-wrap">
                         <p class="mb-1 me-3"><strong>Cajero:</strong> <span t-out="doc.user_id.name"/></p>
-                        <p class="mb-1 me-3"><strong>Punto de Venta:</strong> <span t-out="doc.config_id.name"/></p>
-                        <p class="mb-0 me-3"><strong>Estado de la Sesión:</strong> <span t-out="doc.state"/></p>
+                        <p class="mb-1 me-3"><strong>POS:</strong> <span t-out="doc.config_id.name"/></p>
+                        <p class="mb-0 me-3"><strong>Estado:</strong> <span t-if="doc.state == 'closed'">Cerrado</span><span t-else="" t-out="doc.state"/></p>
                         <p class="me-3"><span class="fw-bold">Sesión:</span> <span t-out="doc.name"/><br/></p>
                     </div>
 
