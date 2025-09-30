@@ -1,6 +1,6 @@
 {
     'name': 'POS - Cajeros y Vendedores',
-    'version': '19.1.0.0.0',
+    'version': '19.0.0.0.0',
     'category': 'Milan/POS',
     'summary': 'Configuración de cajeros y vendedores por POS',
     'description': '''

@@ -9,7 +9,7 @@
         <xpath expr="//div[@class='d-flex align-items-baseline w-md-50'][2]" position="after">
             <div class="d-flex align-items-baseline w-md-50">
                 <i class="fa fa-fw me-1 fa-mobile text-primary" title="Mobile"/>
-                <field name="mobile" class="w-100" widget="phone" placeholder="Mobile"/>
+                <field name="mobile" class="w-100" widget="phone" placeholder="Celular"/>
             </div>
         </xpath>
 

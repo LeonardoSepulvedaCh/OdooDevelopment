@@ -29,7 +29,7 @@
                                 <t t-name="card" class="flex-row">
                                     <aside class="o_kanban_aside_full">
                                         <div class="o_kanban_image_fill w-100 d-flex align-items-center justify-content-center bg-light" style="min-height: 80px;">
-                                            <i class="fa fa-user fa-3x text-muted"/>
+                                            <i class="fa fa-user fa-3x text-muted" title="Contacto Adicional"/>
                                         </div>
                                     </aside>
                                     <main class="ps-2 ps-md-0">

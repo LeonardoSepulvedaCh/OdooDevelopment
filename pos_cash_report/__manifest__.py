@@ -1,6 +1,6 @@
 {
     'name': 'POS - Reporte de cierre de caja',
-    'version': '19.1.0.0.0',
+    'version': '19.0.0.0.0',
     'category': 'Milan/POS',
     'summary': 'Genera un informe PDF al cerrar la caja en el POS',
     'description': """

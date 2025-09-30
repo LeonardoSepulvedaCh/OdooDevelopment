@@ -1,6 +1,6 @@
 {
     'name': 'POS - Facturación Automática por Venta',
-    'version': '19.1.0.0.0',
+    'version': '19.0.0.0.0',
     'category': 'Milan/POS',
     'summary': 'Facturación Automática por Venta',
     'description': 'Agregar una opción en la configuración del POS para que se la opcion de facturar, siempre este activada.',

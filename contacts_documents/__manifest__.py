@@ -1,6 +1,6 @@
 {
     'name': 'Contactos - Documentos (Anexos)',
-    'version': '19.1.0.0.0',
+    'version': '19.0.0.0.0',
     'category': 'Milan/Contactos',
     'summary': 'Gestión de documentos asociados a contactos y empresas en Odoo',
     'description': '''

@@ -31,8 +31,12 @@
             <attribute name="t-if">!order.config.use_custom_receipt</attribute>
         </xpath>
 
-        <!-- Ocultar la información original del contacto cuando está personalizado -->
+        <!-- Ocultar la información original del contacto y del vendedor cuando está personalizado -->
         <xpath expr="//div[@class='pos-receipt-contact']" position="attributes">
+            <attribute name="t-if">!order.config.use_custom_receipt</attribute>
+        </xpath>
+
+        <xpath expr="//div[@class='pos-receipt-customer mt-2']" position="attributes">
             <attribute name="t-if">!order.config.use_custom_receipt</attribute>
         </xpath>
 
