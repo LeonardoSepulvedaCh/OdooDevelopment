@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Menú raíz de la aplicación -->
+    <menuitem id="menu_sale_credit_quota_root" 
+              name="Cupos Clientes" 
+              sequence="10" 
+              web_icon="sale_credit_quota,static/description/icon.png"/>
+    
+    <!-- Submenú principal -->
+    <menuitem id="menu_sale_credit_quota_application" 
+              name="Solicitudes" 
+              parent="menu_sale_credit_quota_root" 
+              sequence="10" 
+              action="sale_credit_quota_application_action"/>
+              
+    
+</odoo>

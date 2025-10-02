@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_sale_credit_quota_application_form" model="ir.ui.view">
+            <field name="name">sale.credit.quota.application.form</field>
+            <field name="model">sale.credit.quota.application</field>
+            <field name="arch" type="xml">
+                <form string="Solicitud de Cupo">
+                    <header>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,approved,rejected"/>
+                        <button string="Aprovar" icon="fa-check" type="object" class="btn btn-primary"/>
+                        <button string="Rechazar" icon="fa-times" type="object" class="btn btn-secondary"/>
+                    </header>
+                    <sheet>
+                        <div class="o_primary">
+                            <h1>
+                                <field name="name" placeholder="SC-YYYYMM-00001" readonly="1" />
+                            </h1>
+                        </div>
+                        <group col="2">
+                            <group string="Información del Cliente">
+                                <field name="customer_id" options="{'no_create': True}"/>
+                                <field name="customer_phone" widget="phone" />
+                                <field name="customer_mobile" widget="phone" />
+                                <field name="customer_email" />
+                                <field name="customer_birth_date" />
+                                <field name="customer_address" />
+                                <field name="customer_city" />
+                                <field name="customer_years_of_activity" />
+                            </group>
+                            
+                            <group string="Información de la Solicitud">
+                                <field name="subject" />
+                                <field name="branch_office" />
+                                <field name="application_date" />
+                                <field name="approved_date" invisible="state != 'approved'" />
+                                <field name="rejected_date" invisible="state != 'rejected'" />
+                                <field name="user_id" options="{'no_create': True}"/>
+                            </group>
+
+                            <group string="Información del Negocio">
+                                <field name="business_name" />
+                                <field name="business_address" />
+                                <field name="business_city" />
+                                <field name="business_years_of_activity" />
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Codeudores">
+                                <field name="codeudor_ids" >
+                                    <kanban class="o_kanban_mobile">
+                                        <field name="name"/>
+                                        <field name="vat"/>
+                                        <field name="phone"/>
+                                        <field name="email"/>
+                                        <field name="relationship"/>
+                                        <field name="age"/>
+                                        <field name="residence_address"/>
+                                        <field name="residence_municipality"/>
+                                        <field name="birth_date"/>
+                                        <templates>
+                                            <t t-name="card" class="flex-row">
+                                                <aside class="o_kanban_aside_full">
+                                                    <div class="o_kanban_image_fill w-100 d-flex align-items-center justify-content-center bg-light" style="min-height: 80px;">
+                                                        <i class="fa fa-user fa-3x text-muted" title="Codeudor"/>
+                                                    </div>
+                                                </aside>
+                                                <main class="ps-2 ps-md-0">
+                                                    <field name="name" invisible="not name" class="fw-bold"/>
+                                                    <div t-if="record.relationship.raw_value" class="text-muted">
+                                                        <i class="fa fa-fw me-1 fa-users text-primary" title="Parentesco"/>
+                                                        <field name="relationship"/>
+                                                    </div>
+                                                    <div t-if="record.vat.raw_value" class="text-truncate">
+                                                        <i class="fa fa-fw me-1 fa-id-card-o text-info" title="Documento"/>
+                                                        <field name="vat"/>
+                                                    </div>
+                                                    <div t-if="record.email.raw_value" class="text-truncate">
+                                                        <i class="fa fa-fw me-1 fa-envelope text-primary" title="Email"/>
+                                                        <field name="email"/>
+                                                    </div>
+                                                    <div t-if="record.phone.raw_value">
+                                                        <i class="fa fa-fw me-1 fa-phone text-success" title="Teléfono"/>
+                                                        <field name="phone"/>
+                                                    </div>
+                                                    <div t-if="record.residence_address.raw_value" class="text-truncate">
+                                                        <i class="fa fa-fw me-1 fa-map-marker text-danger" title="Dirección"/>
+                                                        <field name="residence_address"/>, <field name="residence_municipality"/>
+                                                    </div>
+                                                </main>
+                                            </t>
+                                        </templates>
+                                    </kanban>
+                                </field>
+                            </page>
+
+                            <page string="Propuesta Asesor">
+                                <group col="2">
+                                    <group string="Cupos Sugeridos por el Asesor">
+                                        <field name="suggestion_normal_credit_quota" widget="money" />
+                                        <field name="suggestion_golden_credit_quota" widget="money" />
+                                    </group>
+                                    <group string="Condiciones de Pago">
+                                        <field name="credit_quota_payment_terms_milan" />
+                                        <field name="credit_quota_payment_terms_optimus" />
+                                    </group>
+                                </group>
+                                <group string="Concepto Comercial">
+                                    <field name="good_points" widget="text" placeholder="Describa los puntos a favor que observa en el cliente" />
+                                    <field name="bad_points" widget="text" placeholder="Describa los puntos en contra que observa en el cliente" />
+                                    <field name="new_points" widget="text" placeholder="Describa las novedades que observa en el cliente" />
+                                </group>
+                            </page>
+                            
+                            <page string="Cartera">
+                                <group col="2">
+                                    <group string="Compras afectadas por el Cliente">
+                                        <field name="total_purchased_this_year" widget="money" />
+                                        <field name="total_purchased_last_year" widget="money" />
+                                        <field name="total_purchased_last_two_years" widget="money" />
+                                        <field name="total_purchased_last_three_years" widget="money" />
+                                    </group>
+                                    <group string="Antecedentes del Cliente en la Compañía">
+                                        <field name="taked_discount" />
+                                        <field name="normal_amount_debt" widget="money" />
+                                        <field name="arrears_amount_debt" widget="money" />
+                                    </group>
+                                </group>
+                                <group string="Observaciones, Acuerdos, Moras, etc.">
+                                    <field name="cartera_observations" widget="text" placeholder="Describa las observaciones del area de Cartera" />
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <chatter open_attachments="True" reload_on_attachment="True"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_sale_credit_quota_application_list" model="ir.ui.view">
+            <field name="name">sale.credit.quota.application.list</field>
+            <field name="model">sale.credit.quota.application</field>
+            <field name="arch" type="xml">
+                <list string="Solicitudes de Cupo">
+                    <field name="name" string="Solicitud" />
+                    <field name="customer_id" string="Cliente" />
+                    <field name="subject" />
+                    <field name="branch_office" />
+                    <field name="state" widget="badge" decoration-success="state == 'approved'" decoration-danger="state == 'rejected'" />
+                    <field name="application_date" />
+                    <field name="user_id" />
+                </list>
+            </field>
+        </record>
+
+        <record id="sale_credit_quota_application_action" model="ir.actions.act_window">
+            <field name="name">Solicitudes de Cupo</field>
+            <field name="res_model">sale.credit.quota.application</field>
+            <field name="view_mode">list,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    ¡Crea tu primera solicitud de cupo de crédito!
+                </p>
+                <p>
+                    Las solicitudes de cupo de crédito te permiten tener trazabilidad de las solicitudes de cupo de los clientes.
+                </p>
+                <p>
+                    Puedes crear una solicitud de cupo de crédito para un cliente específico.
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo>
