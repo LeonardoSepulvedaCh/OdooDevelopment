@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <list string="Documentos de Contacto">
                 <field name="partner_id"/>
-                <field name="document_type_id"/>
+                <field name="contact_document_type_id"/>
                 <field name="file_name"/>
                 <button name="action_approve" type="object" icon="fa-check" title="Aprobar Documento" 
                         invisible="state == 'approved'"/>
@@ -39,7 +39,7 @@
                     <group>
                         <group>
                             <field name="partner_id"/>
-                            <field name="document_type_id"/>
+                            <field name="contact_document_type_id"/>
                         </group>
                         <group>
                             <field name="file_name"/>
