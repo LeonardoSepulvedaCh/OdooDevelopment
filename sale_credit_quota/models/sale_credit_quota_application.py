@@ -104,11 +104,12 @@ class SaleCreditQuotaApplication(models.Model):
     # Datos de cartera
     total_purchased_this_year = fields.Float(string='Total Comprado Este Año', digits=(16, 2), default=0.0, compute='_compute_all_purchase_totals')
     total_purchased_last_year = fields.Float(string='Total Comprado Último Año (Año Pasado)', digits=(16, 2), default=0.0, compute='_compute_all_purchase_totals')
-    total_purchased_last_two_years = fields.Float(string='Total Comprado Últimos 2 Años', digits=(16, 2), default=0.0, compute='_compute_all_purchase_totals')
-    total_purchased_last_three_years = fields.Float(string='Total Comprado Últimos 3 Años', digits=(16, 2), default=0.0, compute='_compute_all_purchase_totals')
+    total_purchased_last_two_years = fields.Float(string='Total Comprado Hace 2 Años', digits=(16, 2), default=0.0, compute='_compute_all_purchase_totals')
+    total_purchased_last_three_years = fields.Float(string='Total Comprado Hace 3 Años', digits=(16, 2), default=0.0, compute='_compute_all_purchase_totals')
+    count_purchased = fields.Integer(string='Cantidad de Compras', default=0, compute='_compute_all_purchase_totals')
     taked_discount = fields.Boolean(string='¿Tomó Descuentos?', default=False)
-    normal_amount_debt = fields.Float(string='Monto de Deuda Normal (0-30 días)', digits=(16, 2), default=0.0)
-    arrears_amount_debt = fields.Float(string='Monto de Deuda en Atraso (+30 días)', digits=(16, 2), default=0.0)
+    normal_amount_debt = fields.Float(string='Monto de Deuda Normal (0-30 días)', digits=(16, 2), default=0.0, compute='_compute_normal_amount_debt')
+    arrears_amount_debt = fields.Float(string='Monto de Deuda en Atraso (+30 días)', digits=(16, 2), default=0.0, compute='_compute_arrears_amount_debt')
     cartera_observations = fields.Text(string='Observaciones del area de Cartera')
 
     # Documentos relacionados

@@ -1,5 +1,5 @@
 from odoo import models, api, fields
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 
 class SaleCreditQuotaApplication(models.Model):
     _inherit = 'sale.credit.quota.application'
@@ -45,8 +45,8 @@ class SaleCreditQuotaApplication(models.Model):
             else:
                 record.document_ids = [(6, 0, [])]
 
+    # Calcular el total de compras en un período específico
     def _calculate_total_purchased_for_period(self, customer_id, start_date, end_date):
-        """Método auxiliar para calcular el total de compras en un período específico"""
         if not customer_id:
             return 0.0
         
@@ -104,7 +104,7 @@ class SaleCreditQuotaApplication(models.Model):
         for record in self:
             current_year = date.today().year
             start_date = date(current_year - 2, 1, 1)
-            end_date = date(current_year - 1, 12, 31)
+            end_date = date(current_year - 2, 12, 31)
             
             record.total_purchased_last_two_years = record._calculate_total_purchased_for_period(
                 record.customer_id.id if record.customer_id else None,
@@ -117,7 +117,7 @@ class SaleCreditQuotaApplication(models.Model):
         for record in self:
             current_year = date.today().year
             start_date = date(current_year - 3, 1, 1)
-            end_date = date(current_year - 1, 12, 31)
+            end_date = date(current_year - 3, 12, 31)
             
             record.total_purchased_last_three_years = record._calculate_total_purchased_for_period(
                 record.customer_id.id if record.customer_id else None,
@@ -125,25 +125,26 @@ class SaleCreditQuotaApplication(models.Model):
                 end_date
             )
 
+    # Calcular todos los totales de compras en una sola operación
     @api.depends('customer_id')
     def _compute_all_purchase_totals(self):
-        """Calcula todos los totales de compras en una sola operación"""
         for record in self:
             if not record.customer_id:
                 record.total_purchased_this_year = 0.0
                 record.total_purchased_last_year = 0.0
                 record.total_purchased_last_two_years = 0.0
                 record.total_purchased_last_three_years = 0.0
+                record.count_purchased = 0
                 continue
             
             current_year = date.today().year
             
-            # Definir todos los períodos
+            # Definir todos los períodos (mutuamente excluyentes)
             periods = {
                 'this_year': (date(current_year, 1, 1), date(current_year, 12, 31)),
                 'last_year': (date(current_year - 1, 1, 1), date(current_year - 1, 12, 31)),
-                'last_two_years': (date(current_year - 2, 1, 1), date(current_year - 1, 12, 31)),
-                'last_three_years': (date(current_year - 3, 1, 1), date(current_year - 1, 12, 31)),
+                'last_two_years': (date(current_year - 2, 1, 1), date(current_year - 2, 12, 31)),
+                'last_three_years': (date(current_year - 3, 1, 1), date(current_year - 3, 12, 31)),
             }
             
             # Calcular todos los totales
@@ -160,3 +161,60 @@ class SaleCreditQuotaApplication(models.Model):
                     record.total_purchased_last_two_years = total
                 elif period_name == 'last_three_years':
                     record.total_purchased_last_three_years = total
+            
+            # Calcular la cantidad total de facturas del cliente
+            record.count_purchased = self.env['account.move'].search_count([
+                ('partner_id', '=', record.customer_id.id),
+                ('state', '=', 'posted'),
+                ('move_type', 'in', ['out_invoice', 'out_refund']),
+            ])
+
+    @api.depends('customer_id')
+    def _compute_normal_amount_debt(self):
+        """Calcula el monto de deuda normal (facturas pendientes con vencimiento reciente o próximo)"""
+        for record in self:
+            if not record.customer_id:
+                record.normal_amount_debt = 0.0
+                continue
+            
+            today = fields.Date.today()
+            thirty_days_ago = today - timedelta(days=30)
+            thirty_days_future = today + timedelta(days=30)
+            
+            # Buscar facturas pendientes con vencimiento entre 30 días atrás y 30 días adelante
+            domain = [
+                ('partner_id', '=', record.customer_id.id),
+                ('state', '=', 'posted'),
+                ('move_type', 'in', ['out_invoice']),
+                ('payment_state', 'in', ['not_paid', 'partial']),
+                ('invoice_date_due', '>=', thirty_days_ago),
+                ('invoice_date_due', '<=', thirty_days_future),
+            ]
+            
+            invoices = self.env['account.move'].search(domain)
+            total_debt = sum(invoice.amount_residual for invoice in invoices)
+            record.normal_amount_debt = total_debt
+
+    @api.depends('customer_id')
+    def _compute_arrears_amount_debt(self):
+        for record in self:
+            if not record.customer_id:
+                record.arrears_amount_debt = 0.0
+                continue
+            
+            today = fields.Date.today()
+            thirty_days_ago = today - timedelta(days=30)
+            
+            # Buscar facturas pendientes de pago con vencimiento mayor a 30 días
+            domain = [
+                ('partner_id', '=', record.customer_id.id),
+                ('state', '=', 'posted'),
+                ('move_type', 'in', ['out_invoice']),
+                ('payment_state', 'in', ['not_paid', 'partial']),
+                ('invoice_date_due', '<', thirty_days_ago),
+            ]
+            
+            invoices = self.env['account.move'].search(domain)
+            total_arrears = sum(invoice.amount_residual for invoice in invoices)
+            record.arrears_amount_debt = total_arrears
+    

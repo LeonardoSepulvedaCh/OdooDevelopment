@@ -20,7 +20,39 @@
                                     invisible="not customer_id">
                                 <field name="customer_child_count" widget="statinfo" string="Clientes Hijos"/>
                             </button>
+                            <button name="action_view_customer_purchases" 
+                                    type="object" 
+                                    class="oe_stat_button" 
+                                    icon="fa-shopping-cart"
+                                    invisible="not customer_id">
+                                <field name="count_purchased" widget="statinfo" string="Compras"/>
+                            </button>
                         </div>
+                        
+                        <!-- Campo invisible para evaluación de condiciones -->
+                        <field name="arrears_amount_debt" invisible="1"/>
+                        
+                        <!-- Alerta de deuda en mora -->
+                        <div class="p-3 mb-3 border border-danger rounded" style="background-color:rgba(203, 34, 48, 0.26);" invisible="arrears_amount_debt == 0">
+                            <div class="d-flex align-items-center">
+                                <i class="fa fa-exclamation-triangle fa-2x me-3 text-danger" title="Advertencia de deuda en mora"/>
+                                <div>
+                                    <h4 class="mb-1 text-danger">
+                                        <strong>CLIENTE CON DEUDA EN MORA</strong>
+                                    </h4>
+                                    <p class="mb-1">
+                                        Este cliente tiene facturas vencidas hace más de 30 días por un monto de:
+                                        <strong class="text-danger">
+                                            <field name="arrears_amount_debt" widget="monetary" readonly="1"/>
+                                        </strong>
+                                    </p>
+                                    <small class="text-muted">
+                                        Evalúe cuidadosamente antes de aprobar nuevo cupo de crédito.
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="o_primary">
                             <h1>
                                 <field name="name" placeholder="SC-YYYYMM-00001" readonly="1" />
@@ -123,17 +155,28 @@
                             </page>
                             
                             <page string="Cartera">
+                                <!-- Alerta adicional en la sección de cartera -->
+                                <div class="p-3 mb-3 border border-warning rounded" style="background-color:#ffc30078;" invisible="arrears_amount_debt == 0">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fa fa-warning me-2 text-warning" title="Advertencia de cartera"/>
+                                        <span>
+                                            <strong class="text-warning">Atención:</strong> Este cliente presenta deuda en mora superior a 30 días.
+                                            Revisar historial crediticio antes de aprobar.
+                                        </span>
+                                    </div>
+                                </div>
+                                
                                 <group col="2">
                                     <group string="Compras afectadas por el Cliente">
-                                        <field name="total_purchased_this_year" widget="money" />
-                                        <field name="total_purchased_last_year" widget="money" />
-                                        <field name="total_purchased_last_two_years" widget="money" />
-                                        <field name="total_purchased_last_three_years" widget="money" />
+                                        <field name="total_purchased_this_year" widget="money" help="Es el monto de compras que el cliente ha realizado en el año actual" />
+                                        <field name="total_purchased_last_year" widget="money" help="Es el monto de compras que el cliente ha realizado en el año pasado" />
+                                        <field name="total_purchased_last_two_years" widget="money" help="Es el monto de compras que el cliente ha realizado hace dos años pasados" />
+                                        <field name="total_purchased_last_three_years" widget="money" help="Es el monto de compras que el cliente ha realizado hace tres años pasados" />
                                     </group>
                                     <group string="Antecedentes del Cliente en la Compañía">
-                                        <field name="taked_discount" />
-                                        <field name="normal_amount_debt" widget="money" />
-                                        <field name="arrears_amount_debt" widget="money" />
+                                        <field name="taked_discount" help="Si el cliente ha tomado descuentos en la compañía" />
+                                        <field name="normal_amount_debt" widget="money" help="Es el monto de deuda que esta dentro de los 30 días despues de la fecha establecida en la condición de pago" />
+                                        <field name="arrears_amount_debt" widget="money" help="Es el monto de deuda que esta fuera de los 30 días despues de la fecha establecida en la condición de pago" />
                                     </group>
                                 </group>
                                 <group string="Observaciones, Acuerdos, Moras, etc.">
