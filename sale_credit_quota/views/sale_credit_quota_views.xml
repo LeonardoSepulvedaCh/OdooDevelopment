@@ -6,21 +6,21 @@
             <field name="model">sale.credit.quota.application</field>
             <field name="arch" type="xml">
                 <form string="Solicitud de Cupo">
-                    <div class="oe_button_box" name="button_box">
-                        <button name="action_view_customer_children" 
-                                type="object" 
-                                class="oe_stat_button" 
-                                icon="fa-users"
-                                invisible="not customer_id">
-                            <field name="customer_child_count" widget="statinfo" string="Clientes Hijos"/>
-                        </button>
-                    </div>
                     <header>
                         <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,approved,rejected"/>
                         <button string="Aprovar" icon="fa-check" type="object" class="btn btn-primary"/>
                         <button string="Rechazar" icon="fa-times" type="object" class="btn btn-secondary"/>
                     </header>
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_view_customer_children" 
+                                    type="object" 
+                                    class="oe_stat_button" 
+                                    icon="fa-users"
+                                    invisible="not customer_id">
+                                <field name="customer_child_count" widget="statinfo" string="Clientes Hijos"/>
+                            </button>
+                        </div>
                         <div class="o_primary">
                             <h1>
                                 <field name="name" placeholder="SC-YYYYMM-00001" readonly="1" />

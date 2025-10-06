@@ -277,12 +277,7 @@ class SaleCreditQuotaApplication(models.Model):
     # Acción para abrir la vista de clientes hijos
     def action_view_customer_children(self):
         self.ensure_one()
-        
-        # Forzar recálculo de los campos computados
-        #self._compute_customer_child_ids()
-        #self._compute_customer_child_count()
-        
-        # Búsqueda directa para depuración
+
         if self.customer_id:
             direct_children = self.env['res.partner'].search([
                 ('parent_id', '=', self.customer_id.id)
