@@ -25,9 +25,9 @@ class SaleCreditQuotaDocumentWizard(models.TransientModel):
         help='Lista de contactos relacionados con la solicitud (cliente y codeudores)'
     )
 
+    # Calcula los partners disponibles (cliente + codeudores)
     @api.depends('application_id')
     def _compute_partner_ids(self):
-        """Calcula los partners disponibles (cliente + codeudores)"""
         for wizard in self:
             partner_ids = []
             if wizard.application_id:
@@ -37,8 +37,8 @@ class SaleCreditQuotaDocumentWizard(models.TransientModel):
                     partner_ids.extend(wizard.application_id.codeudor_ids.mapped('partner_id').ids)
             wizard.partner_ids = [(6, 0, partner_ids)]
 
+    # Abre la interfaz de documentos con el partner seleccionado
     def action_open_documents(self):
-        """Abre la interfaz de documentos con el partner seleccionado"""
         self.ensure_one()
         
         if not self.partner_id:

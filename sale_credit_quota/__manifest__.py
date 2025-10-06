@@ -1,6 +1,6 @@
 {
     "name": "Cartera - Cupo de credito",
-    "version": "19.0.0.0.0",
+    "version": "1.0",
     "category": "Milan/Cartera",
     "summary": "Modulo para gestionar el cupo de credito de los clientes.",
     "description": """
@@ -8,7 +8,7 @@
     """,
     "author": "@LeonardoSepulvedaCh",
     "license": "OPL-1",
-    "depends": ["sale", "contacts", "mail", "contacts_extra_information", "documents"],
+    "depends": ["sale", "contacts", "mail", "contacts_birthday_alert", "documents"],
     "data": [
         "security/ir.model.access.csv",
         "wizards/sale_credit_quota_document_wizard_views.xml",

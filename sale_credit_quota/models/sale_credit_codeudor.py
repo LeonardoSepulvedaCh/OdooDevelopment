@@ -47,7 +47,6 @@ class SaleCreditCodeudor(models.Model):
     # Validaciones
     @api.constrains('birth_date')
     def _check_birth_date(self):
-        """Valida que la fecha de nacimiento sea válida"""
         for record in self:
             if record.birth_date:
                 if record.birth_date > fields.Date.today():
@@ -61,9 +60,9 @@ class SaleCreditCodeudor(models.Model):
                         _('El codeudor debe ser mayor de edad (18 años).')
                     )
 
+    # Evitar que el mismo partner sea codeudor múltiples veces en la misma solicitud
     @api.constrains('partner_id', 'application_id')
     def _check_unique_codeudor(self):
-        """Evita que el mismo partner sea codeudor múltiples veces en la misma solicitud"""
         for record in self:
             if record.partner_id and record.application_id:
                 domain = [
@@ -76,9 +75,9 @@ class SaleCreditCodeudor(models.Model):
                         _('El codeudor %s ya está agregado a esta solicitud.') % record.partner_id.name
                     )
 
+    # Evitar que el cliente sea su propio codeudor
     @api.constrains('partner_id', 'application_id')
     def _check_codeudor_not_customer(self):
-        """Evita que el cliente sea su propio codeudor"""
         for record in self:
             if record.partner_id and record.application_id:
                 if record.partner_id == record.application_id.customer_id:
@@ -86,10 +85,9 @@ class SaleCreditCodeudor(models.Model):
                         _('El cliente no puede ser su propio codeudor.')
                     )
 
-    # Computed fields
+    # Calcular la edad del codeudor
     @api.depends('birth_date')
     def _compute_age(self):
-        """Calcula la edad del codeudor"""
         for record in self:
             if record.birth_date:
                 today = fields.Date.today()
@@ -97,13 +95,10 @@ class SaleCreditCodeudor(models.Model):
             else:
                 record.age = 0
 
-    # Onchange methods
+    # Prellenar datos del codeudor cuando se selecciona
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
-        """Prellenar datos del codeudor cuando se selecciona"""
         if self.partner_id:
-            # Los campos related se llenan automáticamente
-            # Prellenar otros campos si existen en el partner
             if self.partner_id.street and not self.residence_address:
                 self.residence_address = self.partner_id.street
             if self.partner_id.city and not self.residence_municipality:

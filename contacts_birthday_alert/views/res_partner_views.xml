@@ -19,11 +19,6 @@
                 <field name="card_code"/>
             </group>
         </xpath>
-
-        <xpath expr="//group[@name='sale']" position="inside">
-            <field name="warehouse_id" domain="[('active', '=', True)]" options="{'no_create': True, 'no_open': True}"/>
-        </xpath>
-
         </field>
     </record>
 </odoo>

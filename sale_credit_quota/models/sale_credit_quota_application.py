@@ -1,7 +1,5 @@
 from odoo import models, fields, api, _
-from odoo.exceptions import ValidationError
-from datetime import datetime
-import re
+from datetime import datetime, date
 
 class SaleCreditQuotaApplication(models.Model):
     _name = 'sale.credit.quota.application'
@@ -26,6 +24,7 @@ class SaleCreditQuotaApplication(models.Model):
         index=True,
         tracking=1
     )
+    
     branch_office = fields.Selection(
         string='Sucursal',
         selection=[
@@ -39,6 +38,7 @@ class SaleCreditQuotaApplication(models.Model):
         ],
         required=True
     )
+    
     subject = fields.Selection(
         string='Asunto',
         selection=[
@@ -102,10 +102,10 @@ class SaleCreditQuotaApplication(models.Model):
     new_points = fields.Text(string='Novedades', help='Novedades de la solicitud')
 
     # Datos de cartera
-    total_purchased_this_year = fields.Float(string='Total Comprado Este Año', digits=(16, 2), default=0.0)
-    total_purchased_last_year = fields.Float(string='Total Comprado Último Año', digits=(16, 2), default=0.0)
-    total_purchased_last_two_years = fields.Float(string='Total Comprado Últimos 2 Años', digits=(16, 2), default=0.0)
-    total_purchased_last_three_years = fields.Float(string='Total Comprado Últimos 3 Años', digits=(16, 2), default=0.0)
+    total_purchased_this_year = fields.Float(string='Total Comprado Este Año', digits=(16, 2), default=0.0, compute='_compute_all_purchase_totals')
+    total_purchased_last_year = fields.Float(string='Total Comprado Último Año (Año Pasado)', digits=(16, 2), default=0.0, compute='_compute_all_purchase_totals')
+    total_purchased_last_two_years = fields.Float(string='Total Comprado Últimos 2 Años', digits=(16, 2), default=0.0, compute='_compute_all_purchase_totals')
+    total_purchased_last_three_years = fields.Float(string='Total Comprado Últimos 3 Años', digits=(16, 2), default=0.0, compute='_compute_all_purchase_totals')
     taked_discount = fields.Boolean(string='¿Tomó Descuentos?', default=False)
     normal_amount_debt = fields.Float(string='Monto de Deuda Normal (0-30 días)', digits=(16, 2), default=0.0)
     arrears_amount_debt = fields.Float(string='Monto de Deuda en Atraso (+30 días)', digits=(16, 2), default=0.0)
@@ -115,57 +115,7 @@ class SaleCreditQuotaApplication(models.Model):
     related_partner_ids = fields.Many2many('res.partner', compute='_compute_related_partner_ids', string='Partners Relacionados', help='Cliente y codeudores de esta solicitud')
     document_ids = fields.Many2many('documents.document', compute='_compute_document_ids', string='Documentos', help='Documentos relacionados con el cliente y codeudores')
 
-    # Valida que la fecha de fin del cupo sea posterior a la fecha de inicio
-    @api.constrains('credit_quota_start_date', 'credit_quota_end_date')
-    def _check_credit_quota_dates(self):
-        for record in self:
-            if record.credit_quota_start_date and record.credit_quota_end_date:
-                if record.credit_quota_end_date < record.credit_quota_start_date:
-                    raise ValidationError(
-                        _('La fecha de fin del cupo debe ser posterior a la fecha de inicio.')
-                    )
-
-    # Valida que los cupos no sean negativos
-    @api.constrains('final_normal_credit_quota', 'final_golden_credit_quota')
-    def _check_credit_quotas(self):
-        for record in self:
-            if record.final_normal_credit_quota < 0:
-                raise ValidationError(
-                    _('El cupo normal final no puede ser negativo.')
-                )
-            if record.final_golden_credit_quota < 0:
-                raise ValidationError(
-                    _('El cupo dorado final no puede ser negativo.')
-                )
-
-    # Valida que los cupos sugeridos no sean negativos
-    @api.constrains('suggestion_normal_credit_quota', 'suggestion_golden_credit_quota')
-    def _check_suggestion_quotas(self):
-        for record in self:
-            if record.suggestion_normal_credit_quota < 0:
-                raise ValidationError(
-                    _('El cupo normal sugerido no puede ser negativo.')
-                )
-            if record.suggestion_golden_credit_quota < 0:
-                raise ValidationError(
-                    _('El cupo dorado sugerido no puede ser negativo.')
-                )
-
-    # Valida que los años de actividad no sean negativos
-    @api.constrains('customer_years_of_activity', 'business_years_of_activity')
-    def _check_years_of_activity(self):
-        for record in self:
-            if record.customer_years_of_activity < 0:
-                raise ValidationError(
-                    _('Los años de actividad del cliente no pueden ser negativos.')
-                )
-            if record.business_years_of_activity < 0:
-                raise ValidationError(
-                    _('Los años de actividad del negocio no pueden ser negativos.')
-                )
-
     # Onchange methods
-    # Prellenar datos del cliente cuando se selecciona
     @api.onchange('customer_id')
     def _onchange_customer_id(self):
         if self.customer_id:
@@ -184,7 +134,6 @@ class SaleCreditQuotaApplication(models.Model):
                 (not self.user_id or self.user_id == self.env.user)):
                 self.user_id = self.customer_id.user_id
 
-    # Sugerir prellenar los cupos finales con los sugeridos
     @api.onchange('suggestion_normal_credit_quota', 'suggestion_golden_credit_quota')
     def _onchange_suggestion_quotas(self):
         if self.suggestion_normal_credit_quota and not self.final_normal_credit_quota:
@@ -192,7 +141,6 @@ class SaleCreditQuotaApplication(models.Model):
         if self.suggestion_golden_credit_quota and not self.final_golden_credit_quota:
             self.final_golden_credit_quota = self.suggestion_golden_credit_quota
 
-    # Generar automáticamente el nombre de la solicitud antes de crear el registro
     @api.model
     def create(self, vals_list):
         if isinstance(vals_list, dict):
@@ -204,7 +152,6 @@ class SaleCreditQuotaApplication(models.Model):
         
         return super(SaleCreditQuotaApplication, self).create(vals_list)
 
-    # Generar el nombre consecutivo de la solicitud en formato SC-YYYYMM-#####
     def _generate_application_name(self):
         now = fields.Datetime.now()
         year_month = now.strftime('%Y%m')
@@ -228,111 +175,3 @@ class SaleCreditQuotaApplication(models.Model):
         
         sequence = f"{next_number:05d}"
         return f"{prefix}{sequence}"
-
-    # Obtener los clientes hijos del cliente principal
-    @api.depends('customer_id')
-    def _compute_customer_child_ids(self):
-        for record in self:
-            if record.customer_id:
-                child_partners = self.env['res.partner'].search([
-                    ('parent_id', '=', record.customer_id.id)
-                ])
-                record.customer_child_ids = [(6, 0, child_partners.ids)]
-            else:
-                record.customer_child_ids = [(6, 0, [])]
-
-    # Contar los clientes hijos
-    @api.depends('customer_child_ids')
-    def _compute_customer_child_count(self):
-        for record in self:
-            record.customer_child_count = len(record.customer_child_ids)
-
-    # Obtener los contactos relacionados (cliente + codeudores)
-    @api.depends('customer_id', 'codeudor_ids.partner_id')
-    def _compute_related_partner_ids(self):
-        for record in self:
-            partner_ids = []
-            
-            if record.customer_id:
-                partner_ids.append(record.customer_id.id)
-            
-            if record.codeudor_ids:
-                partner_ids.extend(record.codeudor_ids.mapped('partner_id').ids)
-            
-            record.related_partner_ids = [(6, 0, partner_ids)]
-
-    # Obtener los documentos relacionados con los partners
-    @api.depends('related_partner_ids')
-    def _compute_document_ids(self):
-        for record in self:
-            if record.related_partner_ids:
-                documents = self.env['documents.document'].search([
-                    ('partner_id', 'in', record.related_partner_ids.ids),
-                    ('type', '!=', 'folder')
-                ])
-                record.document_ids = [(6, 0, documents.ids)]
-            else:
-                record.document_ids = [(6, 0, [])]
-    
-    # Acción para abrir la vista de clientes hijos
-    def action_view_customer_children(self):
-        self.ensure_one()
-
-        if self.customer_id:
-            direct_children = self.env['res.partner'].search([
-                ('parent_id', '=', self.customer_id.id)
-            ])
-            
-            if not direct_children:
-                return {
-                    'type': 'ir.actions.client',
-                    'tag': 'display_notification',
-                    'params': {
-                        'title': _('Sin clientes hijos'),
-                        'message': _('El cliente %s no tiene contactos hijos asociados.') % self.customer_id.name,
-                        'type': 'warning',
-                    }
-                }
-            
-            return {
-                'name': _('Clientes Hijos de %s (%d)') % (self.customer_id.name, len(direct_children)),
-                'type': 'ir.actions.act_window',
-                'res_model': 'res.partner',
-                'view_mode': 'list,form',
-                'domain': [('id', 'in', direct_children.ids)],
-                'context': {
-                    'default_parent_id': self.customer_id.id,
-                    'default_is_company': False,
-                },
-            }
-        else:
-            return {
-                'type': 'ir.actions.client',
-                'tag': 'display_notification',
-                'params': {
-                    'title': _('Error'),
-                    'message': _('No hay cliente seleccionado.'),
-                    'type': 'danger',
-                }
-            }
-    
-    # Abrir un wizard para seleccionar el contacto antes de cargar documentos
-    def action_open_documents(self):
-        self.ensure_one()
-        
-        wizard = self.env['sale.credit.quota.document.wizard'].create({
-            'application_id': self.id,
-            'partner_id': self.customer_id.id if self.customer_id else False,
-        })
-        
-        return {
-            'name': _('Seleccionar Contacto para Asociar Documentos'),
-            'type': 'ir.actions.act_window',
-            'res_model': 'sale.credit.quota.document.wizard',
-            'res_id': wizard.id,
-            'view_mode': 'form',
-            'target': 'new',
-            'context': self.env.context,
-        }
-    
-    

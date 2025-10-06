@@ -1,6 +1,6 @@
 {
-    'name': 'Contactos - Información Extra',
-    'version': '19.0.0.0.0',
+    'name': 'Contactos - Alerta de Cumpleaños',
+    'version': '1.0',
     'category': 'Milan/Contactos',
     'summary': 'Añade contactos adicionales y funcionalidad de cumpleaños',
     'description': """
