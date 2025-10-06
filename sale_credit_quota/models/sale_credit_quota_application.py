@@ -79,6 +79,8 @@ class SaleCreditQuotaApplication(models.Model):
     customer_city = fields.Char(string='Ciudad del Cliente', related='customer_id.city')
     customer_state = fields.Char(string='Estado del Cliente')
     customer_years_of_activity = fields.Integer(string='Años de Actividad del Cliente', default=0)
+    customer_child_ids = fields.Many2many('res.partner', compute='_compute_customer_child_ids', string='Clientes Hijos', help='Clientes hijos del cliente principal', store=True)
+    customer_child_count = fields.Integer(string='Cantidad de Clientes Hijos', compute='_compute_customer_child_count', store=True)
 
     # Datos de los codeudores
     codeudor_ids = fields.One2many('sale.credit.codeudor', 'application_id', string='Codeudores', copy=True)
@@ -108,6 +110,10 @@ class SaleCreditQuotaApplication(models.Model):
     normal_amount_debt = fields.Float(string='Monto de Deuda Normal (0-30 días)', digits=(16, 2), default=0.0)
     arrears_amount_debt = fields.Float(string='Monto de Deuda en Atraso (+30 días)', digits=(16, 2), default=0.0)
     cartera_observations = fields.Text(string='Observaciones del area de Cartera')
+
+    # Documentos relacionados
+    related_partner_ids = fields.Many2many('res.partner', compute='_compute_related_partner_ids', string='Partners Relacionados', help='Cliente y codeudores de esta solicitud')
+    document_ids = fields.Many2many('documents.document', compute='_compute_document_ids', string='Documentos', help='Documentos relacionados con el cliente y codeudores')
 
     # Valida que la fecha de fin del cupo sea posterior a la fecha de inicio
     @api.constrains('credit_quota_start_date', 'credit_quota_end_date')
@@ -223,4 +229,115 @@ class SaleCreditQuotaApplication(models.Model):
         sequence = f"{next_number:05d}"
         return f"{prefix}{sequence}"
 
+    # Obtener los clientes hijos del cliente principal
+    @api.depends('customer_id')
+    def _compute_customer_child_ids(self):
+        for record in self:
+            if record.customer_id:
+                child_partners = self.env['res.partner'].search([
+                    ('parent_id', '=', record.customer_id.id)
+                ])
+                record.customer_child_ids = [(6, 0, child_partners.ids)]
+            else:
+                record.customer_child_ids = [(6, 0, [])]
+
+    # Contar los clientes hijos
+    @api.depends('customer_child_ids')
+    def _compute_customer_child_count(self):
+        for record in self:
+            record.customer_child_count = len(record.customer_child_ids)
+
+    # Obtener los contactos relacionados (cliente + codeudores)
+    @api.depends('customer_id', 'codeudor_ids.partner_id')
+    def _compute_related_partner_ids(self):
+        for record in self:
+            partner_ids = []
+            
+            if record.customer_id:
+                partner_ids.append(record.customer_id.id)
+            
+            if record.codeudor_ids:
+                partner_ids.extend(record.codeudor_ids.mapped('partner_id').ids)
+            
+            record.related_partner_ids = [(6, 0, partner_ids)]
+
+    # Obtener los documentos relacionados con los partners
+    @api.depends('related_partner_ids')
+    def _compute_document_ids(self):
+        for record in self:
+            if record.related_partner_ids:
+                documents = self.env['documents.document'].search([
+                    ('partner_id', 'in', record.related_partner_ids.ids),
+                    ('type', '!=', 'folder')
+                ])
+                record.document_ids = [(6, 0, documents.ids)]
+            else:
+                record.document_ids = [(6, 0, [])]
+    
+    # Acción para abrir la vista de clientes hijos
+    def action_view_customer_children(self):
+        self.ensure_one()
+        
+        # Forzar recálculo de los campos computados
+        #self._compute_customer_child_ids()
+        #self._compute_customer_child_count()
+        
+        # Búsqueda directa para depuración
+        if self.customer_id:
+            direct_children = self.env['res.partner'].search([
+                ('parent_id', '=', self.customer_id.id)
+            ])
+            
+            if not direct_children:
+                return {
+                    'type': 'ir.actions.client',
+                    'tag': 'display_notification',
+                    'params': {
+                        'title': _('Sin clientes hijos'),
+                        'message': _('El cliente %s no tiene contactos hijos asociados.') % self.customer_id.name,
+                        'type': 'warning',
+                    }
+                }
+            
+            return {
+                'name': _('Clientes Hijos de %s (%d)') % (self.customer_id.name, len(direct_children)),
+                'type': 'ir.actions.act_window',
+                'res_model': 'res.partner',
+                'view_mode': 'list,form',
+                'domain': [('id', 'in', direct_children.ids)],
+                'context': {
+                    'default_parent_id': self.customer_id.id,
+                    'default_is_company': False,
+                },
+            }
+        else:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('Error'),
+                    'message': _('No hay cliente seleccionado.'),
+                    'type': 'danger',
+                }
+            }
+    
+    # Abrir un wizard para seleccionar el contacto antes de cargar documentos
+    def action_open_documents(self):
+        self.ensure_one()
+        
+        wizard = self.env['sale.credit.quota.document.wizard'].create({
+            'application_id': self.id,
+            'partner_id': self.customer_id.id if self.customer_id else False,
+        })
+        
+        return {
+            'name': _('Seleccionar Contacto para Asociar Documentos'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'sale.credit.quota.document.wizard',
+            'res_id': wizard.id,
+            'view_mode': 'form',
+            'target': 'new',
+            'context': self.env.context,
+        }
+    
     

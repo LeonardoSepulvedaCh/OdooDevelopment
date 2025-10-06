@@ -5,8 +5,10 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='birth_date']" position="after">
-                <field name="pos_customer"/>
+            <xpath expr="//group[last()]" position="after">
+                <group>
+                    <field name="pos_customer"/>
+                </group>
             </xpath>
         </field>
     </record>

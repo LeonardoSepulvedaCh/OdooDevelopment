@@ -8,9 +8,10 @@
     """,
     "author": "@LeonardoSepulvedaCh",
     "license": "OPL-1",
-    "depends": ["sale", "contacts", "mail"],
+    "depends": ["sale", "contacts", "mail", "contacts_extra_information", "documents"],
     "data": [
         "security/ir.model.access.csv",
+        "wizards/sale_credit_quota_document_wizard_views.xml",
         "views/sale_credit_quota_views.xml",
         "views/sale_credit_quota_menu.xml",
     ],

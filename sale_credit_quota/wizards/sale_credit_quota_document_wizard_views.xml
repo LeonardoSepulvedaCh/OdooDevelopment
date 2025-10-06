@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_sale_credit_quota_document_wizard_form" model="ir.ui.view">
+        <field name="name">sale.credit.quota.document.wizard.form</field>
+        <field name="model">sale.credit.quota.document.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Seleccionar Contacto">
+                <sheet>
+                    <group>
+                        <field name="partner_id" widget="selection" 
+                               domain="[('id', 'in', partner_ids)]"
+                               options="{'no_create': True, 'no_open': True}"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_open_documents" type="object" string="Continuar a Cargar Documentos" class="btn-primary"/>
+                    <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
+

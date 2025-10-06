@@ -6,6 +6,15 @@
             <field name="model">sale.credit.quota.application</field>
             <field name="arch" type="xml">
                 <form string="Solicitud de Cupo">
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_customer_children" 
+                                type="object" 
+                                class="oe_stat_button" 
+                                icon="fa-users"
+                                invisible="not customer_id">
+                            <field name="customer_child_count" widget="statinfo" string="Clientes Hijos"/>
+                        </button>
+                    </div>
                     <header>
                         <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,approved,rejected"/>
                         <button string="Aprovar" icon="fa-check" type="object" class="btn btn-primary"/>
@@ -130,6 +139,27 @@
                                 <group string="Observaciones, Acuerdos, Moras, etc.">
                                     <field name="cartera_observations" widget="text" placeholder="Describa las observaciones del area de Cartera" />
                                 </group>
+                            </page>
+
+                            <page string="Anexos">
+                                <field name="related_partner_ids" invisible="1"/>
+                                <div class="mb-3">
+                                    <button name="action_open_documents" type="object" class="btn btn-primary">
+                                        <i class="fa fa-plus"/> Agregar Documento
+                                    </button>
+                                </div>
+                                <field name="document_ids" nolabel="1" widget="many2many">
+                                    <list string="Documentos" create="false" delete="false" expand="1" default_group_by="partner_id">
+                                        <field name="partner_id" string="Relacionado con"/>
+                                        <field name="name" string="Nombre del Archivo"/>
+                                        <field name="attachment_name" string="Nombre del Archivo" optional="hide"/>
+                                        <field name="mimetype" string="Tipo" optional="hide"/>
+                                        <field name="file_size" string="Tamaño" widget="document_size" optional="hide"/>
+                                        <field name="tag_ids" string="Tipo" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                        <field name="create_date" string="Fecha de Creación" optional="hide"/>
+                                        <button name="access_content" string="Ver/Descargar" type="object" icon="fa-download"/>
+                                    </list>
+                                </field>
                             </page>
                         </notebook>
                     </sheet>

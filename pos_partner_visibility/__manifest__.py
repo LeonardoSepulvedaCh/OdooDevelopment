@@ -1,12 +1,12 @@
 {
     'name': 'Contactos - Cliente POS',
-    'version': '19.0.0.0.0',
+    'version': '1.0',
     'category': 'Milan/POS',
     'summary': 'Campo adicional para seleccionar determinar si el cliente es visible en el POS',
     'description': 'Campo adicional para seleccionar determinar si el cliente es visible en el POS',
     'author': '@LeonardoSepulvedaCh',
     'website': 'https://github.com/LeonardoSepulvedaCh',
-    'depends': ['point_of_sale', 'sale', 'contacts', 'contacts_extra_information'],
+    'depends': ['point_of_sale', 'sale', 'contacts'],
     'data': [
         'views/res_partner_view.xml',
     ],
