@@ -16,7 +16,8 @@ class SaleCreditQuotaApplication(models.Model):
         selection=[
             ('draft', 'Borrador'),
             ('approved', 'Aprobado'), 
-            ('rejected', 'Rechazado')
+            ('rejected', 'Rechazado'),
+            ('finished', 'Finalizado')
         ], 
         required=True, 
         default='draft',
@@ -186,3 +187,20 @@ class SaleCreditQuotaApplication(models.Model):
         
         sequence = f"{next_number:05d}"
         return f"{prefix}{sequence}"
+
+    def unlink(self):
+        for record in self:
+            if record.state == 'approved' and record.customer_id:
+                record.customer_id.write({
+                    'normal_credit_quota': 0.0,
+                    'golden_credit_quota': 0.0,
+                    'credit_limit': 0.0,
+                })
+                
+                # Registrar mensaje en el cliente
+                record.customer_id.message_post(
+                    body=_('Cupos de crédito restablecidos a 0 por eliminación de la solicitud %s') % record.name,
+                    message_type='notification'
+                )
+        
+        return super(SaleCreditQuotaApplication, self).unlink()

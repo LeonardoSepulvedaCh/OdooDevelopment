@@ -1,5 +1,8 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
+import logging
+
+_logger = logging.getLogger(__name__)
 
 class SaleCreditQuotaApplication(models.Model):
     _inherit = 'sale.credit.quota.application'
@@ -129,39 +132,86 @@ class SaleCreditQuotaApplication(models.Model):
             
             customer_values['normal_credit_quota'] = self.final_normal_credit_quota
             customer_values['golden_credit_quota'] = self.final_golden_credit_quota
+            
+            if self.final_normal_credit_quota:
+                customer_values['credit_limit'] = self.final_normal_credit_quota
                 
             if self.property_payment_term_id:
                 customer_values['property_payment_term_id'] = self.property_payment_term_id.id
             
             self.customer_id.write(customer_values)
             
-            cupo_message = _('Cupos de crédito actualizados desde la solicitud %s:') % self.name
-            cupo_message += _('\n• Cupo Normal: %s') % self.final_normal_credit_quota
-            cupo_message += _('\n• Cupo Dorado: %s') % self.final_golden_credit_quota
-            if 'property_payment_term_id' in customer_values:
-                cupo_message += _('\n• Condiciones de Pago: %s') % self.property_payment_term_id.name
-            
             self.customer_id.message_post(
-                body=cupo_message,
+                body=(_('Cupos de crédito actualizados desde la solicitud %s') % self.name),
                 message_type='notification'
             )
         
         self.message_post(
-            body=_('Solicitud aprobada por %s') % self.env.user.name,
+            body=_('Solicitud aprobada por %s el %s') % (self.env.user.name, fields.Date.context_today(self)),
             message_type='notification'
         )
         
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'display_notification',
-            'params': {
-                'title': _('Solicitud Aprobada'),
-                'message': _('La solicitud %s ha sido aprobada exitosamente.') % self.name,
-                'type': 'success',
-            }
-        }
+        return True
 
-    # Validar todos los campos obligatorios para aprobar una solicitud de cupo de crédito
+    def action_finish(self):
+        self.ensure_one()
+        
+        if self.state != 'approved':
+            raise ValidationError(_('Solo se pueden finalizar solicitudes aprobadas.'))
+        
+        return self._finish_application()
+
+    def _finish_application(self):
+        self.ensure_one()
+        
+        self.write({
+            'state': 'finished',
+        })
+        
+        if self.customer_id:
+            self.customer_id.write({
+                'normal_credit_quota': 0.0,
+                'golden_credit_quota': 0.0,
+                'credit_limit': 0.0,
+            })
+            
+            self.customer_id.message_post(
+                body=_('Cupos de crédito finalizados y restablecidos a 0 desde la solicitud %s (fecha fin: %s)') % (self.name, self.credit_quota_end_date or 'No definida'),
+                message_type='notification'
+            )
+        
+        self.message_post(
+            body=_('Solicitud finalizada - Cupos de crédito restablecidos a 0 (fecha fin del cupo: %s)') % (self.credit_quota_end_date or 'No definida'),
+            message_type='notification'
+        )
+        
+        return True
+
+    @api.model
+    def _cron_finish_expired_applications(self):
+        today = fields.Date.today()
+        
+        expired_applications = self.search([
+            ('state', '=', 'approved'),
+            ('credit_quota_end_date', '<=', today),
+            ('credit_quota_end_date', '!=', False),
+        ])
+        
+        for application in expired_applications:
+            try:
+                application._finish_application()
+            except Exception as e:
+                _logger.error(
+                    'Error al finalizar automáticamente la solicitud %s: %s', 
+                    application.name, str(e)
+                )
+        
+        if expired_applications:
+            _logger.info(
+                'Finalizadas automáticamente %d solicitudes de cupo de crédito', 
+                len(expired_applications)
+            )
+
     def _validate_required_fields_for_approval(self):
         missing_fields = []
         
@@ -226,11 +276,10 @@ class SaleCreditQuotaApplication(models.Model):
 
         if missing_fields:
             raise ValidationError(
-                _('Los siguientes campos son obligatorios para aprobar la solicitud:\n\n• %s') % 
+                _('Los siguientes campos son obligatorios para aprobar la solicitud %s') % 
                 '\n• '.join(missing_fields)
             )
     
-    # Validar que el partner tenga todos los documentos obligatorios con las etiquetas requeridas
     def _validate_required_documents(self, partner, partner_label, required_tags, missing_fields):
         if not partner:
             missing_fields.append(f'{partner_label} - No está definido')
@@ -263,16 +312,8 @@ class SaleCreditQuotaApplication(models.Model):
         })
         
         self.message_post(
-            body=_('Solicitud rechazada por %s') % self.env.user.name,
+            body=_('Solicitud rechazada por %s el %s') % (self.env.user.name, fields.Date.context_today(self)),
             message_type='notification'
         )
-        
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'display_notification',
-            'params': {
-                'title': _('Solicitud Rechazada'),
-                'message': _('La solicitud %s ha sido rechazada.') % self.name,
-                'type': 'warning',
-            }
-        }
+
+        return True

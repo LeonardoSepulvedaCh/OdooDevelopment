@@ -7,13 +7,19 @@
             <field name="arch" type="xml">
                 <form string="Solicitud de Cupo">
                     <header>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,approved,rejected"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,approved,finished,rejected"/>
                         <button string="Aprobar" 
                                 name="action_approve" 
                                 type="object" 
                                 class="btn btn-primary"
                                 invisible="state != 'draft'"
                                 confirm="¿Está seguro de que desea aprobar esta solicitud?"/>
+                        <button string="Finalizar" 
+                                name="action_finish" 
+                                type="object" 
+                                class="btn btn-warning"
+                                invisible="state != 'approved'"
+                                confirm="¿Está seguro de que desea finalizar esta solicitud? Los cupos del cliente se restablecerán a 0."/>
                         <button string="Rechazar" 
                                 name="action_reject" 
                                 type="object" 
@@ -70,35 +76,35 @@
                         </div>
                         <group col="2">
                             <group string="Información del Cliente">
-                                <field name="customer_id" options="{'no_create': True}"/>
-                                <field name="customer_phone" widget="phone" />
-                                <field name="customer_mobile" widget="phone" />
-                                <field name="customer_email" />
-                                <field name="customer_birth_date" />
-                                <field name="customer_address" />
-                                <field name="customer_city" />
-                                <field name="customer_years_of_activity" />
+                                <field name="customer_id" options="{'no_create': True}" readonly="state in ['approved', 'rejected', 'finished']"/>
+                                <field name="customer_phone" widget="phone" readonly="state in ['approved', 'rejected', 'finished']"/>
+                                <field name="customer_mobile" widget="phone" readonly="state in ['approved', 'rejected', 'finished']"/>
+                                <field name="customer_email" readonly="state in ['approved', 'rejected', 'finished']"/>
+                                <field name="customer_birth_date" readonly="state in ['approved', 'rejected', 'finished']"/>
+                                <field name="customer_address" readonly="state in ['approved', 'rejected', 'finished']"/>
+                                <field name="customer_city" readonly="state in ['approved', 'rejected', 'finished']"/>
+                                <field name="customer_years_of_activity" readonly="state in ['approved', 'rejected', 'finished']"/>
                             </group>
                             
                             <group string="Información de la Solicitud">
-                                <field name="subject" />
-                                <field name="branch_office" />
-                                <field name="application_date" />
-                                <field name="rejected_date" invisible="state != 'rejected'" />
-                                <field name="user_id" options="{'no_create': True}"/>
+                                <field name="subject" readonly="state in ['approved', 'rejected', 'finished']"/>
+                                <field name="branch_office" readonly="state in ['approved', 'rejected', 'finished']"/>
+                                <field name="application_date" readonly="state in ['approved', 'rejected', 'finished']"/>
+                                <field name="rejected_date" invisible="state != 'rejected'" readonly="1"/>
+                                <field name="user_id" options="{'no_create': True}" readonly="state in ['approved', 'rejected', 'finished']"/>
                             </group>
 
                             <group string="Información del Negocio">
-                                <field name="business_name" />
-                                <field name="business_address" />
-                                <field name="business_city" />
-                                <field name="business_years_of_activity" />
+                                <field name="business_name" readonly="state in ['approved', 'rejected', 'finished']"/>
+                                <field name="business_address" readonly="state in ['approved', 'rejected', 'finished']"/>
+                                <field name="business_city" readonly="state in ['approved', 'rejected', 'finished']"/>
+                                <field name="business_years_of_activity" readonly="state in ['approved', 'rejected', 'finished']"/>
                             </group>
                         </group>
 
                         <notebook>
                             <page string="Codeudores">
-                                <field name="codeudor_ids" >
+                                <field name="codeudor_ids" readonly="state in ['approved', 'rejected', 'finished']">
                                     <kanban class="o_kanban_mobile">
                                         <field name="name"/>
                                         <field name="vat"/>
@@ -148,17 +154,17 @@
                             <page string="Propuesta Asesor">
                                 <group col="2">
                                     <group string="Cupos Sugeridos por el Asesor">
-                                        <field name="suggestion_normal_credit_quota" widget="money" />
-                                        <field name="suggestion_golden_credit_quota" widget="money" />
+                                        <field name="suggestion_normal_credit_quota" widget="money" readonly="state in ['approved', 'rejected', 'finished']"/>
+                                        <field name="suggestion_golden_credit_quota" widget="money" readonly="state in ['approved', 'rejected', 'finished']"/>
                                     </group>
                                     <group string="Condiciones de Pago">
-                                        <field name="property_payment_term_id" />
+                                        <field name="property_payment_term_id" readonly="state in ['approved', 'rejected', 'finished']"/>
                                     </group>
                                 </group>
                                 <group string="Concepto Comercial">
-                                    <field name="good_points" widget="text" placeholder="Describa los puntos a favor que observa en el cliente" />
-                                    <field name="bad_points" widget="text" placeholder="Describa los puntos en contra que observa en el cliente" />
-                                    <field name="new_points" widget="text" placeholder="Describa las novedades que observa en el cliente" />
+                                    <field name="good_points" widget="text" placeholder="Describa los puntos a favor que observa en el cliente" readonly="state in ['approved', 'rejected', 'finished']"/>
+                                    <field name="bad_points" widget="text" placeholder="Describa los puntos en contra que observa en el cliente" readonly="state in ['approved', 'rejected', 'finished']"/>
+                                    <field name="new_points" widget="text" placeholder="Describa las novedades que observa en el cliente" readonly="state in ['approved', 'rejected', 'finished']"/>
                                 </group>
                             </page>
                             
@@ -175,56 +181,56 @@
                                 
                                 <group col="2">
                                     <group string="Compras afectadas por el Cliente">
-                                        <field name="total_purchased_this_year" widget="money" help="Es el monto de compras que el cliente ha realizado en el año actual" />
-                                        <field name="total_purchased_last_year" widget="money" help="Es el monto de compras que el cliente ha realizado en el año pasado" />
-                                        <field name="total_purchased_last_two_years" widget="money" help="Es el monto de compras que el cliente ha realizado hace dos años pasados" />
-                                        <field name="total_purchased_last_three_years" widget="money" help="Es el monto de compras que el cliente ha realizado hace tres años pasados" />
+                                        <field name="total_purchased_this_year" widget="money" help="Es el monto de compras que el cliente ha realizado en el año actual" readonly="1"/>
+                                        <field name="total_purchased_last_year" widget="money" help="Es el monto de compras que el cliente ha realizado en el año pasado" readonly="1"/>
+                                        <field name="total_purchased_last_two_years" widget="money" help="Es el monto de compras que el cliente ha realizado hace dos años pasados" readonly="1"/>
+                                        <field name="total_purchased_last_three_years" widget="money" help="Es el monto de compras que el cliente ha realizado hace tres años pasados" readonly="1"/>
                                     </group>
                                     <group string="Antecedentes del Cliente en la Compañía">
-                                        <field name="taked_discount" help="Si el cliente ha tomado descuentos en la compañía" />
-                                        <field name="average_days_to_pay" help="Es el promedio de días que toma el cliente para pagar las facturas"/>
-                                        <field name="normal_amount_debt" widget="money" help="Es el monto de deuda que esta dentro de los 30 días despues de la fecha establecida en la condición de pago" />
-                                        <field name="arrears_amount_debt" widget="money" help="Es el monto de deuda que esta fuera de los 30 días despues de la fecha establecida en la condición de pago" />
+                                        <field name="taked_discount" help="Si el cliente ha tomado descuentos en la compañía" readonly="state in ['approved', 'rejected', 'finished']"/>
+                                        <field name="average_days_to_pay" help="Es el promedio de días que toma el cliente para pagar las facturas" readonly="1"/>
+                                        <field name="normal_amount_debt" widget="money" help="Es el monto de deuda que esta dentro de los 30 días despues de la fecha establecida en la condición de pago" readonly="1"/>
+                                        <field name="arrears_amount_debt" widget="money" help="Es el monto de deuda que esta fuera de los 30 días despues de la fecha establecida en la condición de pago" readonly="1"/>
                                     </group>
                                 </group>
                                 <group string="Observaciones, Acuerdos, Moras, etc.">
-                                    <field name="cartera_observations" widget="text" placeholder="Describa las observaciones del area de Cartera" />
+                                    <field name="cartera_observations" widget="text" placeholder="Describa las observaciones del area de Cartera" readonly="state in ['approved', 'rejected', 'finished']"/>
                                 </group>
                             </page>
 
                             <page string="Auditoría">
                                 <group col="2">
                                     <group string="Revisión en la CIFIN">
-                                        <field name="audit_is_reported_cifin" help="¿El cliente fue reportado en la CIFIN?" />
-                                        <field name="audit_is_late" help="¿El cliente tiene deuda en mora?" />
+                                        <field name="audit_is_reported_cifin" help="¿El cliente fue reportado en la CIFIN?" readonly="state in ['approved', 'rejected', 'finished']"/>
+                                        <field name="audit_is_late" help="¿El cliente tiene deuda en mora?" readonly="state in ['approved', 'rejected', 'finished']"/>
                                     </group>
                                     <group string="Deudas y Mora en la CIFIN">
-                                        <field name="audit_debt_cifin" widget="money" help="Es el monto de deudas que el cliente tiene en la CIFIN" />
-                                        <field name="audit_total_late_payment" widget="money" help="Es el monto de mora que el cliente tiene en la CIFIN" />
+                                        <field name="audit_debt_cifin" widget="money" help="Es el monto de deudas que el cliente tiene en la CIFIN" readonly="state in ['approved', 'rejected', 'finished']"/>
+                                        <field name="audit_total_late_payment" widget="money" help="Es el monto de mora que el cliente tiene en la CIFIN" readonly="state in ['approved', 'rejected', 'finished']"/>
                                     </group>
                                 </group>
                                 <group string="Observaciones sobre la Auditoría">
-                                    <field name="audit_cifin_observations" widget="text" placeholder="Describa las observaciones de la Auditoría sobre la CIFIN" />
-                                    <field name="audit_ctl_observations" widget="text" placeholder="Describa las observaciones de la Auditoría sobre el CTL" />
+                                    <field name="audit_cifin_observations" widget="text" placeholder="Describa las observaciones de la Auditoría sobre la CIFIN" readonly="state in ['approved', 'rejected', 'finished']"/>
+                                    <field name="audit_ctl_observations" widget="text" placeholder="Describa las observaciones de la Auditoría sobre el CTL" readonly="state in ['approved', 'rejected', 'finished']"/>
                                 </group>
                             </page>
 
                             <page string="Cupos Finales">
                                 <group col="2">
                                     <group string="Cupos Finales">
-                                        <field name="final_normal_credit_quota" widget="money" help="Es el cupo normal final" />
-                                        <field name="final_golden_credit_quota" widget="money" help="Es el cupo dorado final" />
+                                        <field name="final_normal_credit_quota" widget="money" help="Es el cupo normal final" readonly="state in ['approved', 'rejected', 'finished']"/>
+                                        <field name="final_golden_credit_quota" widget="money" help="Es el cupo dorado final" readonly="state in ['approved', 'rejected', 'finished']"/>
                                     </group>
                                     <group string="Fechas del Cupo">
-                                        <field name="credit_quota_start_date" />
-                                        <field name="credit_quota_end_date" />
+                                        <field name="credit_quota_start_date" readonly="state in ['approved', 'rejected', 'finished']"/>
+                                        <field name="credit_quota_end_date" readonly="state in ['approved', 'rejected', 'finished']"/>
                                     </group>
                                     <group string="Condiciones de Pago">
-                                        <field name="property_payment_term_id" />
+                                        <field name="property_payment_term_id" readonly="state in ['approved', 'rejected', 'finished']"/>
                                     </group>
                                     <group string="Quien aprueba">
-                                        <field name="approved_by" />
-                                        <field name="approved_date"/>
+                                        <field name="approved_by" readonly="1"/>
+                                        <field name="approved_date" readonly="1"/>
                                     </group>
                                 </group>
                             </page>
@@ -232,7 +238,7 @@
                             <page string="Anexos">
                                 <field name="related_partner_ids" invisible="1"/>
                                 <div class="mb-3">
-                                    <button name="action_open_documents" type="object" class="btn btn-primary">
+                                    <button name="action_open_documents" type="object" class="btn btn-primary" invisible="state in ['approved', 'rejected', 'finished']">
                                         <i class="fa fa-plus"/> Agregar Documento
                                     </button>
                                 </div>
@@ -265,7 +271,7 @@
                     <field name="customer_id" string="Cliente" />
                     <field name="subject" />
                     <field name="branch_office" />
-                    <field name="state" widget="badge" decoration-success="state == 'approved'" decoration-danger="state == 'rejected'" />
+                    <field name="state" widget="badge" decoration-success="state == 'approved'" decoration-danger="state == 'rejected'" decoration-muted="state == 'finished'" />
                     <field name="application_date" />
                     <field name="user_id" />
                 </list>
