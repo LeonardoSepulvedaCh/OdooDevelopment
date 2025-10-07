@@ -77,7 +77,6 @@ class SaleCreditQuotaApplication(models.Model):
                 }
             }
 
-        # Buscar todas las facturas del cliente
         domain = [
             ('partner_id', '=', self.customer_id.id),
             ('state', '=', 'posted'),
@@ -117,20 +116,8 @@ class SaleCreditQuotaApplication(models.Model):
         if self.state != 'draft':
             raise ValidationError(_('Solo se pueden aprobar solicitudes en estado borrador.'))
         
-        missing_fields = []
-        
-        if not self.property_payment_term_id:
-            missing_fields.append('Condiciones de Pago')
-
-        if self.final_normal_credit_quota <= 0:
-            missing_fields.append('Cupo Normal Final (debe ser mayor a 0)')
-        
-        if missing_fields:
-            raise ValidationError(
-                _('Los siguientes campos son obligatorios para aprobar la solicitud:\n• %s') % 
-                '\n• '.join(missing_fields)
-            )
-        
+        self._validate_required_fields_for_approval()
+                
         self.write({
             'state': 'approved',
             'approved_date': fields.Date.context_today(self),
@@ -173,6 +160,96 @@ class SaleCreditQuotaApplication(models.Model):
                 'type': 'success',
             }
         }
+
+    # Validar todos los campos obligatorios para aprobar una solicitud de cupo de crédito
+    def _validate_required_fields_for_approval(self):
+        missing_fields = []
+        
+        if self.final_normal_credit_quota <= 0:
+            missing_fields.append('Cupo Normal Final (debe ser mayor a 0)')
+        
+        if self.final_golden_credit_quota < 0:
+            missing_fields.append('Cupo Dorado Final (no puede ser negativo)')
+        
+        if not self.credit_quota_start_date:
+            missing_fields.append('Fecha de Inicio del Cupo')
+        
+        if not self.credit_quota_end_date:
+            missing_fields.append('Fecha de Fin del Cupo')
+        
+        if not self.property_payment_term_id:
+            missing_fields.append('Condiciones de Pago')
+        
+        if self.suggestion_normal_credit_quota <= 0:
+            missing_fields.append('Cupo Normal Sugerido por el Asesor (debe ser mayor a 0)')
+        
+        if self.suggestion_golden_credit_quota < 0:
+            missing_fields.append('Cupo Dorado Sugerido por el Asesor (no puede ser negativo)')
+        
+        if not self.good_points or not self.good_points.strip():
+            missing_fields.append('Observaciones del Asesor - Lo Bueno')
+        
+        if not self.bad_points or not self.bad_points.strip():
+            missing_fields.append('Observaciones del Asesor - Lo Malo')
+        
+        if not self.new_points or not self.new_points.strip():
+            missing_fields.append('Observaciones del Asesor - Novedades')
+        
+        if not self.codeudor_ids:
+            missing_fields.append('Debe tener al menos un Codeudor')
+        
+        business_fields = [
+            ('business_name', 'Nombre del Negocio'),
+            ('business_address', 'Dirección del Negocio'),
+            ('business_city', 'Ciudad del Negocio'),
+        ]
+        
+        for field_name, field_label in business_fields:
+            field_value = getattr(self, field_name)
+            if not field_value or not field_value.strip():
+                missing_fields.append(f'Información del Negocio - {field_label}')
+        
+        if self.business_years_of_activity < 0:
+            missing_fields.append('Años de Actividad del Negocio (no puede ser negativo)')
+        
+        required_tags = ['Cedula de Ciudadanía', 'CTL', 'RUT']
+        self._validate_required_documents(self.customer_id, 'Cliente', required_tags, missing_fields)
+        
+        for codeudor in self.codeudor_ids:
+            if codeudor.partner_id:
+                self._validate_required_documents(
+                    codeudor.partner_id, 
+                    f'Codeudor {codeudor.name or codeudor.partner_id.name}', 
+                    required_tags, 
+                    missing_fields
+                )
+
+        if missing_fields:
+            raise ValidationError(
+                _('Los siguientes campos son obligatorios para aprobar la solicitud:\n\n• %s') % 
+                '\n• '.join(missing_fields)
+            )
+    
+    # Validar que el partner tenga todos los documentos obligatorios con las etiquetas requeridas
+    def _validate_required_documents(self, partner, partner_label, required_tags, missing_fields):
+        if not partner:
+            missing_fields.append(f'{partner_label} - No está definido')
+            return
+        
+        documents = self.env['documents.document'].search([
+            ('partner_id', '=', partner.id),
+            ('type', '!=', 'folder')
+        ])
+        
+        if not documents:
+            missing_fields.append(f'{partner_label} - No tiene documentos anexos')
+            return
+        
+        document_tags = documents.mapped('tag_ids.name')
+        
+        for required_tag in required_tags:
+            if required_tag not in document_tags:
+                missing_fields.append(f'{partner_label} - Falta documento con etiqueta "{required_tag}"')
 
     def action_reject(self):
         self.ensure_one()

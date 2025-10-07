@@ -152,23 +152,6 @@ class SaleCreditQuotaApplication(models.Model):
         if self.suggestion_golden_credit_quota and not self.final_golden_credit_quota:
             self.final_golden_credit_quota = self.suggestion_golden_credit_quota
 
-    @api.onchange('property_payment_term_id')
-    def _onchange_property_payment_term_id(self):
-        if self.customer_id and self.property_payment_term_id:
-            self.customer_id.property_payment_term_id = self.property_payment_term_id
-
-    def write(self, vals):
-        result = super(SaleCreditQuotaApplication, self).write(vals)
-        
-        if 'property_payment_term_id' in vals:
-            for record in self:
-                if record.customer_id:
-                    record.customer_id.write({
-                        'property_payment_term_id': record.property_payment_term_id.id if record.property_payment_term_id else False
-                    })
-        
-        return result
-
     @api.model
     def create(self, vals_list):
         if isinstance(vals_list, dict):
