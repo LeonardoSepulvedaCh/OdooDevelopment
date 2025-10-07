@@ -169,9 +169,9 @@ class SaleCreditQuotaApplication(models.Model):
                 ('move_type', 'in', ['out_invoice', 'out_refund']),
             ])
 
+    # Calcular el monto de deuda normal (facturas pendientes con vencimiento reciente o próximo)
     @api.depends('customer_id')
     def _compute_normal_amount_debt(self):
-        """Calcula el monto de deuda normal (facturas pendientes con vencimiento reciente o próximo)"""
         for record in self:
             if not record.customer_id:
                 record.normal_amount_debt = 0.0
@@ -218,3 +218,53 @@ class SaleCreditQuotaApplication(models.Model):
             total_arrears = sum(invoice.amount_residual for invoice in invoices)
             record.arrears_amount_debt = total_arrears
     
+    # Calcular los días promedio que toma el cliente para pagar las facturas
+    @api.depends('customer_id')
+    def _compute_average_days_to_pay(self):
+        for record in self:
+            if not record.customer_id:
+                record.average_days_to_pay = 0
+                continue
+            
+            # Buscar facturas pagadas completamente del cliente
+            domain = [
+                ('partner_id', '=', record.customer_id.id),
+                ('state', '=', 'posted'),
+                ('move_type', 'in', ['out_invoice']),
+                ('payment_state', '=', 'paid'),
+                ('invoice_date_due', '!=', False),  # Debe tener fecha de vencimiento
+            ]
+            
+            paid_invoices = self.env['account.move'].search(domain)
+            
+            if not paid_invoices:
+                record.average_days_to_pay = 0
+                continue
+            
+            total_days = 0
+            valid_invoices = 0
+            
+            for invoice in paid_invoices:
+                # Buscar los pagos de esta factura
+                payment_lines = invoice._get_reconciled_info_JSON_values()
+                
+                if payment_lines:
+                    # Tomar la fecha del último pago (cuando se completó el pago)
+                    last_payment_date = None
+                    
+                    for payment in payment_lines:
+                        payment_date = fields.Date.from_string(payment.get('date'))
+                        if not last_payment_date or payment_date > last_payment_date:
+                            last_payment_date = payment_date
+                    
+                    if last_payment_date and invoice.invoice_date_due:
+                        # Calcular días entre fecha de vencimiento y fecha de pago
+                        days_diff = (last_payment_date - invoice.invoice_date_due).days
+                        total_days += days_diff
+                        valid_invoices += 1
+            
+            # Calcular promedio
+            if valid_invoices > 0:
+                record.average_days_to_pay = round(total_days / valid_invoices)
+            else:
+                record.average_days_to_pay = 0

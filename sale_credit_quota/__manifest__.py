@@ -14,6 +14,7 @@
         "wizards/sale_credit_quota_document_wizard_views.xml",
         "views/sale_credit_quota_views.xml",
         "views/sale_credit_quota_menu.xml",
+        "views/res_partner_views.xml",
     ],
     "installable": True,
     "auto_install": False,

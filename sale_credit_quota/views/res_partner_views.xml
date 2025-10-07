@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_inherit_credit_quota" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.credit_quota</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+
+        <xpath expr="//field[@name='user_id']" position="after">
+            <field name="normal_credit_quota" widget="monetary" readonly="1"/>
+            <field name="golden_credit_quota" widget="monetary" readonly="1"/>
+        </xpath>
+        </field>
+    </record>
+</odoo>

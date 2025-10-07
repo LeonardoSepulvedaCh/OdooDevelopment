@@ -7,9 +7,19 @@
             <field name="arch" type="xml">
                 <form string="Solicitud de Cupo">
                     <header>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,approved,rejected"/>
-                        <button string="Aprovar" icon="fa-check" type="object" class="btn btn-primary"/>
-                        <button string="Rechazar" icon="fa-times" type="object" class="btn btn-secondary"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,approved,rejected"/>
+                        <button string="Aprobar" 
+                                name="action_approve" 
+                                type="object" 
+                                class="btn btn-primary"
+                                invisible="state != 'draft'"
+                                confirm="¿Está seguro de que desea aprobar esta solicitud?"/>
+                        <button string="Rechazar" 
+                                name="action_reject" 
+                                type="object" 
+                                class="btn btn-secondary"
+                                invisible="state != 'draft'"
+                                confirm="¿Está seguro de que desea rechazar esta solicitud?"/>
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
@@ -74,7 +84,6 @@
                                 <field name="subject" />
                                 <field name="branch_office" />
                                 <field name="application_date" />
-                                <field name="approved_date" invisible="state != 'approved'" />
                                 <field name="rejected_date" invisible="state != 'rejected'" />
                                 <field name="user_id" options="{'no_create': True}"/>
                             </group>
@@ -143,8 +152,7 @@
                                         <field name="suggestion_golden_credit_quota" widget="money" />
                                     </group>
                                     <group string="Condiciones de Pago">
-                                        <field name="credit_quota_payment_terms_milan" />
-                                        <field name="credit_quota_payment_terms_optimus" />
+                                        <field name="property_payment_term_id" />
                                     </group>
                                 </group>
                                 <group string="Concepto Comercial">
@@ -155,7 +163,6 @@
                             </page>
                             
                             <page string="Cartera">
-                                <!-- Alerta adicional en la sección de cartera -->
                                 <div class="p-3 mb-3 border border-warning rounded" style="background-color:#ffc30078;" invisible="arrears_amount_debt == 0">
                                     <div class="d-flex align-items-center">
                                         <i class="fa fa-warning me-2 text-warning" title="Advertencia de cartera"/>
@@ -175,12 +182,50 @@
                                     </group>
                                     <group string="Antecedentes del Cliente en la Compañía">
                                         <field name="taked_discount" help="Si el cliente ha tomado descuentos en la compañía" />
+                                        <field name="average_days_to_pay" help="Es el promedio de días que toma el cliente para pagar las facturas"/>
                                         <field name="normal_amount_debt" widget="money" help="Es el monto de deuda que esta dentro de los 30 días despues de la fecha establecida en la condición de pago" />
                                         <field name="arrears_amount_debt" widget="money" help="Es el monto de deuda que esta fuera de los 30 días despues de la fecha establecida en la condición de pago" />
                                     </group>
                                 </group>
                                 <group string="Observaciones, Acuerdos, Moras, etc.">
                                     <field name="cartera_observations" widget="text" placeholder="Describa las observaciones del area de Cartera" />
+                                </group>
+                            </page>
+
+                            <page string="Auditoría">
+                                <group col="2">
+                                    <group string="Revisión en la CIFIN">
+                                        <field name="audit_is_reported_cifin" help="¿El cliente fue reportado en la CIFIN?" />
+                                        <field name="audit_is_late" help="¿El cliente tiene deuda en mora?" />
+                                    </group>
+                                    <group string="Deudas y Mora en la CIFIN">
+                                        <field name="audit_debt_cifin" widget="money" help="Es el monto de deudas que el cliente tiene en la CIFIN" />
+                                        <field name="audit_total_late_payment" widget="money" help="Es el monto de mora que el cliente tiene en la CIFIN" />
+                                    </group>
+                                </group>
+                                <group string="Observaciones sobre la Auditoría">
+                                    <field name="audit_cifin_observations" widget="text" placeholder="Describa las observaciones de la Auditoría sobre la CIFIN" />
+                                    <field name="audit_ctl_observations" widget="text" placeholder="Describa las observaciones de la Auditoría sobre el CTL" />
+                                </group>
+                            </page>
+
+                            <page string="Cupos Finales">
+                                <group col="2">
+                                    <group string="Cupos Finales">
+                                        <field name="final_normal_credit_quota" widget="money" help="Es el cupo normal final" />
+                                        <field name="final_golden_credit_quota" widget="money" help="Es el cupo dorado final" />
+                                    </group>
+                                    <group string="Fechas del Cupo">
+                                        <field name="credit_quota_start_date" />
+                                        <field name="credit_quota_end_date" />
+                                    </group>
+                                    <group string="Condiciones de Pago">
+                                        <field name="property_payment_term_id" />
+                                    </group>
+                                    <group string="Quien aprueba">
+                                        <field name="approved_by" />
+                                        <field name="approved_date"/>
+                                    </group>
                                 </group>
                             </page>
 

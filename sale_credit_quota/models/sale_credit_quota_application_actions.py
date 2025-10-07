@@ -1,4 +1,5 @@
-from odoo import models, _
+from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError
 
 class SaleCreditQuotaApplication(models.Model):
     _inherit = 'sale.credit.quota.application'
@@ -108,4 +109,93 @@ class SaleCreditQuotaApplication(models.Model):
                 'search_default_partner_id': self.customer_id.id,
                 'search_default_posted': 1,
             },
+        }
+
+    def action_approve(self):
+        self.ensure_one()
+        
+        if self.state != 'draft':
+            raise ValidationError(_('Solo se pueden aprobar solicitudes en estado borrador.'))
+        
+        missing_fields = []
+        
+        if not self.property_payment_term_id:
+            missing_fields.append('Condiciones de Pago')
+
+        if self.final_normal_credit_quota <= 0:
+            missing_fields.append('Cupo Normal Final (debe ser mayor a 0)')
+        
+        if missing_fields:
+            raise ValidationError(
+                _('Los siguientes campos son obligatorios para aprobar la solicitud:\n• %s') % 
+                '\n• '.join(missing_fields)
+            )
+        
+        self.write({
+            'state': 'approved',
+            'approved_date': fields.Date.context_today(self),
+            'approved_by': self.env.user.id,
+        })
+        
+        if self.customer_id:
+            customer_values = {}
+            
+            customer_values['normal_credit_quota'] = self.final_normal_credit_quota
+            customer_values['golden_credit_quota'] = self.final_golden_credit_quota
+                
+            if self.property_payment_term_id:
+                customer_values['property_payment_term_id'] = self.property_payment_term_id.id
+            
+            self.customer_id.write(customer_values)
+            
+            cupo_message = _('Cupos de crédito actualizados desde la solicitud %s:') % self.name
+            cupo_message += _('\n• Cupo Normal: %s') % self.final_normal_credit_quota
+            cupo_message += _('\n• Cupo Dorado: %s') % self.final_golden_credit_quota
+            if 'property_payment_term_id' in customer_values:
+                cupo_message += _('\n• Condiciones de Pago: %s') % self.property_payment_term_id.name
+            
+            self.customer_id.message_post(
+                body=cupo_message,
+                message_type='notification'
+            )
+        
+        self.message_post(
+            body=_('Solicitud aprobada por %s') % self.env.user.name,
+            message_type='notification'
+        )
+        
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Solicitud Aprobada'),
+                'message': _('La solicitud %s ha sido aprobada exitosamente.') % self.name,
+                'type': 'success',
+            }
+        }
+
+    def action_reject(self):
+        self.ensure_one()
+        
+        if self.state != 'draft':
+            raise ValidationError(_('Solo se pueden rechazar solicitudes en estado borrador.'))
+        
+        self.write({
+            'state': 'rejected',
+            'rejected_date': fields.Date.context_today(self),
+        })
+        
+        self.message_post(
+            body=_('Solicitud rechazada por %s') % self.env.user.name,
+            message_type='notification'
+        )
+        
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Solicitud Rechazada'),
+                'message': _('La solicitud %s ha sido rechazada.') % self.name,
+                'type': 'warning',
+            }
         }

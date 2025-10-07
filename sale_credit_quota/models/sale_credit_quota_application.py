@@ -14,8 +14,7 @@ class SaleCreditQuotaApplication(models.Model):
     state = fields.Selection(
         string='Estado', 
         selection=[
-            ('draft', 'Borrador'), 
-            ('in_progress', 'En Proceso'), 
+            ('draft', 'Borrador'),
             ('approved', 'Aprobado'), 
             ('rejected', 'Rechazado')
         ], 
@@ -52,21 +51,20 @@ class SaleCreditQuotaApplication(models.Model):
             ('dac_sponsor', 'DAC Padrino'),
         ],
         required=True,
-        default='opening'
+        default='opening',
+        tracking=1
     )
 
     application_date = fields.Date(string='Fecha de Solicitud', required=True, default=fields.Date.context_today, index=True, copy=False)
-    approved_date = fields.Date(string='Fecha de Aprobación', readonly=True, copy=False)
+    approved_date = fields.Date(string='Fecha de Aprobación', readonly=True, copy=False, tracking=1)
     rejected_date = fields.Date(string='Fecha de Rechazo', readonly=True, copy=False)
     approved_by = fields.Many2one('res.users', string='Aprobado por', readonly=True, copy=False, tracking=1)
-    rejected_by = fields.Many2one('res.users', string='Rechazado por', readonly=True, copy=False)
 
     final_normal_credit_quota = fields.Float(string='Cupo Normal Final', digits=(16, 2), default=0.0)
     final_golden_credit_quota = fields.Float(string='Cupo Dorado Final', digits=(16, 2), default=0.0)
     credit_quota_start_date = fields.Date(string='Fecha de Inicio del Cupo')
     credit_quota_end_date = fields.Date(string='Fecha de Fin del Cupo')
-    credit_quota_payment_terms_milan = fields.Many2one('account.payment.term', string='Condiciones de Pago Milan')
-    credit_quota_payment_terms_optimus = fields.Many2one('account.payment.term', string='Condiciones de Pago Optimus')
+    property_payment_term_id = fields.Many2one('account.payment.term', string='Condiciones de Pago')
 
     # Datos del cliente
     customer_id = fields.Many2one('res.partner', string='Cliente', required=True, index=True, tracking=2)
@@ -82,8 +80,10 @@ class SaleCreditQuotaApplication(models.Model):
     customer_child_ids = fields.Many2many('res.partner', compute='_compute_customer_child_ids', string='Clientes Hijos', help='Clientes hijos del cliente principal', store=True)
     customer_child_count = fields.Integer(string='Cantidad de Clientes Hijos', compute='_compute_customer_child_count', store=True)
 
+    average_days_to_pay = fields.Integer(string='Días Promedio de Pago', default=0, compute='_compute_average_days_to_pay', store=True)
+
     # Datos de los codeudores
-    codeudor_ids = fields.One2many('sale.credit.codeudor', 'application_id', string='Codeudores', copy=True)
+    codeudor_ids = fields.One2many('sale.credit.codeudor', 'application_id', string='Codeudores', copy=True, tracking=1)
     
     # Datos del negocio
     business_name = fields.Char(string='Nombre del Negocio')
@@ -114,9 +114,17 @@ class SaleCreditQuotaApplication(models.Model):
 
     # Documentos relacionados
     related_partner_ids = fields.Many2many('res.partner', compute='_compute_related_partner_ids', string='Partners Relacionados', help='Cliente y codeudores de esta solicitud')
-    document_ids = fields.Many2many('documents.document', compute='_compute_document_ids', string='Documentos', help='Documentos relacionados con el cliente y codeudores')
+    document_ids = fields.Many2many('documents.document', compute='_compute_document_ids', string='Documentos', help='Documentos relacionados con el cliente y codeudores', tracking=1)
 
-    # Onchange methods
+    # Campos de auditoría de la solicitud
+    audit_cifin_observations = fields.Text(string='Observaciones sobre la CIFIN')
+    audit_ctl_observations = fields.Text(string='Observaciones sobre el CTL')
+    audit_is_reported_cifin = fields.Boolean(string='¿Fue Reportado en la CIFIN?', default=False)
+    audit_debt_cifin = fields.Float(string='Deudas', digits=(16, 2), default=0.0)
+    audit_is_late = fields.Boolean(string='¿Tiene deuda en mora?', default=False)
+    audit_total_late_payment = fields.Float(string='Total de Mora', digits=(16, 2), default=0.0)
+
+    # Onchange methods - para traer los datos del cliente
     @api.onchange('customer_id')
     def _onchange_customer_id(self):
         if self.customer_id:
@@ -128,6 +136,8 @@ class SaleCreditQuotaApplication(models.Model):
 
             if not self.business_address and self.customer_id.street:
                 self.business_address = self.customer_id.street
+            
+            self.property_payment_term_id = self.customer_id.property_payment_term_id
             
             # Solo si el asesor actual es el usuario por defecto o está vacío
             if (hasattr(self.customer_id, 'user_id') and 
@@ -141,6 +151,23 @@ class SaleCreditQuotaApplication(models.Model):
             self.final_normal_credit_quota = self.suggestion_normal_credit_quota
         if self.suggestion_golden_credit_quota and not self.final_golden_credit_quota:
             self.final_golden_credit_quota = self.suggestion_golden_credit_quota
+
+    @api.onchange('property_payment_term_id')
+    def _onchange_property_payment_term_id(self):
+        if self.customer_id and self.property_payment_term_id:
+            self.customer_id.property_payment_term_id = self.property_payment_term_id
+
+    def write(self, vals):
+        result = super(SaleCreditQuotaApplication, self).write(vals)
+        
+        if 'property_payment_term_id' in vals:
+            for record in self:
+                if record.customer_id:
+                    record.customer_id.write({
+                        'property_payment_term_id': record.property_payment_term_id.id if record.property_payment_term_id else False
+                    })
+        
+        return result
 
     @api.model
     def create(self, vals_list):
