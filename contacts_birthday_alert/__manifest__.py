@@ -1,19 +1,19 @@
 {
     'name': 'Contactos - Alerta de Cumpleaños',
-    'version': '1.0',
+    'version': '1.0.0',
     'category': 'Milan/Contactos',
-    'summary': 'Añade contactos adicionales y funcionalidad de cumpleaños',
+    'summary': 'Modulo para gestionar el alerta de cumpleaños de los contactos',
     'description': """
         Este módulo permite añadir:
-        - Contactos adicionales relacionados (solo para información)
         - Fecha de nacimiento en los contactos
         - Notificaciones de cumpleaños
-        - Campo para codigo de contacto CNL (Cliente), PNL (Proveedor), E (Empleado)
+        - Campo para codigo de contacto CNL
     """,
     'author': '@LeonardoSepulvedaCh',
     'license': 'OPL-1',
     'depends': ['base', 'contacts', 'mail', 'bus', 'stock', 'hr'],
     'data': [
+        'data/ir_config_parameter.xml',
         'data/ir_cron_data.xml',
         'views/res_partner_views.xml',
         'views/contacts_filter_views.xml',

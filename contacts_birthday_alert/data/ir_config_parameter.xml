@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Parámetros de sistema para límites de edad -->
+    <record id="config_edad_minima" model="ir.config_parameter">
+        <field name="key">contacts_birthday_alert.edad_minima</field>
+        <field name="value">16</field>
+    </record>
+
+    <record id="config_edad_maxima" model="ir.config_parameter">
+        <field name="key">contacts_birthday_alert.edad_maxima</field>
+        <field name="value">110</field>
+    </record>
+</odoo>
+

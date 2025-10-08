@@ -16,6 +16,7 @@
         <xpath expr="//group[1]" position="inside">
             <group>
                 <field name="birth_date"/>
+                <field name="age" readonly="1" invisible="not birth_date"/>
                 <field name="card_code"/>
             </group>
         </xpath>
