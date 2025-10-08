@@ -16,14 +16,14 @@ class SaleCreditCodeudor(models.Model):
     partner_id = fields.Many2one('res.partner',string='Codeudor', required=True, index=True, domain=[('is_company', '=', False)], help='Contacto que actuará como codeudor')
 
     # Campos relacionados desde res.partner (se prellenan automáticamente)
-    name = fields.Char(string='Nombres y Apellidos', related='partner_id.name', store=True, readonly=False)
-    vat = fields.Char(string='Documento de Identidad', related='partner_id.vat', store=True, readonly=False)
+    name = fields.Char(string='Nombres y Apellidos', related='partner_id.name', store=True, readonly=False, required=True)
+    vat = fields.Char(string='Documento de Identidad', related='partner_id.vat', store=True, readonly=False, required=True)
     phone = fields.Char(string='Teléfono', related='partner_id.phone', store=True, readonly=False)
-    email = fields.Char(string='Correo Electrónico', related='partner_id.email', store=True, readonly=False)
+    email = fields.Char(string='Correo Electrónico', related='partner_id.email', store=True, readonly=False, required=True)
 
     # Campos adicionales específicos del codeudor (no en res.partner estándar)
-    residence_address = fields.Char(string='Dirección de Residencia', related='partner_id.street', store=True, readonly=False)
-    residence_municipality = fields.Char(string='Municipio de Residencia', related='partner_id.city', store=True, readonly=False)
+    residence_address = fields.Char(string='Dirección de Residencia', related='partner_id.street', store=True, readonly=False, required=True)
+    residence_municipality = fields.Char(string='Municipio de Residencia', related='partner_id.city', store=True, readonly=False, required=True)
 
     relationship = fields.Selection(
         string='Parentesco',
@@ -37,9 +37,10 @@ class SaleCreditCodeudor(models.Model):
             ('business_partner', 'Socio Comercial'),
             ('other', 'Otro')
         ],
-        help='Relación del codeudor con el cliente'
+        help='Relación del codeudor con el cliente',
+        required=True
     )
-    birth_date = fields.Date(string='Fecha de Nacimiento', related='partner_id.birth_date', store=True, readonly=False)
+    birth_date = fields.Date(string='Fecha de Nacimiento', related='partner_id.birth_date', store=True, readonly=False, required=True)
     
     # Campo calculado para edad
     age = fields.Integer(string='Edad (Años)', compute='_compute_age', store=True, help='Edad calculada a partir de la fecha de nacimiento')

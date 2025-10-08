@@ -1,8 +1,17 @@
-from odoo import models, api, _
+from odoo import models, api, fields, _
 from odoo.exceptions import ValidationError
 
 class SaleCreditQuotaApplication(models.Model):
     _inherit = 'sale.credit.quota.application'
+
+    @api.constrains('application_date')
+    def _check_application_date(self):
+        for record in self:
+            if record.application_date:
+                if record.application_date > fields.Date.today():
+                    raise ValidationError(
+                        _('La fecha de solicitud no puede ser futura.')
+                    )
 
     @api.constrains('credit_quota_start_date', 'credit_quota_end_date')
     def _check_credit_quota_dates(self):

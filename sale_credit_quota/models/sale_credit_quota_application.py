@@ -81,7 +81,7 @@ class SaleCreditQuotaApplication(models.Model):
     customer_child_ids = fields.Many2many('res.partner', compute='_compute_customer_child_ids', string='Clientes Hijos', help='Clientes hijos del cliente principal', store=True)
     customer_child_count = fields.Integer(string='Cantidad de Clientes Hijos', compute='_compute_customer_child_count', store=True)
 
-    average_days_to_pay = fields.Integer(string='Días Promedio de Pago', default=0, compute='_compute_average_days_to_pay', store=True)
+    average_days_to_pay = fields.Integer(string='Días Promedio de Pago', default=0, compute='_compute_average_days_to_pay', store=False)
 
     # Datos de los codeudores
     codeudor_ids = fields.One2many('sale.credit.codeudor', 'application_id', string='Codeudores', copy=True, tracking=1)
@@ -153,40 +153,25 @@ class SaleCreditQuotaApplication(models.Model):
         if self.suggestion_golden_credit_quota and not self.final_golden_credit_quota:
             self.final_golden_credit_quota = self.suggestion_golden_credit_quota
 
-    @api.model
+    @api.model_create_multi
     def create(self, vals_list):
-        if isinstance(vals_list, dict):
-            vals_list = [vals_list]
+        # Crear los registros primero para obtener los IDs
+        records = super(SaleCreditQuotaApplication, self).create(vals_list)
         
-        for vals in vals_list:
-            if vals.get('name', 'Nueva Solicitud') == 'Nueva Solicitud':
-                vals['name'] = self._generate_application_name()
+        # Generar el nombre único basado en el ID para cada registro
+        for record in records:
+            if record.name == 'Nueva Solicitud':
+                record.name = record._generate_application_name()
         
-        return super(SaleCreditQuotaApplication, self).create(vals_list)
+        return records
 
     def _generate_application_name(self):
+        self.ensure_one()
         now = fields.Datetime.now()
         year_month = now.strftime('%Y%m')
         
-        prefix = f"SC-{year_month}-"
-        
-        last_application = self.search([
-            ('name', 'like', prefix),
-            ('name', 'not in', ['Nueva Solicitud', 'Nuevo'])
-        ], limit=1, order='name desc')
-        
-        if last_application and last_application.name.startswith(prefix):
-            last_number_str = last_application.name.replace(prefix, '')
-            if last_number_str.isdigit():
-                last_number = int(last_number_str)
-                next_number = last_number + 1
-            else:
-                next_number = 1
-        else:
-            next_number = 1
-        
-        sequence = f"{next_number:05d}"
-        return f"{prefix}{sequence}"
+        sequence = f"{self.id:05d}"
+        return f"SC-{year_month}-{sequence}"
 
     def unlink(self):
         for record in self:

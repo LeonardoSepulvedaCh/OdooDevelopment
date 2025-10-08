@@ -6,10 +6,35 @@
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
 
-        <xpath expr="//field[@name='user_id']" position="after">
-            <field name="normal_credit_quota" widget="monetary" readonly="1"/>
+        <xpath expr="//field[@name='days_sales_outstanding']" position="after">
+            <field name="normal_credit_quota" widget="monetary" readonly="1" invisible="1"/>
             <field name="golden_credit_quota" widget="monetary" readonly="1"/>
         </xpath>
+        </field>
+    </record>
+
+        <!-- Mover el grupo Credit Limits de la página Contabilidad a la página Ventas y Compras -->
+    <record id="view_partner_form_move_credit_limits" model="ir.ui.view">
+        <field name="name">res.partner.form.move.credit.limits</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account.view_partner_property_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='accounting']//group[@name='credit_limits']" position="replace"/>
+            
+            <xpath expr="//page[@name='sales_purchases']//group[@name='sale']" position="after">
+                <group string="Límites de Crédito"
+                       name="credit_limits"
+                       groups="account.group_account_invoice,account.group_account_readonly"
+                       invisible="not show_credit_limit">
+                    <field name="credit"/>
+                    <field name="days_sales_outstanding"/>
+                    <label for="use_partner_credit_limit" string="Cupo Normal"/>
+                    <div class="o_row">
+                        <field name="use_partner_credit_limit"/>
+                        <field name="credit_limit" readonly="1" class="oe_inline" widget="monetary" options="{'currency_field': 'currency_id'}"  invisible="not use_partner_credit_limit"/>
+                    </div>
+                </group>
+            </xpath>
         </field>
     </record>
 </odoo>
