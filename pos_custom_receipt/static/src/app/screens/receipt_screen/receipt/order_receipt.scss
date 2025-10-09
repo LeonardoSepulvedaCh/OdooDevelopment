@@ -1,49 +1,62 @@
-.custom-change-info {
-    width: 100%;
-    padding: 5px 0;
-    text-align: center;
-}
+$border-color: #c7c7c7;
+$border-dotted: 2px dotted $border-color;
+$border-solid: 0.5px solid $border-color;
+$spacing-small: 5px;
+$spacing-medium: 10px;
+$qr-size: 200px;
 
-.render-container .pos-receipt{
-    font-size: 10px !important;
-}
-
-.pos-receipt-taxes{
-    width: 100%;
-    border-top: 2px dotted #c7c7c7;
+.render-container {
+    .pos-receipt {
+        font-size: 10px !important;
+        
+        .custom-change-info {
+            width: 100%;
+            padding: $spacing-small 0;
+            text-align: center;
+        }
+        
+        &-taxes {
+            width: 100%;
+            border-top: $border-dotted;
+        }
+        
+        &-amount {
+            margin-bottom: $spacing-medium;
+        }
+        
+        &-order-data {
+            white-space: pre-line;
+            word-wrap: break-word;
+            
+            .footer-tiem {
+                margin-bottom: 8px !important;
+            }
+        }
+    }
 }
 
 .paymentlines {
     width: 100%;
-    border-top: .5px solid #c7c7c7;
-    margin-top: 10px;
+    border-top: $border-solid;
+    margin-top: $spacing-medium;
 }
 
-.pos-receipt-amount{
-    margin-bottom: 10px;
+.after-footer {
+    margin: $spacing-medium 0;
+    border-top: $border-solid;
 }
 
-.after-footer{
-    margin: 10px 0;
-    border-top: .5px solid #c7c7c7;
-}
-
-.pos-receipt-order-data {
-    white-space: pre-line;
-    word-wrap: break-word;
-}
-
-.pos-receipt-order-data{
-    .footer-tiem{
-        margin-bottom: 8px !important;
+.electronic-invoice-info {
+    .cufe-info {
+        margin: $spacing-medium 0;
     }
-}
-
-.cufe-info{
-    margin: 10px 0;
-}
-
-.qr-code-image{
-    width: 200px;
-    height: 200px;
+    
+    .qr-code-section {
+        .qr-code-container {
+            .qr-code-image {
+                width: $qr-size;
+                height: $qr-size;
+            }
+        }
+    }
 }

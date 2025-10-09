@@ -4,9 +4,9 @@ from odoo import models, fields, api
 class PosOrder(models.Model):
     _inherit = 'pos.order'
 
+    # Extender los campos de la orden para incluir auto_invoice
     @api.model
     def _order_fields(self, ui_order):
-        """Extender los campos de la orden para incluir auto_invoice"""
         fields = super()._order_fields(ui_order)
         
         # Si está configurada la facturación automática en el POS config
@@ -17,8 +17,8 @@ class PosOrder(models.Model):
         
         return fields
 
+    # Preparar valores para la factura cuando se activa auto_invoice
     def _prepare_invoice_vals(self):
-        """Preparar valores para la factura cuando se activa auto_invoice"""
         vals = super()._prepare_invoice_vals()
         
         # Si está configurada la facturación automática, asegurar que se facture

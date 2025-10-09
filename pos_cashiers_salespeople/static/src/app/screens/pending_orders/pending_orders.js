@@ -112,13 +112,10 @@ export class PendingOrdersScreen extends Component {
 
     async loadOrderToPos(order) {
         try {
-            // Crear una nueva orden en el POS con los datos de la orden pendiente
             const newOrder = this.pos.addNewOrder();
             
-            // Establecer el cliente si existe
             if (order.partner_id && order.partner_id[0]) {
                 try {
-                    // Buscar el cliente en la base de datos del POS usando la API correcta
                     const partnerId = order.partner_id[0];
                     const partner = this.pos.models["res.partner"].getBy("id", partnerId);
                     if (partner) {
@@ -134,16 +131,13 @@ export class PendingOrdersScreen extends Component {
             // Establecer el vendedor si existe
             if (order.salesperson_id && order.salesperson_id[0]) {
                 try {
-                    // Crear objeto de vendedor compatible con el POS
                     const salesperson = {
                         id: order.salesperson_id[0],
                         name: order.salesperson_id[1]
                     };
                     
-                    // Establecer el vendedor en la orden actual
                     newOrder.salesperson_id = salesperson;
                     
-                    // Establecer el user_id de la orden POS como el vendedor
                     newOrder.user_id = salesperson.id;
                     
                     console.log('Vendedor establecido:', salesperson.name);
@@ -153,16 +147,13 @@ export class PendingOrdersScreen extends Component {
                 }
             }
 
-            // Agregar las líneas de productos
             const orderLines = this.parseOrderLines(order.order_lines);
             
             for (const line of orderLines) {
                 try {
-                    // Buscar el producto en la base de datos del POS usando la API correcta
                     const product = this.pos.models["product.product"].getBy("id", line.product_id);
                     if (product) {
                         
-                        // Agregar el producto a la orden usando la API correcta del POS
                         const vals = {
                             product_id: product,
                             product_tmpl_id: product.product_tmpl_id,
@@ -170,11 +161,9 @@ export class PendingOrdersScreen extends Component {
                             discount: line.discount || 0
                         };
                         
-                        // Usar addLineToCurrentOrder que es el método correcto
                         const orderLine = await this.pos.addLineToCurrentOrder(vals, {}, false);
                         
                         if (orderLine) {
-                            // Establecer la cantidad después de crear la línea
                             orderLine.setQuantity(line.quantity);
                         }
                     } else {
@@ -185,16 +174,12 @@ export class PendingOrdersScreen extends Component {
                 }
             }
 
-            // Marcar la orden como completada en la base de datos
             await this.orm.write('pos.order.pending', [order.id], { status: 'completed' });
 
-            // Actualizar la lista de órdenes pendientes
             await this.loadPendingOrders();
 
-            // Volver a la pantalla principal del POS
             this.pos.navigateToOrderScreen(newOrder);
 
-            // Mostrar notificación
             this.env.services.notification.add('Orden cargada exitosamente en el POS', {
                 type: 'success'
             });

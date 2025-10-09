@@ -1,21 +1,29 @@
+$border-color: #c7c7c7;
+$border-dotted: 2px dotted $border-color;
+$border-solid: 0.5px solid $border-color;
+$spacing-small: 5px;
+
 .custom-receipt-header {
     width: 100%;
 }
 
-.custom-ticket-info .company-info {
-    padding: 5px 0;
-    border-bottom: .5px solid #c7c7c7;
-    text-align: center;
-    .company-name {
-        font-weight: bold;
+.custom-ticket-info {
+    .company-info {
+        padding: $spacing-small 0;
+        border-bottom: $border-solid;
+        text-align: center;
+        
+        .company-name {
+            font-weight: bold;
+        }
     }
 }
 
 .custom-client-info {
     width: 100%;
-    padding: 5px 0;
+    padding: $spacing-small 0;
     text-align: center;
-    border-bottom: 2px dotted #c7c7c7;
+    border-bottom: $border-dotted;
 }
 
 .custom-header-content {

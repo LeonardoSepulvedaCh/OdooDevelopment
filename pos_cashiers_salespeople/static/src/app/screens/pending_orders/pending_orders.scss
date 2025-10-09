@@ -6,56 +6,55 @@
     padding: 0;
     box-sizing: border-box;
     overflow: hidden;
-}
 
-.card{
-    border-radius: 10px;
-}
-
-.pending-orders-screen .screen-full-width {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-tbody{
-    border:none;
-    border-color: transparent;
-}
-
-.btn-delete i{
-    color: #d40000;
-    border: none;
-    font-size: 16px;
-    &:hover{
-        color: #f30000;
-        cursor: pointer;
+    .card {
+        border-radius: 10px;
     }
-}
 
-.controls{
-    background: #ffffff;
-    border-bottom: 1px solid #d3d3d3;
-    height: 50px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-}
+    tbody {
+        border: none;
+        border-color: transparent;
+    }
 
-.leftpane {
-    flex: 0 0 40%;
-    max-width: 40%;
-}
+    .btn-delete i {
+        color: #d40000;
+        border: none;
+        font-size: 16px;
+        &:hover {
+            color: #f30000;
+            cursor: pointer;
+        }
+    }
 
-.rightpane {
-    padding: 0;
-    flex: 1;
-    width: auto;
-    min-width: 0;
-    margin: 0;
+    .controls {
+        border-bottom: 1px solid #d3d3d368;
+        height: 50px;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+
+    .leftpane {
+        flex: 0 0 40%;
+        max-width: 40%;
+    }
+
+    .rightpane {
+        padding: 0;
+        flex: 1;
+        width: auto;
+        min-width: 0;
+        margin: 0;
+    }
+
+    .screen-full-width {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
 }
 
 ::-webkit-scrollbar {

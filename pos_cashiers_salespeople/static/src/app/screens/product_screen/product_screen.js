@@ -22,10 +22,7 @@ patch(ProductScreen.prototype, {
         }
     },
     
-    /**
-     * Verificar si el usuario actual es cajero en este POS
-     * @returns {boolean}
-     */
+
     isCurrentUserCashier() {
         if (!this.pos.user || !this.pos.config) {
             return false;
@@ -51,10 +48,6 @@ patch(ProductScreen.prototype, {
         return cashierUserIds.includes(currentUserId);
     },
 
-    /**
-     * Verificar si el usuario actual es vendedor en este POS
-     * @returns {boolean}
-     */
     isCurrentUserSalesperson() {
         if (!this.pos.user || !this.pos.config) {
             return false;
@@ -80,11 +73,6 @@ patch(ProductScreen.prototype, {
         return salespersonUserIds.includes(currentUserId);
     },
 
-    /**
-     * Generar un nombre para el pedido con las dos primeras letras del nombre del vendedor, el numero del dia y un consecutivo de las ordenes creadas por el vendedor
-     * @param {number} salespersonId - ID del vendedor (opcional, usa el de la orden actual si no se proporciona)
-     * @returns {string}
-     */
     async generateOrderName(salespersonId = null) {
         try {
             const currentOrder = this.pos.getOrder();
@@ -99,7 +87,7 @@ patch(ProductScreen.prototype, {
             }
             
             // Obtener información del vendedor
-            let salespersonName = 'US'; // Default fallback
+            let salespersonName = 'US';
             if (targetSalespersonId === this.pos.user.id) {
                 salespersonName = this.pos.user.name || 'US';
             } else if (currentOrder && currentOrder.getSalesperson() && currentOrder.getSalesperson().id === targetSalespersonId) {
@@ -116,37 +104,32 @@ patch(ProductScreen.prototype, {
                 }
             }
             
-            // Obtener las dos primeras letras del nombre del vendedor
             const salesperson = salespersonName.split(' ')[0].toUpperCase().slice(0, 2);
             
-            // Obtener el día del mes
-            const date = new Date().getDate().toString().padStart(2, '0');
+            const today = new Date();
+            const date = today.getDate().toString().padStart(2, '0');
+            const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+            const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
             
-            // Contar órdenes pendientes del vendedor
             const existingOrders = await this.env.services.orm.searchRead(
                 'pos.order.pending',
                 [
                     ['salesperson_id', '=', targetSalespersonId],
-                    ['status', '=', 'pending']
+                    ['date_order', '>=', this.formatDateForOdoo(startOfDay)],
+                    ['date_order', '<', this.formatDateForOdoo(endOfDay)]
                 ],
-                ['id'],
-                { limit: 1 }
+                ['id']
             );
             
             const consecutive = existingOrders.length + 1;
-            return `${salesperson} - ${date} - ${consecutive}`;
+            return `${salesperson} - ${date} - ${consecutive.toString().padStart(2, '0')}`;
         } catch (error) {
             console.error('Error generando nombre de orden:', error);
-            // Fallback si hay error
-            const timestamp = new Date().getTime();
+            const timestamp = Date.now().toString().slice(-6);
             return `PEDIDO - ${timestamp}`;
         }
     },
 
-    /**
-     * Crear un pedido (order) en lugar de ir al pago
-     * Esta función guarda el pedido en la base de datos y limpia la vista actual
-     */
     async createOrder() {
         const currentOrder = this.pos.getOrder();
         if (!currentOrder) {
@@ -217,11 +200,6 @@ patch(ProductScreen.prototype, {
         }
     },
 
-    /**
-     * Formatear fecha para Odoo en formato YYYY-MM-DD HH:MM:SS
-     * @param {Date} date - Fecha a formatear
-     * @returns {string} - Fecha formateada para Odoo
-     */
     formatDateForOdoo(date) {
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');

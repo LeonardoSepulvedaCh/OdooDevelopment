@@ -18,20 +18,16 @@ class PosOrderPending(models.Model):
         ('cancelled', 'Cancelado')
     ], string='Estado', default='pending')
     
-    # Campos para almacenar los totales
     amount_total = fields.Float(string='Total con Impuestos')
     amount_untaxed = fields.Float(string='Total sin Impuestos') 
     amount_tax = fields.Float(string='Impuestos')
     
-    # Campo JSON para almacenar las líneas de la orden
     order_lines = fields.Text(string='Líneas de la Orden')
     
-    # Campos adicionales
     pos_config_id = fields.Many2one('pos.config', string='Punto de Venta')
     note = fields.Text(string='Notas')
     
     def get_order_lines_data(self):
-        """Devuelve las líneas de la orden como lista de diccionarios"""
         if self.order_lines:
             try:
                 return json.loads(self.order_lines)
