@@ -59,7 +59,7 @@ class SaleCreditQuotaApplication(models.Model):
     application_date = fields.Date(string='Fecha de Solicitud', required=True, default=fields.Date.context_today, index=True, copy=False)
     approved_date = fields.Date(string='Fecha de Aprobación', readonly=True, copy=False, tracking=1)
     rejected_date = fields.Date(string='Fecha de Rechazo', readonly=True, copy=False)
-    approved_by = fields.Many2one('res.users', string='Aprobado por', readonly=True, copy=False, tracking=1)
+    approved_by = fields.Many2one('res.users', string='Aprobado por', copy=False, tracking=1, domain=[('is_credit_quota_approver', '=', True)])
 
     final_normal_credit_quota = fields.Float(string='Cupo Normal Final', digits=(16, 2), default=0.0)
     final_golden_credit_quota = fields.Float(string='Cupo Dorado Final', digits=(16, 2), default=0.0)

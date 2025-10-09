@@ -16,14 +16,14 @@ class SaleCreditCodeudor(models.Model):
     partner_id = fields.Many2one('res.partner',string='Codeudor', required=True, index=True, domain=[('is_company', '=', False)], help='Contacto que actuará como codeudor')
 
     # Campos relacionados desde res.partner (se prellenan automáticamente)
-    name = fields.Char(string='Nombres y Apellidos', related='partner_id.name', store=True, readonly=False, required=True)
-    vat = fields.Char(string='Documento de Identidad', related='partner_id.vat', store=True, readonly=False, required=True)
+    name = fields.Char(string='Nombres y Apellidos', related='partner_id.name', store=True, readonly=False)
+    vat = fields.Char(string='Documento de Identidad', related='partner_id.vat', store=True, readonly=False)
     phone = fields.Char(string='Teléfono', related='partner_id.phone', store=True, readonly=False)
-    email = fields.Char(string='Correo Electrónico', related='partner_id.email', store=True, readonly=False, required=True)
+    email = fields.Char(string='Correo Electrónico', related='partner_id.email', store=True, readonly=False)
 
     # Campos adicionales específicos del codeudor (no en res.partner estándar)
-    residence_address = fields.Char(string='Dirección de Residencia', related='partner_id.street', store=True, readonly=False, required=True)
-    residence_municipality = fields.Char(string='Municipio de Residencia', related='partner_id.city', store=True, readonly=False, required=True)
+    residence_address = fields.Char(string='Dirección de Residencia', related='partner_id.street', store=True, readonly=False)
+    residence_municipality = fields.Char(string='Municipio de Residencia', related='partner_id.city', store=True, readonly=False)
 
     relationship = fields.Selection(
         string='Parentesco',
@@ -40,12 +40,36 @@ class SaleCreditCodeudor(models.Model):
         help='Relación del codeudor con el cliente',
         required=True
     )
-    birth_date = fields.Date(string='Fecha de Nacimiento', related='partner_id.birth_date', store=True, readonly=False, required=True)
+    birth_date = fields.Date(string='Fecha de Nacimiento', related='partner_id.birth_date', store=True, readonly=False)
     
     # Campo calculado para edad
     age = fields.Integer(string='Edad (Años)', compute='_compute_age', store=True, help='Edad calculada a partir de la fecha de nacimiento')
 
     # Validaciones
+    @api.constrains('partner_id')
+    def _check_partner_required_fields(self):
+        for record in self:
+            if record.partner_id:
+                missing_fields = []
+                if not record.partner_id.name:
+                    missing_fields.append('Nombre')
+                if not record.partner_id.vat:
+                    missing_fields.append('Documento de Identidad')
+                if not record.partner_id.email:
+                    missing_fields.append('Correo Electrónico')
+                if not record.partner_id.street:
+                    missing_fields.append('Dirección de Residencia')
+                if not record.partner_id.city:
+                    missing_fields.append('Municipio de Residencia')
+                if not record.partner_id.birth_date:
+                    missing_fields.append('Fecha de Nacimiento')
+                
+                if missing_fields:
+                    raise ValidationError(
+                        _('El codeudor "%s" no tiene los siguientes campos obligatorios:\n• %s\n\nPor favor, complete estos datos en el contacto.') % 
+                        (record.partner_id.name or 'Sin nombre', '\n• '.join(missing_fields))
+                    )
+
     @api.constrains('birth_date')
     def _check_birth_date(self):
         for record in self:

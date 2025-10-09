@@ -57,3 +57,22 @@ class SaleCreditQuotaApplication(models.Model):
                 raise ValidationError(
                     _('Los años de actividad del negocio no pueden ser negativos.')
                 )
+
+    @api.constrains('customer_id', 'state')
+    def _check_single_approved_application_per_customer(self):
+        for record in self:
+            if record.customer_id and record.state == 'approved':
+                existing_approved = self.search([
+                    ('customer_id', '=', record.customer_id.id),
+                    ('state', '=', 'approved'),
+                    ('id', '!=', record.id),
+                ])
+                
+                if existing_approved:
+                    existing_names = ', '.join(existing_approved.mapped('name'))
+                    raise ValidationError(
+                        _('El cliente "%s" ya tiene una solicitud aprobada: %s.\n\n'
+                          'Un cliente solo puede tener una solicitud de cupo de crédito aprobada a la vez. '
+                          'Debe finalizar la solicitud existente antes de aprobar una nueva.') % 
+                        (record.customer_id.name, existing_names)
+                    )

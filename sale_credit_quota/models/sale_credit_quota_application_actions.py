@@ -120,12 +120,16 @@ class SaleCreditQuotaApplication(models.Model):
             raise ValidationError(_('Solo se pueden aprobar solicitudes en estado borrador.'))
         
         self._validate_required_fields_for_approval()
-                
-        self.write({
+        
+        values = {
             'state': 'approved',
             'approved_date': fields.Date.context_today(self),
-            'approved_by': self.env.user.id,
-        })
+        }
+        
+        if not self.approved_by:
+            values['approved_by'] = self.env.user.id
+        
+        self.write(values)
         
         if self.customer_id:
             customer_values = {}
@@ -146,10 +150,21 @@ class SaleCreditQuotaApplication(models.Model):
                 message_type='notification'
             )
         
+        approver_name = self.approved_by.name if self.approved_by else self.env.user.name
+        
         self.message_post(
-            body=_('Solicitud aprobada por %s el %s') % (self.env.user.name, fields.Date.context_today(self)),
+            body=_('Solicitud aprobada por %s el %s') % (approver_name, fields.Date.context_today(self)),
             message_type='notification'
         )
+        
+        # Enviar notificación al canal de discusiones
+        try:
+            self._send_approval_notification()
+        except Exception as e:
+            _logger.warning(
+                'No se pudo enviar la notificación al canal para la solicitud %s: %s', 
+                self.name, str(e)
+            )
         
         return True
 

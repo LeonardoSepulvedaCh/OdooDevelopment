@@ -229,7 +229,7 @@
                                         <field name="property_payment_term_id" readonly="state in ['approved', 'rejected', 'finished']"/>
                                     </group>
                                     <group string="Quien aprueba">
-                                        <field name="approved_by" readonly="1"/>
+                                        <field name="approved_by" readonly="state in ['approved', 'rejected', 'finished']"/>
                                         <field name="approved_date" readonly="1"/>
                                     </group>
                                 </group>
