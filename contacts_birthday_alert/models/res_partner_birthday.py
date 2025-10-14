@@ -16,13 +16,17 @@ class ResPartner(models.Model):
         if not check_date:
             return self.browse()
         
-        mmdd = check_date.strftime('%m-%d')
-        self.env.cr.execute(
-            "SELECT id FROM res_partner WHERE birth_date IS NOT NULL AND to_char(birth_date, 'MM-DD') = %s",
-            (mmdd,)
-        )
-        ids = [r[0] for r in self.env.cr.fetchall()]
-        return self.browse(ids)
+        partners = self.search([('birth_date', '!=', False)])
+        
+        result = self.browse()
+        target_month = check_date.month
+        target_day = check_date.day
+        
+        for partner in partners:
+            if partner.birth_date.month == target_month and partner.birth_date.day == target_day:
+                result |= partner
+        
+        return result
 
     # Método principal para enviar notificaciones de cumpleaños.
     @api.model
@@ -36,40 +40,33 @@ class ResPartner(models.Model):
             _logger.warning("send_birthday_notifications: no hay target_user válido, abortando.")
             return True
 
-        # Fecha según la Zona Horaria del usuario target_user
         record_for_tz = self.with_user(target_user.id)
         today_str = fields.Date.context_today(record_for_tz)
         today = fields.Date.to_date(today_str)
         tomorrow = today + timedelta(days=1)
 
-        # Buscar partners con cumpleaños hoy / mañana
         partners_today = self._partners_with_bday_on(today)
         partners_tomorrow = self._partners_with_bday_on(tomorrow)
 
         # Manejo especial para 29 de febrero en años no bisiestos
         if today.month == 2 and today.day == 28 and not calendar.isleap(today.year):
-            self.env.cr.execute(
-                "SELECT id FROM res_partner WHERE birth_date IS NOT NULL AND to_char(birth_date, 'MM-DD') = %s",
-                ('02-29',)
-            )
-            ids = [r[0] for r in self.env.cr.fetchall()]
-            partners_today |= self.browse(ids)
+            partners = self.search([('birth_date', '!=', False)])
+            for partner in partners:
+                if partner.birth_date.month == 2 and partner.birth_date.day == 29:
+                    partners_today |= partner
 
         if not partners_today and not partners_tomorrow:
             _logger.debug("send_birthday_notifications: no hay cumpleaños hoy ni mañana.")
             return True
 
-        # Obtener el remitente del mensaje (OdooBot)
         try:
             odoobot_user = self.env.ref('base.user_root')
             odoobot_partner = odoobot_user.partner_id
         except Exception:
             odoobot_partner = self.env.user.partner_id
 
-        # Buscar o crear el canal para enviar el mensaje
         channel = self._get_or_create_birthday_channel()
 
-        # Enviar mensajes al canal
         if channel:
             self._post_birthday_messages(
                 channel, 
@@ -90,7 +87,6 @@ class ResPartner(models.Model):
             ('channel_type', '=', 'channel')
         ], limit=1)
 
-        # Si no existe el canal, lo crea
         if not channel:
             try:
                 channel = Channel.sudo().create({
@@ -118,7 +114,6 @@ class ResPartner(models.Model):
         try:
             notify_all_members = False
 
-            # Mensaje para cumpleaños de hoy
             if partners_today:
                 today_body = _("""
                 <h5><b>🎂🥳HOY CUMPLEN AÑOS LOS SIGUIENTES CLIENTES🥳🎂</b></h5>
@@ -138,7 +133,6 @@ class ResPartner(models.Model):
                 if notify_all_members:
                     self._notify_channel_members(channel, message_today)
 
-            # Mensaje para cumpleaños de mañana
             if partners_tomorrow:
                 tomorrow_body = _("""
                 <b>📆🎂Mañana cumplen años los siguientes clientes🎂📆</b>

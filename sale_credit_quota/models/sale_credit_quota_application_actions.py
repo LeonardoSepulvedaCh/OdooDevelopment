@@ -265,7 +265,6 @@ class SaleCreditQuotaApplication(models.Model):
         
         business_fields = [
             ('business_name', 'Nombre del Negocio'),
-            ('business_address', 'Dirección del Negocio'),
             ('business_city', 'Ciudad del Negocio'),
         ]
         
@@ -277,7 +276,11 @@ class SaleCreditQuotaApplication(models.Model):
         if self.business_years_of_activity < 0:
             missing_fields.append('Años de Actividad del Negocio (no puede ser negativo)')
         
-        required_tags = ['Cedula de Ciudadanía', 'CTL', 'RUT']
+        
+        if self.review_auditoria_state != 'approved':
+            missing_fields.append('Revisión por Auditoría debe estar aprobada')
+        
+        required_tags = ['Cedula de Ciudadanía', 'CTL', 'RUT', 'Fotos del Negocio']
         self._validate_required_documents(self.customer_id, 'Cliente', required_tags, missing_fields)
         
         for codeudor in self.codeudor_ids:

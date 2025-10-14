@@ -88,7 +88,6 @@ class SaleCreditQuotaApplication(models.Model):
     
     # Datos del negocio
     business_name = fields.Char(string='Nombre del Negocio')
-    business_address = fields.Char(string='Dirección del Negocio')
     business_city = fields.Char(string='Ciudad del Negocio', help='Ciudad donde se encuentra el negocio del cliente')
     business_years_of_activity = fields.Integer(string='Años de Actividad del Negocio', default=0)
 
@@ -125,6 +124,11 @@ class SaleCreditQuotaApplication(models.Model):
     audit_is_late = fields.Boolean(string='¿Tiene deuda en mora?', default=False)
     audit_total_late_payment = fields.Float(string='Total de Mora', digits=(16, 2), default=0.0)
 
+    # Campos para indicar el estado de revisión por cartera y auditoria
+    review_auditoria_state = fields.Selection(string='Estado de Revisión por Auditoría', selection=[('pending', 'Pendiente'), ('approved', 'Aprobado'), ('rejected', 'Rechazado')], default='pending')
+    rejeaction_auditoria_observations = fields.Text(string='Observaciones de Rechazo por Auditoría')
+    approved_observations = fields.Text(string='Observaciones Finales')
+
     # Onchange methods - para traer los datos del cliente
     @api.onchange('customer_id')
     def _onchange_customer_id(self):
@@ -134,9 +138,6 @@ class SaleCreditQuotaApplication(models.Model):
             
             if not self.business_city and self.customer_id.city:
                 self.business_city = self.customer_id.city
-
-            if not self.business_address and self.customer_id.street:
-                self.business_address = self.customer_id.street
             
             self.property_payment_term_id = self.customer_id.property_payment_term_id
             

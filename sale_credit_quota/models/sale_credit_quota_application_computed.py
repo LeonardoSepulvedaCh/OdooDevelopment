@@ -35,11 +35,14 @@ class SaleCreditQuotaApplication(models.Model):
 
     @api.depends('related_partner_ids')
     def _compute_document_ids(self):
+        required_tags = ['Cedula de Ciudadanía', 'CTL', 'RUT', 'Fotos del Negocio']
+        
         for record in self:
             if record.related_partner_ids:
                 documents = self.env['documents.document'].search([
                     ('partner_id', 'in', record.related_partner_ids.ids),
-                    ('type', '!=', 'folder')
+                    ('type', '!=', 'folder'),
+                    ('tag_ids.name', 'in', required_tags)
                 ])
                 record.document_ids = [(6, 0, documents.ids)]
             else:
@@ -178,15 +181,16 @@ class SaleCreditQuotaApplication(models.Model):
             
             today = fields.Date.today()
             thirty_days_ago = today - timedelta(days=30)
-            thirty_days_future = today + timedelta(days=30)
             
+            # Deuda normal: facturas vencidas hace 30 días o menos - (vencimiento entre hoy y hace 30 días)
             domain = [
                 ('partner_id', '=', record.customer_id.id),
                 ('state', '=', 'posted'),
                 ('move_type', 'in', ['out_invoice']),
                 ('payment_state', 'in', ['not_paid', 'partial']),
-                ('invoice_date_due', '>=', thirty_days_ago),
-                ('invoice_date_due', '<=', thirty_days_future),
+                ('invoice_date_due', '!=', False),
+                ('invoice_date_due', '<', today),  # Ya vencidas
+                ('invoice_date_due', '>=', thirty_days_ago),  # Pero no más de 30 días
             ]
             
             invoices = self.env['account.move'].search(domain)
@@ -203,12 +207,14 @@ class SaleCreditQuotaApplication(models.Model):
             today = fields.Date.today()
             thirty_days_ago = today - timedelta(days=30)
             
+            # Deuda en mora: facturas vencidas hace más de 30 días - (día 31 en adelante desde el vencimiento)
             domain = [
                 ('partner_id', '=', record.customer_id.id),
                 ('state', '=', 'posted'),
                 ('move_type', 'in', ['out_invoice']),
                 ('payment_state', 'in', ['not_paid', 'partial']),
-                ('invoice_date_due', '<', thirty_days_ago),
+                ('invoice_date_due', '!=', False),
+                ('invoice_date_due', '<', thirty_days_ago),  # Vencidas hace más de 30 días
             ]
             
             invoices = self.env['account.move'].search(domain)
