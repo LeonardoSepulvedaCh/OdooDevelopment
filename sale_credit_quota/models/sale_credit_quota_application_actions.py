@@ -230,6 +230,9 @@ class SaleCreditQuotaApplication(models.Model):
     def _validate_required_fields_for_approval(self):
         missing_fields = []
         
+        if not self.customer_vat or not self.customer_vat.strip():
+            missing_fields.append('Cédula del Cliente')
+        
         if self.final_normal_credit_quota <= 0:
             missing_fields.append('Cupo Normal Final (debe ser mayor a 0)')
         
@@ -263,6 +266,18 @@ class SaleCreditQuotaApplication(models.Model):
         if not self.codeudor_ids:
             missing_fields.append('Debe tener al menos un Codeudor')
         
+        # Validar que si es persona jurídica, debe tener un representante legal y al menos otro codeudor
+        if self.is_legal_entity:
+            has_legal_representative = any(
+                codeudor.relationship == 'legal_representative' 
+                for codeudor in self.codeudor_ids
+            )
+            if not has_legal_representative:
+                missing_fields.append('Para una Persona Jurídica, debe tener al menos un Codeudor con parentesco "Representante Legal"')
+            
+            if len(self.codeudor_ids) < 2:
+                missing_fields.append('Para una Persona Jurídica, debe tener al menos 2 Codeudores (uno como Representante Legal y otro adicional)')
+        
         business_fields = [
             ('business_name', 'Nombre del Negocio'),
             ('business_city', 'Ciudad del Negocio'),
@@ -280,15 +295,18 @@ class SaleCreditQuotaApplication(models.Model):
         if self.review_auditoria_state != 'approved':
             missing_fields.append('Revisión por Auditoría debe estar aprobada')
         
-        required_tags = ['Cedula de Ciudadanía', 'CTL', 'RUT', 'Fotos del Negocio']
-        self._validate_required_documents(self.customer_id, 'Cliente', required_tags, missing_fields)
+        # Documentos requeridos para el cliente
+        customer_required_tags = ['CTL', 'RUT', 'Cedula de Ciudadanía', 'Pagare', 'Fotos del Negocio']
+        self._validate_required_documents(self.customer_id, 'Cliente', customer_required_tags, missing_fields)
         
+        # Documentos requeridos para los codeudores
+        codeudor_required_tags = ['CTL', 'RUT', 'Cedula de Ciudadanía']
         for codeudor in self.codeudor_ids:
             if codeudor.partner_id:
                 self._validate_required_documents(
                     codeudor.partner_id, 
                     f'Codeudor {codeudor.name or codeudor.partner_id.name}', 
-                    required_tags, 
+                    codeudor_required_tags, 
                     missing_fields
                 )
 

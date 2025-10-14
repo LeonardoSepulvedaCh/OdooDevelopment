@@ -77,12 +77,20 @@
                         <group col="2">
                             <group string="Información del Cliente">
                                 <field name="customer_id" options="{'no_create': True}" readonly="state in ['approved', 'rejected', 'finished']"/>
-                                <field name="customer_phone" widget="phone" readonly="state in ['approved', 'rejected', 'finished']"/>
-                                <field name="customer_mobile" widget="phone" readonly="state in ['approved', 'rejected', 'finished']"/>
+                                <field name="customer_vat" readonly="state in ['approved', 'rejected', 'finished']"/>
+                                <field name="is_legal_entity" readonly="state in ['approved', 'rejected', 'finished']"/>
+                                <label for="customer_phone" string="Teléfono"/>
+                                <div class="o_row">
+                                    <field name="customer_phone" widget="phone" placeholder="Teléfono" class="oe_inline" readonly="state in ['approved', 'rejected', 'finished']"/>
+                                    <field name="customer_mobile" widget="phone" placeholder="Teléfono Móvil" class="oe_inline" readonly="state in ['approved', 'rejected', 'finished']"/>
+                                </div>
                                 <field name="customer_email" readonly="state in ['approved', 'rejected', 'finished']"/>
                                 <field name="customer_birth_date" readonly="state in ['approved', 'rejected', 'finished']"/>
-                                <field name="customer_address" readonly="state in ['approved', 'rejected', 'finished']"/>
-                                <field name="customer_city" readonly="state in ['approved', 'rejected', 'finished']"/>
+                                <label for="customer_address" string="Dirección"/>
+                                <div class="o_row">
+                                    <field name="customer_address" placeholder="Dirección" class="oe_inline" readonly="state in ['approved', 'rejected', 'finished']"/>
+                                    <field name="customer_city" placeholder="Ciudad" class="oe_inline" readonly="state in ['approved', 'rejected', 'finished']"/>
+                                </div>
                                 <field name="customer_years_of_activity" readonly="state in ['approved', 'rejected', 'finished']"/>
                             </group>
                             
@@ -111,35 +119,38 @@
                                         <templates>
                                             <t t-name="card" class="flex-row">
                                                 <aside class="o_kanban_aside_full">
-                                                    <div class="o_kanban_image_fill w-100 d-flex align-items-center justify-content-center bg-light" style="min-height: 80px;">
+                                                    <div class="o_kanban_image_fill w-100 d-flex align-items-center justify-content-center bg-light" >
                                                         <i class="fa fa-user fa-3x text-muted" title="Codeudor"/>
                                                     </div>
                                                 </aside>
                                                 <main class="ps-2 ps-md-0">
                                                     <field name="name" invisible="not name" class="fw-bold"/>
-                                                    <div t-if="record.relationship.raw_value" class="text-muted">
-                                                        <i class="fa fa-fw me-1 fa-users text-primary" title="Parentesco"/>
-                                                        <field name="relationship"/>
+                                                    <div t-if="record.relationship.raw_value or record.age.raw_value" class="text-muted">
+                                                        <span t-if="record.relationship.raw_value">
+                                                            <i class="fa fa-fw me-1 fa-users text-primary" title="Parentesco"/>
+                                                            <field name="relationship"/>
+                                                        </span>
+                                                        <span t-if="record.relationship.raw_value and record.age.raw_value"> - </span>
+                                                        <span t-if="record.age.raw_value">
+                                                            <i class="fa fa-fw me-1 fa-birthday-cake text-warning" title="Edad"/>
+                                                            <field name="age"/> años
+                                                        </span>
                                                     </div>
                                                     <div t-if="record.vat.raw_value" class="text-truncate">
                                                         <i class="fa fa-fw me-1 fa-id-card-o text-info" title="Documento"/>
                                                         <field name="vat"/>
                                                     </div>
-                                                    <div t-if="record.email.raw_value" class="text-truncate">
-                                                        <i class="fa fa-fw me-1 fa-envelope text-primary" title="Email"/>
-                                                        <field name="email"/>
-                                                    </div>
                                                     <div t-if="record.phone.raw_value">
                                                         <i class="fa fa-fw me-1 fa-phone text-success" title="Teléfono"/>
                                                         <field name="phone"/>
                                                     </div>
+                                                    <div t-if="record.email.raw_value" class="text-truncate">
+                                                        <i class="fa fa-fw me-1 fa-envelope text-primary" title="Email"/>
+                                                        <field name="email"/>
+                                                    </div>
                                                     <div t-if="record.residence_address.raw_value" class="text-truncate">
                                                         <i class="fa fa-fw me-1 fa-map-marker text-danger" title="Dirección"/>
                                                         <field name="residence_address"/>, <field name="residence_municipality"/>
-                                                    </div>
-                                                    <div t-if="record.age.raw_value">
-                                                        <i class="fa fa-fw me-1 fa-birthday-cake text-warning" title="Edad"/>
-                                                        <span><field name="age"/> años</span>
                                                     </div>
                                                 </main>
                                             </t>
@@ -237,6 +248,7 @@
                                 <group string="Observaciones sobre la Auditoría">
                                     <field name="audit_cifin_observations" widget="text" placeholder="Describa las observaciones de la Auditoría sobre la CIFIN" readonly="state in ['approved', 'rejected', 'finished']"/>
                                     <field name="audit_ctl_observations" widget="text" placeholder="Describa las observaciones de la Auditoría sobre el CTL" readonly="state in ['approved', 'rejected', 'finished']"/>
+                                    <field name="audit_observations" widget="text" placeholder="Describa las observaciones generales de la Auditoría" readonly="state in ['approved', 'rejected', 'finished']"/>
                                 </group>
                             </page>
 

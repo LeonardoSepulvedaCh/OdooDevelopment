@@ -10,7 +10,7 @@ class SaleCreditCodeudor(models.Model):
 
     # Campos de control
     sequence = fields.Integer(string='Secuencia', default=10)
-    application_id = fields.Many2one('sale.credit.quota.application', string='Solicitud', required=True, ondelete='cascade', index=True)
+    application_id = fields.Many2one('sale.credit.quota.application', string='Solicitud', required=True, ondelete='cascade', index=True, readonly=True)
     
     # Relación con el partner (codeudor)
     partner_id = fields.Many2one('res.partner',string='Codeudor', required=True, index=True, domain=[('is_company', '=', False)], help='Contacto que actuará como codeudor')
@@ -55,29 +55,28 @@ class SaleCreditCodeudor(models.Model):
     age = fields.Integer(string='Edad (Años)', compute='_compute_age', store=True, help='Edad calculada a partir de la fecha de nacimiento')
 
     # Validaciones
-    @api.constrains('partner_id')
+    @api.constrains('name', 'vat', 'email', 'residence_address', 'residence_municipality', 'birth_date')
     def _check_partner_required_fields(self):
         for record in self:
-            if record.partner_id:
-                missing_fields = []
-                if not record.partner_id.name:
-                    missing_fields.append('Nombre')
-                if not record.partner_id.vat:
-                    missing_fields.append('Documento de Identidad')
-                if not record.partner_id.email:
-                    missing_fields.append('Correo Electrónico')
-                if not record.partner_id.street:
-                    missing_fields.append('Dirección de Residencia')
-                if not record.partner_id.city:
-                    missing_fields.append('Municipio de Residencia')
-                if not record.partner_id.birth_date:
-                    missing_fields.append('Fecha de Nacimiento')
-                
-                if missing_fields:
-                    raise ValidationError(
-                        _('El codeudor "%s" no tiene los siguientes campos obligatorios:\n• %s\n\nPor favor, complete estos datos en el contacto.') % 
-                        (record.partner_id.name or 'Sin nombre', '\n• '.join(missing_fields))
-                    )
+            missing_fields = []
+            if not record.name:
+                missing_fields.append('Nombres y Apellidos')
+            if not record.vat:
+                missing_fields.append('Documento de Identidad')
+            if not record.email:
+                missing_fields.append('Correo Electrónico')
+            if not record.residence_address:
+                missing_fields.append('Dirección de Residencia')
+            if not record.residence_municipality:
+                missing_fields.append('Municipio de Residencia')
+            if not record.birth_date:
+                missing_fields.append('Fecha de Nacimiento')
+            
+            if missing_fields:
+                raise ValidationError(
+                    _('El codeudor "%s" no tiene los siguientes campos obligatorios:\n• %s\n\nPor favor, complete estos datos en la solicitud.') % 
+                    (record.name or record.partner_id.name or 'Sin nombre', '\n• '.join(missing_fields))
+                )
 
     @api.constrains('birth_date')
     def _check_birth_date(self):

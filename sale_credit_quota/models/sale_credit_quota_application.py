@@ -80,6 +80,7 @@ class SaleCreditQuotaApplication(models.Model):
     customer_years_of_activity = fields.Integer(string='Años de Actividad del Cliente', default=0)
     customer_child_ids = fields.Many2many('res.partner', compute='_compute_customer_child_ids', string='Clientes Hijos', help='Clientes hijos del cliente principal', store=True)
     customer_child_count = fields.Integer(string='Cantidad de Clientes Hijos', compute='_compute_customer_child_count', store=True)
+    is_legal_entity = fields.Boolean(string='¿Es una Persona Jurídica?', default=False)
 
     average_days_to_pay = fields.Integer(string='Días Promedio de Pago', default=0, compute='_compute_average_days_to_pay', store=False)
 
@@ -128,6 +129,7 @@ class SaleCreditQuotaApplication(models.Model):
     review_auditoria_state = fields.Selection(string='Estado de Revisión por Auditoría', selection=[('pending', 'Pendiente'), ('approved', 'Aprobado'), ('rejected', 'Rechazado')], default='pending')
     rejeaction_auditoria_observations = fields.Text(string='Observaciones de Rechazo por Auditoría')
     approved_observations = fields.Text(string='Observaciones Finales')
+    audit_observations = fields.Text(string='Observaciones sobre la Auditoría')
 
     # Onchange methods - para traer los datos del cliente
     @api.onchange('customer_id')

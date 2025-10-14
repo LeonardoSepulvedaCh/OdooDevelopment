@@ -35,7 +35,8 @@ class SaleCreditQuotaApplication(models.Model):
 
     @api.depends('related_partner_ids')
     def _compute_document_ids(self):
-        required_tags = ['Cedula de Ciudadanía', 'CTL', 'RUT', 'Fotos del Negocio']
+        # Incluir todas las etiquetas posibles (cliente y codeudores)
+        required_tags = ['CTL', 'RUT', 'Cedula de Ciudadanía', 'Pagare', 'Fotos del Negocio']
         
         for record in self:
             if record.related_partner_ids:
