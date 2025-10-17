@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_sale_order_form_inherit_credit_lock" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.credit_lock</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Campos invisibles -->
+            <xpath expr="//form" position="inside">
+                <field name="partner_is_blocked" invisible="1"/>
+                <field name="partner_arrears_amount" invisible="1"/>
+                <field name="partner_family_arrears_amount" invisible="1"/>
+                <field name="block_reason" invisible="1"/>
+            </xpath>
+
+            <!-- Inserta la alerta justo después del header -->
+            <xpath expr="//header" position="after">
+                <div class="alert alert-danger w-100" 
+                     role="alert"
+                     invisible="not partner_is_blocked or state != 'draft'">
+                    <i class="fa fa-ban me-2" title="Cliente bloqueado"/>
+                    <strong>CLIENTE BLOQUEADO - NO SE PUEDE CONFIRMAR LA VENTA</strong>
+                    
+                    <!-- Mostrar razón del bloqueo -->
+                    <p class="mt-2 mb-1" invisible="not block_reason">
+                        <strong>Razón del bloqueo:</strong><br/>
+                        <field name="block_reason" readonly="1" nolabel="1"/>
+                    </p>
+                    
+                    <!-- Mostrar monto de mora propio -->
+                    <p class="mt-2 mb-0" invisible="partner_arrears_amount == 0">
+                        <strong>Mora del Cliente:</strong>
+                        <field name="partner_arrears_amount" widget="monetary" readonly="1" nolabel="1" class="d-inline"/>
+                    </p>
+                    
+                    <!-- Mostrar monto total familiar si es diferente del propio -->
+                    <p class="mb-0" invisible="partner_family_arrears_amount == partner_arrears_amount or partner_family_arrears_amount == 0">
+                        <strong>Mora Total (Familia):</strong>
+                        <field name="partner_family_arrears_amount" widget="monetary" readonly="1" nolabel="1" class="d-inline"/>
+                    </p>
+                    
+                    <hr class="my-2"/>
+                    <small>
+                        <i class="fa fa-info-circle me-1" title="Información"/>
+                        No podrá confirmar esta orden de venta hasta que se regularice la situación crediticia
+                        del cliente, contacto padre y/o contactos hijos, o se desbloquee manualmente desde el formulario del contacto.
+                    </small>
+                </div>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>
