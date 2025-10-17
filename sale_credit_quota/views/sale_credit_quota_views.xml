@@ -79,11 +79,8 @@
                                 <field name="customer_id" options="{'no_create': True}" readonly="state in ['approved', 'rejected', 'finished']"/>
                                 <field name="customer_vat" readonly="state in ['approved', 'rejected', 'finished']"/>
                                 <field name="is_legal_entity" readonly="state in ['approved', 'rejected', 'finished']"/>
-                                <label for="customer_phone" string="Teléfono"/>
-                                <div class="o_row">
-                                    <field name="customer_phone" widget="phone" placeholder="Teléfono" class="oe_inline" readonly="state in ['approved', 'rejected', 'finished']"/>
-                                    <field name="customer_mobile" widget="phone" placeholder="Teléfono Móvil" class="oe_inline" readonly="state in ['approved', 'rejected', 'finished']"/>
-                                </div>
+                                <field name="customer_phone" widget="phone" placeholder="Teléfono" readonly="state in ['approved', 'rejected', 'finished']"/>
+                                <field name="customer_mobile" widget="phone" placeholder="Teléfono Móvil" readonly="state in ['approved', 'rejected', 'finished']"/>
                                 <field name="customer_email" readonly="state in ['approved', 'rejected', 'finished']"/>
                                 <field name="customer_birth_date" readonly="state in ['approved', 'rejected', 'finished']"/>
                                 <label for="customer_address" string="Dirección"/>

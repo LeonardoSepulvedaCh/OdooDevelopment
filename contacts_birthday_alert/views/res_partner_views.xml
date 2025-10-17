@@ -13,11 +13,17 @@
             </div>
         </xpath>
 
+        <xpath expr="//div[hasclass('d-flex', 'align-items-baseline', 'w-md-50')][field[@name='email']]" position="before">
+            <div class="d-flex align-items-baseline w-md-50">
+                <i class="fa fa-fw me-1 fa-id-card text-primary" title="Card Code"/>
+                <field name="card_code" class="w-100" placeholder="Código del Contacto"/>
+            </div>
+        </xpath>
+
         <xpath expr="//group[1]" position="inside">
             <group>
                 <field name="birth_date"/>
                 <field name="age" readonly="1" invisible="not birth_date"/>
-                <field name="card_code"/>
             </group>
         </xpath>
         </field>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vista de formulario heredada para res.partner - campos base -->
+    <record id="view_partner_form_name_split" model="ir.ui.view">
+        <field name="name">res.partner.form.name.split</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            
+            <!-- Agregar el campo is_legal_person después de category_id -->
+            <xpath expr="//field[@name='category_id']" position="after">
+                <field name="is_legal_person"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <!-- Vista heredada para agregar la nueva pagina de Datos Adicionales -->
+    <record id="view_partner_form_name_split_accounting" model="ir.ui.view">
+        <field name="name">res.partner.form.name.split.accounting</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//notebook" position="inside">
+                <page string="Datos Adicionales" name="datos_adicionales">
+                    <group string="Nombres y Apellidos Cliente / Representante" colspan="2">
+                        <group>
+                            <field name="first_name" placeholder="Primer Nombre" help="Este campo es obligatorio para el envío de facturas. En caso de ser una persona jurídica, distribuir el nombre en los campos de Primer Nombre y Primer Apellido"/>
+                            <field name="first_surname" placeholder="Primer Apellido" help="Este campo es obligatorio para el envío de facturas. En caso de ser una persona jurídica, distribuir el apellido en los campos de Primer Apellido y Segundo Apellido"/>
+                        </group>
+                        <group>
+                            <field name="second_name" placeholder="Segundo Nombre"/>
+                            <field name="second_surname" placeholder="Segundo Apellido"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+
+        </field>
+    </record>
+
+    <!-- Vista heredada para el formulario de contactos hijos (wizard) -->
+    <record id="view_partner_form_name_split_child" model="ir.ui.view">
+        <field name="name">res.partner.form.name.split.child</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            
+            <!-- Agregar campos de nombres y apellidos en el formulario de contacto hijo -->
+            <xpath expr="//field[@name='child_ids']//form//label[@for='comment']" position="before">
+                <group name="names_group" priority="3">
+                    <field name="first_name" placeholder="Primer Nombre" help="Este campo es obligatorio para el envío de facturas, en caso de ser una persona jurídica, distribuir el nombre en los campos de Primer Nombre y Primer Apellido"/>
+                    <field name="second_name" placeholder="Segundo Nombre"/>
+                    <field name="first_surname" placeholder="Primer Apellido" help="Este campo es obligatorio para el envío de facturas, en caso de ser una persona jurídica, distribuir el apellido en los campos de Primer Apellido y Segundo Apellido"/>
+                    <field name="second_surname" placeholder="Segundo Apellido"/>
+                </group>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

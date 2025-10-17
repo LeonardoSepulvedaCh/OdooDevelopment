@@ -1,7 +1,7 @@
 {
     'name': 'Contactos - Alerta de Cumpleaños',
     'version': '1.0.0',
-    'category': 'Milan/Contactos',
+    'category': 'Rutavity/Contacts',
     'summary': 'Modulo para gestionar el alerta de cumpleaños de los contactos',
     'description': """
         Este módulo permite añadir:
