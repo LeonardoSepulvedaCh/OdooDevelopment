@@ -5,8 +5,7 @@ class ResPartner(models.Model):
 
     first_name = fields.Char(
         string='Primer Nombre',
-        tracking=True,
-        required=True
+        tracking=True
     )
     second_name = fields.Char(
         string='Segundo Nombre',
@@ -14,8 +13,7 @@ class ResPartner(models.Model):
     )
     first_surname = fields.Char(
         string='Primer Apellido',
-        tracking=True,
-        required=True
+        tracking=True
     )
     second_surname = fields.Char(
         string='Segundo Apellido',

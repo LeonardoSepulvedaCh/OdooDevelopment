@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Redirect form - will delegate to specific method redirect forms -->
+    <template id="redirect_form">
+        <t t-set="payment_method_code" t-value="payment_method_code or 'pse'"/>
+        <t t-if="payment_method_code == 'pse'">
+            <t t-call="payment_rutavity.redirect_form_pse"/>
+        </t>
+    </template>
+
+    <!-- PSE redirect form (currently not used, but defined for consistency) -->
+    <template id="redirect_form_pse">
+        
+    </template>
+
+    <!-- Inline form - will delegate to specific method inline forms -->
+    <template id="inline_form">
+        <t t-set="payment_method_code" t-value="pm_sudo.code"/>
+        <t t-if="payment_method_code == 'pse'">
+            <t t-call="payment_rutavity.inline_form_pse"/>
+        </t>
+    </template>
+
+    <!-- PSE specific inline form -->
+    <template id="inline_form_pse">
+        <div id="rutavity-pse-container">
+            <t t-call="payment_rutavity.pse_payment_form"/>
+        </div>
+    </template>
+
+    <template id="pse_payment_form">
+        <div class="col-12 mt-3">
+            <input name="provider_id" type="hidden" t-att-value="provider_id"/>
+            <input name="partner_id" type="hidden" t-att-value="partner_id"/>
+
+            <t t-set="inline_form_data" t-value="pm_sudo.get_rutavity_inline_form_data(partner_id)"/>
+            <t t-set="partner_data" t-value="inline_form_data.get('partner_data', {})"/>
+
+            <div class="row g-4">
+                <div class="col-md-6 mt-3">
+                    <label for="bank" class="form-label fw-bold text-dark">
+                        <i class="fa fa-university text-primary me-2"></i>
+                        <span>Bank *</span>
+                    </label>
+                    <select id="bank" name="bank" class="form-select" required="required">
+                        <option value="" selected="selected">Select your bank</option>
+                    </select>
+                </div>
+
+                <div class="col-md-6 mt-3">
+                    <label for="email" class="form-label fw-bold text-dark">
+                        <i class="fa fa-envelope text-primary me-2"></i>
+                        <span>Email *</span>
+                    </label>
+                    <input type="email" id="email" name="email" class="form-control" 
+                        placeholder="example@email.com" required="required"
+                        t-att-value="partner_data.get('email')" />
+                </div>
+
+                <div class="col-md-6 mt-3">
+                    <label for="document-type" class="form-label fw-bold text-dark">
+                        <i class="fa fa-address-card text-primary me-2"></i>
+                        <span>Identity Document *</span>
+                    </label>
+                    <select id="document-type" name="documentType" class="form-select" required="required">
+                        <option value="">Select document type</option>
+                        <option value="CC" t-att-selected="'selected' if partner_data.get('documentType') == 'CC' else None">Citizenship Card</option>
+                        <option value="CE" t-att-selected="'selected' if partner_data.get('documentType') == 'CE' else None">Foreign ID Card</option>
+                        <option value="NIT" t-att-selected="'selected' if partner_data.get('documentType') == 'NIT' else None">Tax Identification Number</option>
+                        <option value="PPN" t-att-selected="'selected' if partner_data.get('documentType') == 'PPN' else None">Passport</option>
+                    </select>
+                </div>
+
+                <div class="col-md-6 mt-3">
+                    <label for="document-number" class="form-label fw-bold text-dark">
+                        <i class="fa fa-id-card text-primary me-2"></i>
+                        <span>Document Number *</span>
+                    </label>
+                    <input type="text" id="document-number" name="documentNumber" class="form-control" 
+                        placeholder="Enter identity document number" required="required"
+                        t-att-value="partner_data.get('documentNumber')" />
+                </div>
+
+                <div class="col-md-6 mt-3">
+                    <label for="firstName" class="form-label fw-bold text-dark">
+                        <i class="fa fa-user text-primary me-2"></i>
+                        <span>First Names *</span>
+                    </label>
+                    <input type="text" id="firstName" name="firstName" class="form-control" 
+                        placeholder="Enter your first names" required="required"
+                        t-att-value="partner_data.get('firstName')" />
+                </div>
+                <div class="col-md-6 mt-3">
+                    <label for="lastName" class="form-label fw-bold text-dark">
+                        <i class="fa fa-user text-primary me-2"></i>
+                        <span>Last Names *</span>
+                    </label>
+                    <input type="text" id="lastName" name="lastName" class="form-control" 
+                        placeholder="Enter your last names" required="required"
+                        t-att-value="partner_data.get('lastName')" />
+                </div>
+
+                <div class="col-md-6 mt-3">
+                    <label for="phone" class="form-label fw-bold text-dark">
+                        <i class="fa fa-phone text-primary me-2"></i>
+                        <span>Phone *</span>
+                    </label>
+                    <input type="tel" id="phone" name="phone" class="form-control" 
+                        placeholder="+57 300 123 4567" required="required"
+                        t-att-value="partner_data.get('phone')" />
+                </div>
+
+                <div class="col-md-6 mt-3">
+                    <label for="address" class="form-label fw-semibold text-dark">
+                        <i class="fa fa-map-marker text-primary me-2"></i>
+                        <span>Address</span>
+                    </label>
+                    <input type="text" id="address" name="address" class="form-control" 
+                        placeholder="Street, number, neighborhood" required="required"
+                        t-att-value="partner_data.get('address')" />
+                </div>
+
+            </div>
+        </div>
+    </template>
+
+</odoo>

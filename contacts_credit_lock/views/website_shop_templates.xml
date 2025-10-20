@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portfolio_block_banner" name="Portfolio Block Banner" inherit_id="website.layout">
+        <xpath expr="//header" position="before">
+            <!-- Verificar si el usuario está autenticado y bloqueado -->
+            <t t-if="request.env.user and not request.env.user._is_public()">
+                <t t-set="partner" t-value="request.env.user.partner_id"/>
+                <t t-if="partner._is_portfolio_blocked()">
+                    <t t-set="block_reason" t-value="partner._get_portfolio_block_reason()"/>
+                    <div class="portfolio-block-banner-minimal">
+                        <div class="container-fluid">
+                            <div class="row align-items-center py-2">
+                                <div class="col-auto">
+                                    <i class="fa fa-exclamation-circle fa-lg"/>
+                                </div>
+                                
+                                <div class="col">
+                                    <strong>Cuenta Bloqueada por Cartera</strong>
+                                    <span class="d-none d-md-inline ms-2">—</span>
+                                    <span class="d-none d-md-inline ms-2">
+                                        <t t-esc="block_reason or 'No se especificó una razón.'"/>
+                                    </span>
+                                </div>
+                                
+                                <div class="col-auto d-none d-lg-block">
+                                    <small class="text-white-50">
+                                        <i class="fa fa-phone me-1"/>
+                                        <a href="https://wa.me/573222760904?text=Hola%2C%20quiero%20solucionar%20mi%20situaci%C3%B3n%20de%20cartera" target="_blank">Contacte al área de cartera para más información</a>
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </xpath>
+    </template>
+</odoo>
+
+

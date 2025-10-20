@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Add checkboxes and bulk payment functionality to invoice list -->
+    <template id="portal_my_invoices_bulk_payment" inherit_id="account.portal_my_invoices">
+       
+        <!-- Add bulk payment summary bar -->
+        <xpath expr="//t[@t-if='not invoices']" position="before">
+            <div t-if="invoices" class="mb-3 o_invoice_bulk_controls">
+                <!-- Bulk payment summary (hidden by default, shown when invoices selected) -->
+                <div id="bulk_payment_summary" class="d-none rounded-3">
+                    <div class="alert alert-light border-0 mb-0 ">
+                        <div class="d-flex justify-content-between align-items-center gap-3">
+                            <!-- Left side: Total amount -->
+                            <div class="text-center">
+                                <span class="text-muted small">Total to pay</span>
+                                <div class="fw-bold fs-5">
+                                    <span id="bulk_total_amount" class="text-nowrap"></span>
+                                </div>
+                            </div>
+                            
+                            <!-- Right side: Action button -->
+                            <div>
+                                <button type="button" id="proceed_bulk_payment_btn"
+                                    class="btn btn-primary d-flex align-items-center gap-2">
+                                    <span>Go to payment</span>
+                                    <i class="fa fa-arrow-circle-right"/>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+        
+        <!-- Add checkbox column header at the beginning -->
+        <xpath expr="//thead/tr[hasclass('active')]/th[1]" position="before">
+            <th class="bulk-selection-header" style="width: 50px;">
+                <input type="checkbox" id="select_all_invoices" class="form-check-input" title="Select All"/>
+            </th>
+        </xpath>
+        
+        <!-- Add checkbox to each invoice row at the beginning -->
+        <xpath expr="//t[@t-foreach='invoices']/tr/td[1]" position="before">
+            <td class="bulk-selection-cell">
+                <t t-set="invoice" t-value="invoice_data['invoice']"/>
+                <input t-if="invoice._has_to_be_paid()"
+                    type="checkbox" 
+                    name="invoice_checkbox"
+                    t-att-value="invoice.id"
+                    t-att-data-amount="invoice.amount_residual"
+                    t-att-data-currency-id="invoice.currency_id.id"
+                    t-att-data-currency-symbol="invoice.currency_id.symbol"
+                    class="form-check-input invoice-checkbox"/>
+            </td>
+        </xpath>
+    </template>
+
+    <!-- Extend overdue invoices payment page to add invoice cards with editable amounts -->
+    <template id="portal_selected_invoices_payment_page" name="Selected Invoices Payment" inherit_id="account_payment.portal_overdue_invoices_page">
+        <xpath expr="//div[hasclass('col-lg-7')]" position="attributes">
+            <attribute name="class" add="rutavity-payment-page" separator=" "/>
+        </xpath>
+        
+        <!-- Replace the summary with our custom invoice cards -->
+        <xpath expr="//div[hasclass('text-bg-light')]" position="replace">
+            <!-- Title with proper i18n support -->
+            <h3 class="mb-4 text-center" t-out="page_title"/>
+        
+            <!-- Selected Invoices Summary with Editable Amounts (Card Design) -->
+            <div class="mb-4">
+                <!-- Invoices Container -->
+                <div id="invoices_payment_card" class="invoices-grid mb-3">
+                    <t t-foreach="invoices" t-as="invoice">
+                        <div>
+                            <div class="card invoice-card shadow-sm h-100" t-att-data-invoice-id="invoice.id">
+                                <div class="card-body">
+                                    <!-- Header Row: Invoice ID and Balance Due -->
+                                    <div class="row mb-2">
+                                        <div class="col-6">
+                                            <small class="text-muted d-block">Invoice</small>
+                                            <strong class="d-block text-nowrap" t-out="invoice.name"/>
+                                        </div>
+                                        <div class="col-6 text-end">
+                                            <small class="text-muted d-block">Balance Due</small>
+                                            <span class="text-primary fw-bold" 
+                                                    t-out="invoice.amount_residual" 
+                                                    t-options="{'widget': 'monetary', 'display_currency': invoice.currency_id}"/>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Customer Name Row -->
+                                    <div class="row mb-3">
+                                        <div class="col-12">
+                                            <small class="text-muted d-block">Customer</small>
+                                            <span class="d-block" t-out="invoice.partner_id.anonymized_name if logged_partner and logged_partner.id != invoice.partner_id.id else invoice.partner_id.name"/>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Amount to Pay Input -->
+                                    <div class="row">
+                                        <div class="col-12 text-center">
+                                            <label class="form-label small text-muted mb-1">
+                                                <i class="fa fa-pencil me-1"/>Amount to Pay
+                                            </label>
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-light" t-out="invoice.currency_id.symbol"/>
+                                                <input 
+                                                    type="number" 
+                                                    class="form-control form-control-lg fw-bold invoice-amount-input text-center"
+                                                    t-att-name="'amount_' + str(invoice.id)"
+                                                    t-att-data-invoice-id="invoice.id"
+                                                    t-att-data-max-amount="invoice.amount_residual"
+                                                    t-att-data-currency-id="invoice.currency_id.id"
+                                                    t-att-value="invoice.amount_residual"
+                                                    step="0.01"
+                                                    min="0.01"
+                                                    placeholder="0.00"
+                                                    required="required"/>
+                                            </div>
+                                            <small class="text-danger d-none invalid-amount-msg mt-1 d-block">
+                                                <i class="fa fa-exclamation-triangle me-1"/>
+                                                Amount must be between 0.01 and <span class="max-amount-display"/>
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+                
+                <!-- Total Summary Card -->
+                <div class="card border-primary shadow-sm">
+                    <div class="card-body bg-light">
+                        <div class="row align-items-center">
+                            <div class="col-12 col-md-6 text-center text-md-start">
+                                <h6 class="mb-0 text-muted">Total to pay</h6>
+                            </div>
+                            <div class="col-12 col-md-6 text-center text-md-end">
+                                <div class="d-flex justify-content-center justify-content-md-end align-items-center gap-2 fs-4 fw-bold text-primary">
+                                    <span id="payment_total_currency" class="d-none" t-out="currency.symbol"/>
+                                    <span id="payment_total_amount" 
+                                        t-options="{'widget': 'monetary', 'display_currency': currency}"
+                                        t-out="sum(invoices.mapped('amount_residual'))"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+</odoo>
+

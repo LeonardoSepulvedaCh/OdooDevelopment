@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Modify native cron to execute every 1 minute and activate it -->
+    <record model="ir.cron" id="payment.cron_post_process_payment_tx">
+        <field name="interval_number">1</field>
+        <field name="interval_type">minutes</field>
+        <field name="active" eval="True"/>
+    </record>
+
+</odoo>
+

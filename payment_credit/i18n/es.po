@@ -1,0 +1,87 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_credit
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-10-08 15:53+0000\n"
+"PO-Revision-Date: 2025-10-08 15:53+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: payment_credit
+#: model:ir.model,name:payment_credit.model_res_partner
+msgid "Contact"
+msgstr "Contacto"
+
+#. module: payment_credit
+#: model:ir.model,website_form_label:payment_credit.model_res_partner
+msgid "Create a Customer"
+msgstr "Crear un cliente"
+
+#. module: payment_credit
+#: model:payment.method,name:payment_credit.payment_method_credit
+msgid "Credit"
+msgstr ""
+
+#. module: payment_credit
+#: model:ir.model.fields,field_description:payment_credit.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:payment_credit.field_payment_transaction__display_name
+#: model:ir.model.fields,field_description:payment_credit.field_res_partner__display_name
+msgid "Display Name"
+msgstr "Nombre mostrado"
+
+#. module: payment_credit
+#: model:ir.model.fields,field_description:payment_credit.field_payment_provider__id
+#: model:ir.model.fields,field_description:payment_credit.field_payment_transaction__id
+#: model:ir.model.fields,field_description:payment_credit.field_res_partner__id
+msgid "ID"
+msgstr ""
+
+#. module: payment_credit
+#: model:ir.model,name:payment_credit.model_payment_provider
+msgid "Payment Provider"
+msgstr "Proveedor de pago"
+
+#. module: payment_credit
+#: model:ir.model,name:payment_credit.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Transacción de pago"
+
+#. module: payment_credit
+#. odoo-python
+#: code:addons/payment_credit/models/payment_provider.py:0
+msgid "Rutavity Credit is only available for orders"
+msgstr "Crédito Rutavity solo está disponible para pedidos"
+
+#. module: payment_credit
+#. odoo-python
+#: code:addons/payment_credit/models/payment_transaction.py:0
+msgid "Selected payment method: %s"
+msgstr "Método de pago seleccionado: %s"
+
+#. module: payment_credit
+#: model_terms:ir.ui.view,arch_db:payment_credit.view_order_form_inherit
+msgid "Transactions"
+msgstr "Transacciones"
+
+#. module: payment_credit
+#: model_terms:ir.ui.view,arch_db:payment_credit.credit_payment_form
+msgid ""
+"You can't use this payment method because it exceeds your credit limit. Your"
+" available credit is:"
+msgstr ""
+"No puede utilizar este método de pago porque excede su límite de crédito. Su"
+" crédito disponible es:"
+
+#. module: payment_credit
+#. odoo-python
+#: code:addons/payment_credit/controllers/payment.py:0
+msgid "You do not have sufficient credit to complete this transaction."
+msgstr "No tiene suficiente crédito para completar esta transacción."

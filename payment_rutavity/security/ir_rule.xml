@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Public user can read account moves (invoices) from current company -->
+        <record id="account_move_public_user_rule" model="ir.rule">
+            <field name="name">Public User: Read Account Moves (Current Company)</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+            <field name="groups" eval="[(4, ref('base.group_public'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <!-- Public user can read payment transactions from current company -->
+        <record id="payment_transaction_public_user_rule" model="ir.rule">
+            <field name="name">Public User: Read Payment Transactions (Current Company)</field>
+            <field name="model_id" ref="payment.model_payment_transaction"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+            <field name="groups" eval="[(4, ref('base.group_public'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+    </data>
+</odoo>
+

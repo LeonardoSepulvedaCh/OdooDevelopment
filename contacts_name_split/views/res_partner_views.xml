@@ -26,8 +26,8 @@
                 <page string="Datos Adicionales" name="datos_adicionales">
                     <group string="Nombres y Apellidos Cliente / Representante" colspan="2">
                         <group>
-                            <field name="first_name" placeholder="Primer Nombre" help="Este campo es obligatorio para el envío de facturas. En caso de ser una persona jurídica, distribuir el nombre en los campos de Primer Nombre y Primer Apellido"/>
-                            <field name="first_surname" placeholder="Primer Apellido" help="Este campo es obligatorio para el envío de facturas. En caso de ser una persona jurídica, distribuir el apellido en los campos de Primer Apellido y Segundo Apellido"/>
+                            <field name="first_name" placeholder="Primer Nombre" required="1" help="Este campo es obligatorio para el envío de facturas. En caso de ser una persona jurídica, distribuir el nombre en los campos de Primer Nombre y Primer Apellido"/>
+                            <field name="first_surname" placeholder="Primer Apellido" required="1" help="Este campo es obligatorio para el envío de facturas. En caso de ser una persona jurídica, distribuir el apellido en los campos de Primer Apellido y Segundo Apellido"/>
                         </group>
                         <group>
                             <field name="second_name" placeholder="Segundo Nombre"/>

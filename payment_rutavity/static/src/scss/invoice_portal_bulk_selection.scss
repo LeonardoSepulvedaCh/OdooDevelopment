@@ -1,0 +1,75 @@
+/**
+ * Author: Sebastián Rodríguez
+ * Styles for invoice portal bulk selection interface
+ */
+
+// Bulk selection controls
+.o_invoice_bulk_controls {
+    // Checkbox column styling
+    .bulk-selection-header,
+    .bulk-selection-cell {
+        text-align: center;
+        vertical-align: middle;
+
+        .form-check-input {
+            cursor: pointer;
+            width: 1.2em;
+            height: 1.2em;
+            margin: 0;
+        }
+    }
+
+    #bulk_payment_summary {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1050;
+        box-shadow: rgba(17, 68, 119, 0.39) 1px 11px 79px 8px;
+        transition: all 0.2s ease;
+        animation: slideUp 0.3s ease-out;
+
+        .alert {
+            border-radius: 8px;
+        }
+    }
+}
+
+// Responsive adjustments for mobile
+@media (max-width: 768px) {
+    .o_invoice_bulk_controls {
+        #bulk_payment_summary {
+            width: 95%;
+            bottom: 10px;
+
+            .alert {
+                flex-direction: column;
+                gap: 10px !important;
+                text-align: center;
+            }
+        }
+    }
+}
+
+// Responsive adjustments for desktop
+@media (min-width: 992px) {
+    .o_invoice_bulk_controls {
+        #bulk_payment_summary {
+            min-width: 430px;
+            max-width: 90%;
+        }
+    }
+}
+
+// Animation for floating banner
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}

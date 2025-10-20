@@ -1,0 +1,163 @@
+/**
+ * Author: Sebastián Rodríguez
+ * Styles for Invoice Payment Amounts Cards
+ */
+.rutavity-payment-page {
+
+    // Responsive Grid for Invoice Cards
+    .invoices-grid {
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: 1fr;
+
+        // Tablets and up: 2 columns
+        @media (min-width: 768px) {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+    }
+
+    // Invoice Cards Design
+    .invoice-card {
+        transition: all 0.3s ease;
+        border: 1px solid #dee2e6;
+
+        &:hover {
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+            transform: translateY(-2px);
+        }
+
+        // Invalid state
+        &:has(.invoice-amount-input.is-invalid) {
+            border-color: #dc3545;
+            background-color: #fff5f5;
+        }
+
+        // Small labels styling
+        small.text-muted {
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        // Amount input styling
+        .invoice-amount-input {
+            font-size: 1.25rem;
+
+            &:focus {
+                border-color: var(--bs-primary);
+                box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25);
+            }
+
+            &.is-invalid {
+                border-color: #dc3545;
+
+                &:focus {
+                    box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+                }
+            }
+        }
+    }
+
+    // Total Summary Card
+    .card.border-primary {
+        border-width: 2px;
+
+        .card-body {
+            padding: 1.25rem;
+        }
+    }
+
+    // Responsive improvements for mobile
+    @media (max-width: 767.98px) {
+        .invoice-card {
+            .row {
+                margin-bottom: 0.75rem !important;
+
+                &:last-child {
+                    margin-bottom: 0 !important;
+                }
+            }
+
+            // Stack columns on mobile for better readability
+            .col-6 {
+                &:first-child {
+                    margin-bottom: 0.5rem;
+                }
+            }
+        }
+
+
+    }
+
+    // Animation for validation messages
+    .invalid-amount-msg {
+        animation: fadeIn 0.3s ease-in;
+
+        &.d-none {
+            animation: fadeOut 0.3s ease-out;
+        }
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeOut {
+        from {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        to {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+    }
+
+    // Quick action buttons
+    #reset_amounts_btn,
+    #clear_amounts_btn {
+        font-weight: 500;
+
+        &:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+    }
+
+    // Badge styling
+    .badge.bg-primary.rounded-pill {
+        font-size: 0.875rem;
+        padding: 0.35rem 0.65rem;
+    }
+
+    // Info alert styling
+    .alert-info {
+        border-left: 4px solid var(--bs-info);
+        background-color: rgba(var(--bs-info-rgb), 0.1);
+        border-color: rgba(var(--bs-info-rgb), 0.2);
+    }
+
+
+    #o_payment_methods  {
+        > p:first-child {
+            background-color: var(--primary);
+            color: white;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+
+            i:before {
+                color: white;
+            }
+        }
+    }
+}

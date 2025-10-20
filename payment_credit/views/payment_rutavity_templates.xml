@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherit redirect_form from payment_rutavity to add credit payment method support -->
+    <template id="redirect_form_inherit_credit" inherit_id="payment_rutavity.redirect_form">
+        <xpath expr="//t[@t-if]" position="after">
+            <t t-elif="payment_method_code == 'credit'">
+                <t t-call="payment_credit.redirect_form_credit"/>
+            </t>
+        </xpath>
+    </template>
+
+    <!-- Credit specific redirect form -->
+    <template id="redirect_form_credit">
+        <form t-att-action="api_url" method="post">
+            <input type="hidden" name="reference" t-att-value="reference"/>
+        </form>
+    </template>
+
+    <!-- Inherit inline_form from payment_rutavity to add credit payment method support -->
+    <template id="inline_form_inherit_credit" inherit_id="payment_rutavity.inline_form">
+        <xpath expr="//t[@t-if]" position="after">
+            <t t-elif="payment_method_code == 'credit'">
+                <t t-call="payment_credit.inline_form_credit"/>
+            </t>
+        </xpath>
+    </template>
+
+    <!-- Credit specific inline form -->
+    <template id="inline_form_credit">
+        <div id="rutavity-credit-container">
+            <t t-call="payment_credit.credit_payment_form" />
+        </div>
+    </template>
+
+    <!-- Credit payment form template -->
+    <template id="credit_payment_form">
+        <div class="row gap-md-0">
+            <t t-set="sales" t-value="env['sale.order'].browse(sale_order_id)"/>
+
+            <t t-if="sales.sudo().partner_id._has_sufficient_credit(sales.amount_total) == False">
+                <div class="col-12 col-md mt-0 mb-0">
+                    <div class="alert alert-warning mb-0" role="alert">
+                        <span>
+                            You can't use this payment method because it exceeds your credit limit. Your available credit is:
+                            <strong t-out="sales.sudo().partner_id._get_available_credit(True)"/>
+                        </span>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </template>
+</odoo>

@@ -1,101 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Vista para agregar los campos de bloqueo y mora en el formulario de contacto -->
-    <record id="view_partner_form_inherit_credit_lock" model="ir.ui.view">
-        <field name="name">res.partner.form.inherit.credit_lock</field>
+    <!-- Campos para el bloqueo por cartera en el formulario de contacto -->
+    <record id="view_partner_form_portfolio_block" model="ir.ui.view">
+        <field name="name">res.partner.form.portfolio.block</field>
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
-            
-            <!-- Agregar campos en la página de Ventas y Compras -->
-            <xpath expr="//page[@name='sales_purchases']" position="inside">
-                <group string="Control de Crédito y Mora" name="credit_control">
-                    <field name="is_credit_locked" 
-                           widget="boolean_toggle"
-                           help="Active para bloquear manualmente las ventas a este cliente"/>
-                    <field name="has_arrears" readonly="1" invisible="1"/>
-                    <field name="arrears_amount_debt" 
-                           widget="monetary" 
-                           readonly="1"
-                           invisible="arrears_amount_debt == 0"
-                           decoration-danger="arrears_amount_debt &gt; 0"/>
-                    <field name="parent_has_arrears" readonly="1" invisible="1"/>
-                    <field name="children_have_arrears" readonly="1" invisible="1"/>
-                    <field name="family_arrears_amount" 
-                           widget="monetary" 
-                           readonly="1"
-                           invisible="family_arrears_amount == arrears_amount_debt"
-                           decoration-danger="family_arrears_amount &gt; 0"
-                           help="Incluye mora del contacto, padre e hijos"/>
+            <xpath expr="//page[@name='sales_purchases']//group[@name='sale']" position="after">
+                <field name="can_user_block_portfolio" invisible="1"/>
+                
+                <group name="portfolio_block" 
+                       string="Bloqueo por Cartera"
+                       invisible="not can_user_block_portfolio">
+                    <field name="portfolio_blocked" widget="boolean_toggle"/>
+                    <field name="portfolio_block_reason" 
+                           invisible="not portfolio_blocked"
+                           placeholder="Especifique la razón por la cual este contacto está bloqueado."/>
                 </group>
-                
-                <!-- Alerta de mora propia -->
-                <div class="p-3 mb-3 border border-danger rounded" 
-                     style="background-color:rgba(220, 53, 69, 0.1);"
-                     invisible="arrears_amount_debt == 0">
-                    <div class="d-flex align-items-center">
-                        <i class="fa fa-exclamation-triangle fa-2x me-3 text-danger" title="Cliente con mora"/>
-                        <div>
-                            <h5 class="mb-1 text-danger">
-                                <strong>⚠️ CLIENTE CON DEUDA EN MORA</strong>
-                            </h5>
-                            <p class="mb-1">
-                                Este cliente tiene facturas vencidas hace más de 30 días por un monto de:
-                                <strong class="text-danger fs-5">
-                                    <field name="arrears_amount_debt" widget="monetary" readonly="1" nolabel="1" class="d-inline"/>
-                                </strong>
-                            </p>
-                            <small class="text-muted">
-                                <i class="fa fa-info-circle me-1"/>
-                                No se podrán confirmar órdenes de venta hasta regularizar la situación crediticia.
-                            </small>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Alerta de mora del padre -->
-                <div class="p-3 mb-3 border border-warning rounded" 
-                     style="background-color:rgba(255, 193, 7, 0.1);"
-                     invisible="not parent_has_arrears">
-                    <div class="d-flex align-items-center">
-                        <i class="fa fa-users fa-2x me-3 text-warning" title="Contacto padre con mora"/>
-                        <div>
-                            <h5 class="mb-1 text-warning">
-                                <strong>⚠️ CONTACTO PADRE CON MORA O BLOQUEADO</strong>
-                            </h5>
-                            <p class="mb-1">
-                                El contacto padre de este cliente tiene deuda en mora o está bloqueado manualmente.
-                            </p>
-                            <small class="text-muted">
-                                <i class="fa fa-info-circle me-1"/>
-                                Este contacto también quedará bloqueado hasta que se regularice la situación del padre.
-                            </small>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Alerta de mora de hijos -->
-                <div class="p-3 mb-3 border border-warning rounded" 
-                     style="background-color:rgba(255, 193, 7, 0.1);"
-                     invisible="not children_have_arrears">
-                    <div class="d-flex align-items-center">
-                        <i class="fa fa-sitemap fa-2x me-3 text-warning" title="Contactos hijos con mora"/>
-                        <div>
-                            <h5 class="mb-1 text-warning">
-                                <strong>⚠️ CONTACTOS HIJOS CON MORA O BLOQUEADOS</strong>
-                            </h5>
-                            <p class="mb-1">
-                                Uno o más contactos hijos de este cliente tienen deuda en mora o están bloqueados.
-                            </p>
-                            <small class="text-muted">
-                                <i class="fa fa-info-circle me-1"/>
-                                Este contacto también quedará bloqueado hasta que se regularice la situación de los hijos.
-                            </small>
-                        </div>
-                    </div>
-                </div>
             </xpath>
-            
+        </field>
+    </record>
+
+    <!-- Filtro para buscar contactos bloqueados por cartera en la vista de lista -->
+    <record id="view_partner_search_portfolio_block" model="ir.ui.view">
+        <field name="name">res.partner.search.portfolio.block</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='inactive']" position="after">
+                <separator/>
+                <filter name="portfolio_blocked" 
+                        string="Bloqueo por Cartera" 
+                        domain="[('portfolio_blocked', '=', True)]"
+                        help="Contactos bloqueados por problemas de cartera"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Campo para visualizar el estado de bloqueo en la vista de lista -->
+    <record id="view_partner_tree_portfolio_block" model="ir.ui.view">
+        <field name="name">res.partner.tree.portfolio.block</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='phone']" position="after">
+                <field name="portfolio_blocked" 
+                       widget="boolean_toggle" 
+                       optional="hide"/>
+            </xpath>
         </field>
     </record>
 </odoo>

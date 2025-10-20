@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Add gateway fields to payment transaction form view -->
+    <record id="payment_transaction_form_rutavity" model="ir.ui.view">
+        <field name="name">payment.transaction.form.rutavity</field>
+        <field name="model">payment.transaction</field>
+        <field name="inherit_id" ref="payment.payment_transaction_form"/>
+        <field name="arch" type="xml">
+            <!-- Add gateway status and message in transaction_details group -->
+            <xpath expr="//group[@name='transaction_details']/field[@name='is_post_processed']" position="after">
+                <field name="payment_method_code" invisible="1"/>
+                <field name="gateway_response_data" invisible="1"/>
+            </xpath>
+            
+            <!-- Add gateway information group after transaction_partner -->
+            <xpath expr="//group[@name='transaction_partner']" position="after">
+                <group name="rutavity_gateway_fields" 
+                       string="Gateway Information"
+                       invisible="provider_code != 'rutavity' or payment_method_code != 'pse'"
+                       colspan="2">
+                    <field name="gateway_status" string="Status" readonly="1"/>
+                    <field name="gateway_response_message" string="Message" readonly="1"/>
+                    <field name="provider_reference" string="Reference" readonly="1"/>
+                    <field name="gateway_franchise" string="Franchise" readonly="1"/>
+                    <field name="gateway_bank" string="Bank" readonly="1"/>
+                </group>
+                
+                <!-- Add invoice amounts detail for multiple invoice payments -->
+                <group name="invoice_amounts_detail_group" 
+                       string="Invoice Payment Details"
+                       invisible="not invoice_amounts_detail"
+                       colspan="2">
+                    <field name="invoice_amounts_detail" widget="json_viewer" readonly="1" nolabel="1"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
