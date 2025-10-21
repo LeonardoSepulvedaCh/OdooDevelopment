@@ -1,4 +1,5 @@
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
@@ -59,6 +60,18 @@ class ResPartner(models.Model):
                 partner.is_legal_person = True
             else:
                 partner.is_legal_person = False
+
+    @api.constrains('first_name', 'first_surname', 'is_company')
+    def _check_required_fields_for_company(self):
+        """
+        Valida que first_name y first_surname sean obligatorios solo para compañías
+        """
+        for partner in self:
+            if partner.is_company:
+                if not partner.first_name:
+                    raise ValidationError("El campo 'Primer Nombre' es obligatorio para compañías.")
+                if not partner.first_surname:
+                    raise ValidationError("El campo 'Primer Apellido' es obligatorio para compañías.")
 
 
 

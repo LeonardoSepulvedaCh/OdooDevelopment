@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Secuencias para cada tipo de serie de tickets -->
+        
+        <record id="sequence_helpdesk_pqrs" model="ir.sequence">
+            <field name="name">Ticket PQRS</field>
+            <field name="code">helpdesk.ticket.pqrs</field>
+            <field name="prefix"></field>
+            <field name="padding">1</field>
+            <field name="number_increment">1</field>
+            <field name="number_next">1</field>
+            <field name="implementation">standard</field>
+        </record>
+        
+        <record id="sequence_helpdesk_ticket_cuc" model="ir.sequence">
+            <field name="name">Ticket Cucuta</field>
+            <field name="code">helpdesk.ticket.cuc</field>
+            <field name="prefix"></field>
+            <field name="padding">1</field>
+            <field name="number_increment">1</field>
+            <field name="number_next">1</field>
+            <field name="implementation">standard</field>
+        </record>
+        
+        <record id="sequence_helpdesk_ticket_med" model="ir.sequence">
+            <field name="name">Ticket Medellín</field>
+            <field name="code">helpdesk.ticket.med</field>
+            <field name="prefix"></field>
+            <field name="padding">1</field>
+            <field name="number_increment">1</field>
+            <field name="number_next">1</field>
+            <field name="implementation">standard</field>
+        </record>
+        
+        <record id="sequence_helpdesk_ticket_bog" model="ir.sequence">
+            <field name="name">Ticket Bogotá</field>
+            <field name="code">helpdesk.ticket.bog</field>
+            <field name="prefix"></field>
+            <field name="padding">1</field>
+            <field name="number_increment">1</field>
+            <field name="number_next">1</field>
+            <field name="implementation">standard</field>
+        </record>
+        
+        <record id="sequence_helpdesk_ticket_bga" model="ir.sequence">
+            <field name="name">Ticket Bucaramanga</field>
+            <field name="code">helpdesk.ticket.bga</field>
+            <field name="prefix"></field>
+            <field name="padding">1</field>
+            <field name="number_increment">1</field>
+            <field name="number_next">1</field>
+            <field name="implementation">standard</field>
+        </record>
+        
+        <record id="sequence_helpdesk_ticket_baq" model="ir.sequence">
+            <field name="name">Ticket Barranquilla</field>
+            <field name="code">helpdesk.ticket.baq</field>
+            <field name="prefix"></field>
+            <field name="padding">1</field>
+            <field name="number_increment">1</field>
+            <field name="number_next">1</field>
+            <field name="implementation">standard</field>
+        </record>
+        
+        <record id="sequence_helpdesk_ticket_cal" model="ir.sequence">
+            <field name="name">Ticket Cali</field>
+            <field name="code">helpdesk.ticket.cal</field>
+            <field name="prefix"></field>
+            <field name="padding">1</field>
+            <field name="number_increment">1</field>
+            <field name="number_next">1</field>
+            <field name="implementation">standard</field>
+        </record>
+        
+        <record id="sequence_helpdesk_ticket_other" model="ir.sequence">
+            <field name="name">Ticket Otro</field>
+            <field name="code">helpdesk.ticket.other</field>
+            <field name="prefix"></field>
+            <field name="padding">1</field>
+            <field name="number_increment">1</field>
+            <field name="number_next">1</field>
+            <field name="implementation">standard</field>
+        </record>
+        
+    </data>
+</odoo>
+

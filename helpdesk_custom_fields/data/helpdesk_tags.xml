@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Tags principales de calidad -->
+        <record id="helpdesk_tag_calidad_articulo" model="helpdesk.tag">
+            <field name="name">Calidad articulo</field>
+            <field name="color">1</field>
+        </record>
+        
+        <record id="helpdesk_tag_mercancia_trocada" model="helpdesk.tag">
+            <field name="name">Mercancia trocada</field>
+            <field name="color">2</field>
+        </record>
+        
+        <record id="helpdesk_tag_faltantes" model="helpdesk.tag">
+            <field name="name">Faltantes</field>
+            <field name="color">3</field>
+        </record>
+        
+        <record id="helpdesk_tag_rayones_golpes" model="helpdesk.tag">
+            <field name="name">Rayones/Golpes</field>
+            <field name="color">4</field>
+        </record>
+        
+        <!-- Tags de ajustes y gestión -->
+        <record id="helpdesk_tag_ajustes_generales" model="helpdesk.tag">
+            <field name="name">Ajustes generales</field>
+            <field name="color">5</field>
+        </record>
+        
+        <record id="helpdesk_tag_creacion_cliente" model="helpdesk.tag">
+            <field name="name">Creación Cliente</field>
+            <field name="color">6</field>
+        </record>
+        
+        <!-- Tags de demoras -->
+        <record id="helpdesk_tag_demora_despacho" model="helpdesk.tag">
+            <field name="name">Demora en despacho</field>
+            <field name="color">7</field>
+        </record>
+        
+        <record id="helpdesk_tag_demora_transportador" model="helpdesk.tag">
+            <field name="name">Demora transportador</field>
+            <field name="color">8</field>
+        </record>
+        
+        <!-- Tags de funcionamiento -->
+        <record id="helpdesk_tag_funcionamiento" model="helpdesk.tag">
+            <field name="name">Funcionamiento</field>
+            <field name="color">9</field>
+        </record>
+        
+        <record id="helpdesk_tag_facturacion" model="helpdesk.tag">
+            <field name="name">Facturación</field>
+            <field name="color">10</field>
+        </record>
+        
+        <!-- Tags de asesoría -->
+        <record id="helpdesk_tag_inconformidad_ases" model="helpdesk.tag">
+            <field name="name">Inconformidad Ases</field>
+            <field name="color">11</field>
+        </record>
+        
+        <record id="helpdesk_tag_no_visitan_cliente" model="helpdesk.tag">
+            <field name="name">No visitan Cliente</field>
+            <field name="color">12</field>
+        </record>
+        
+        <record id="helpdesk_tag_novedad_asesoria" model="helpdesk.tag">
+            <field name="name">Novedad asesoria</field>
+            <field name="color">13</field>
+        </record>
+        
+        <record id="helpdesk_tag_novedad_digitacion" model="helpdesk.tag">
+            <field name="name">Novedad digitació</field>
+            <field name="color">14</field>
+        </record>
+        
+        <!-- Tags generales -->
+        <record id="helpdesk_tag_otros" model="helpdesk.tag">
+            <field name="name">Otros</field>
+            <field name="color">15</field>
+        </record>
+        
+        <!-- Tags de piezas defectuosas -->
+        <record id="helpdesk_tag_pieza_defectuosa" model="helpdesk.tag">
+            <field name="name">Pieza defectuosa</field>
+            <field name="color">16</field>
+        </record>
+        
+        <record id="helpdesk_tag_pacto_reposicion" model="helpdesk.tag">
+            <field name="name">Pacto de reposición</field>
+            <field name="color">17</field>
+        </record>
+        
+        <!-- Tags de gestión -->
+        <record id="helpdesk_tag_quejas_reclamos" model="helpdesk.tag">
+            <field name="name">Quejas y reclamos</field>
+            <field name="color">18</field>
+        </record>
+        
+        <record id="helpdesk_tag_se_repite_dano" model="helpdesk.tag">
+            <field name="name">Se repite el daño</field>
+            <field name="color">19</field>
+        </record>
+        
+        <record id="helpdesk_tag_sin_gestionar" model="helpdesk.tag">
+            <field name="name">Sin gestionar</field>
+            <field name="color">20</field>
+        </record>
+        
+    </data>
+</odoo>

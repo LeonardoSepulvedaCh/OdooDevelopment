@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="helpdesk_team_view_form_inherit" model="ir.ui.view">
+        <field name="name">helpdesk.team.view.form.inherit</field>
+        <field name="model">helpdesk.team</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_team_view_form"/>
+        <field name="arch" type="xml">
+            <!-- Agregar el campo en la configuración del equipo -->
+            <xpath expr="//field[@name='description']" position="after">
+                <group string="Configuración de Garantías" name="warranty_config">
+                    <field name="is_warranty_team"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
+

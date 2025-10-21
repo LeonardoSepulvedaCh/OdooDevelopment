@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="helpdesk_ticket_view_form" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.view.form</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form" />
+        <field name="arch" type="xml">
+
+            <!-- Campo invisible para controlar la visibilidad -->
+            <xpath expr="//field[@name='team_id']" position="after">
+                <field name="is_warranty_team" invisible="1"/>
+            </xpath>
+
+            <xpath expr="//field[@name='user_id']" position="after">
+                <label for="serie" string="Serie" invisible="not is_warranty_team" class="o_form_label" required="is_warranty_team"/>
+                <div class="o_row" invisible="not is_warranty_team">
+                    <field name="serie" placeholder="Seleccione serie" required="is_warranty_team"/>
+                    <span class="mx-2">-</span>
+                    <field name="consecutive_number" readonly="1" placeholder="0"/>
+                </div>
+            </xpath>
+
+
+            <xpath expr="//field[@name='tag_ids']" position="after">
+                <field name="branch_id" invisible="not is_warranty_team"/>
+                <field name="origin" invisible="not is_warranty_team"/>
+            </xpath>
+
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="card_code" invisible="not is_warranty_team"/>
+                <field name="client_type" invisible="not is_warranty_team"/>
+            </xpath>
+
+            <!-- Crear una pagina en el notebook para el comentario del área de garantías -->
+            <xpath expr="//notebook" position="inside">
+                <page string="Comentario del área de garantías" name="warranty_comment" invisible="not is_warranty_team">
+                    <field name="warranty_comment" placeholder="Observaciones del área de garantías" />
+                </page>
+                
+                <page string="Anexos" name="attachments">
+                    <field name="attachment_ids" 
+                           widget="attachment_preview" 
+                           string="Subir Anexos"
+                           context="{'default_res_model': 'helpdesk.ticket', 'default_res_id': id}"/>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Herencia de la vista kanban para agregar serie y consecutivo -->
+    <record id="helpdesk_ticket_view_kanban_inherit" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.view.kanban.inherit</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_kanban"/>
+        <field name="arch" type="xml">
+            <!-- Agregar campos necesarios -->
+            <xpath expr="//kanban" position="inside">
+                <field name="is_warranty_team"/>
+                <field name="serie"/>
+                <field name="consecutive_number"/>
+            </xpath>
+
+            <!-- Agregar serie y consecutivo en el card después del nombre -->
+            <xpath expr="//div[hasclass('fw-bold', 'fs-5')]" position="after">
+                <div t-if="record.is_warranty_team.raw_value and record.serie.raw_value" class="text-muted">
+                    <span t-esc="record.serie.value"/> - <span t-esc="record.consecutive_number.value"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Herencia del formulario de creación rápida para agregar serie -->
+    <record id="quick_create_ticket_form_inherit" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.form.quick_create.inherit</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.quick_create_ticket_form"/>
+        <field name="arch" type="xml">
+            
+            <!-- Agregar campo is_warranty_team -->
+            <xpath expr="//field[@name='team_id'][1]" position="after">
+                <field name="is_warranty_team" invisible="1"/>
+            </xpath>
+
+            <!-- Agregar serie después del partner_id -->
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <label for="serie" string="Serie" 
+                       invisible="not is_warranty_team" 
+                       required="is_warranty_team"/>
+                <div class="o_row" invisible="not is_warranty_team">
+                    <field name="serie" placeholder="Seleccione serie" 
+                           required="is_warranty_team"/>
+                    <span class="mx-2">-</span>
+                    <field name="consecutive_number" readonly="1" placeholder="Auto"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

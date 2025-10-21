@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="helpdesk_custom_fields.AttachmentPreviewField">
+        <div class="o_attachment_preview_field">
+            <!-- Área de subida de archivos -->
+            <div class="o_attachment_upload_area mb-3" t-if="!props.readonly">
+                <FileInput
+                    className="'btn btn-primary'"
+                    accepted="'*/*'"
+                    onUpload.bind="onFileUploaded"
+                    multiUpload="true"
+                    resModel="resModel"
+                    resId="resId"
+                >
+                    <i class="fa fa-upload me-2"/>
+                    <t t-esc="uploadText or 'Subir archivos'"/>
+                </FileInput>
+            </div>
+
+            <!-- Lista de archivos -->
+            <div class="o_attachment_list" t-if="files.length > 0">
+                <div class="row g-3">
+                    <t t-foreach="files" t-as="file" t-key="file.id">
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                            <div class="o_attachment_card card h-100">
+                                <!-- Miniatura / Icono -->
+                                <div class="o_attachment_preview position-relative" 
+                                     t-att-class="file.isViewable ? 'cursor-pointer' : ''"
+                                     t-on-click="() => this.onFileClick(file)">
+                                    
+                                    <t t-if="file.isImage">
+                                        <div class="o_attachment_image_wrapper d-flex align-items-center justify-content-center" 
+                                             style="height: 200px; overflow: hidden; background: #f8f9fa;">
+                                            <img t-att-src="'/web/image/' + file.id + '?height=200'" 
+                                                 class="img-fluid"
+                                                 t-att-alt="file.name"
+                                                 style="max-height: 200px; object-fit: cover; width: 100%;"/>
+                                        </div>
+                                    </t>
+                                    <t t-else="">
+                                        <div class="o_attachment_icon_wrapper d-flex align-items-center justify-content-center text-muted" 
+                                             style="height: 200px; background: #f8f9fa;">
+                                            <i t-att-class="'fa fa-5x ' + getFileIcon(file.mimetype)"/>
+                                        </div>
+                                    </t>
+                                    
+                                    <!-- Badge para archivos visibles -->
+                                    <t t-if="file.isViewable">
+                                        <div class="position-absolute top-0 end-0 m-2">
+                                            <span class="badge bg-primary">
+                                                <i class="fa fa-eye me-1"/>Vista previa
+                                            </span>
+                                        </div>
+                                    </t>
+                                </div>
+
+                                <!-- Información del archivo -->
+                                <div class="card-body p-2">
+                                    <div class="o_attachment_info">
+                                        <div class="o_attachment_name small text-truncate fw-bold" 
+                                             t-att-title="file.name">
+                                            <t t-esc="getNameWithoutExtension(file)"/>
+                                        </div>
+                                        <div class="o_attachment_details small text-muted">
+                                            <span class="badge bg-secondary me-1" t-esc="getExtension(file)"/>
+                                        </div>
+                                        <div class="o_attachment_meta small text-muted">
+                                            <div t-if="getUserName(file)" class="mt-1">
+                                                <i class="fa fa-user me-1"/>
+                                                <t t-esc="getUserName(file)"/>
+                                            </div>
+                                            <div t-if="getFormattedDate(file)" class="mt-1">
+                                                <i class="fa fa-clock-o me-1"/>
+                                                <t t-esc="getFormattedDate(file)"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Acciones -->
+                                <div class="card-footer p-2 bg-transparent border-top-0">
+                                    <div class="btn-group w-100" role="group">
+                                        <a t-att-href="file.downloadUrl" 
+                                           class="btn btn-sm btn-outline-secondary"
+                                           title="Descargar"
+                                           download="">
+                                            <i class="fa fa-download"/>
+                                        </a>
+                                        <button t-if="!props.readonly"
+                                                type="button"
+                                                class="btn btn-sm btn-outline-primary"
+                                                t-on-click.stop="() => this.onFileRename(file.id, file.name)"
+                                                title="Renombrar">
+                                            <i class="fa fa-pencil"/>
+                                        </button>
+                                        <button t-if="!props.readonly"
+                                                type="button"
+                                                class="btn btn-sm btn-outline-danger"
+                                                t-on-click.stop="() => this.onFileRemove(file.id)"
+                                                title="Eliminar">
+                                            <i class="fa fa-trash"/>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </div>
+
+            <!-- Mensaje cuando no hay archivos -->
+            <div t-else="" class="alert alert-info text-center">
+                <i class="fa fa-info-circle me-2"/>
+                No hay archivos adjuntos
+            </div>
+        </div>
+    </t>
+
+</templates>
+
