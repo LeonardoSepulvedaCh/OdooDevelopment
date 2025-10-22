@@ -57,8 +57,16 @@ class HelpdeskTicket(models.Model):
     )
 
     warranty_comment = fields.Text(string='Comentario del área de garantías')
+    
+    # Campo para relacionar factura
+    invoice_id = fields.Many2one(
+        'account.move',
+        string='Factura',
+        domain="[('move_type', '=', 'out_invoice'), ('state', '=', 'posted'), ('partner_id', '=', partner_id)]",
+        help='Factura relacionada con este ticket de garantía'
+    )
+    
 
-    # Campo para gestionar adjuntos
     attachment_ids = fields.Many2many(
         'ir.attachment',
         'helpdesk_ticket_attachment_rel',
@@ -99,13 +107,22 @@ class HelpdeskTicket(models.Model):
         elif not self.partner_id:
             self.card_code = False
 
+    # Validar que la serie sea obligatoria para equipos de garantías
     @api.constrains('serie', 'team_id')
     def _check_serie_required_for_warranty_team(self):
-        """Validar que la serie sea obligatoria para equipos de garantías"""
         for ticket in self:
             if ticket.is_warranty_team and not ticket.serie:
                 raise ValidationError(
                     'El campo "Serie" es obligatorio para tickets del equipo de garantías.'
+                )
+    
+    # Validar que la factura sea obligatoria para equipos de garantías
+    @api.constrains('invoice_id', 'team_id')
+    def _check_invoice_required_for_warranty_team(self):
+        for ticket in self:
+            if ticket.is_warranty_team and not ticket.invoice_id:
+                raise ValidationError(
+                    'El campo "Factura" es obligatorio para tickets del equipo de garantías.'
                 )
 
     @api.model_create_multi

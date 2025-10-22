@@ -15,7 +15,7 @@
                 <label for="serie" string="Serie" invisible="not is_warranty_team" class="o_form_label" required="is_warranty_team"/>
                 <div class="o_row" invisible="not is_warranty_team">
                     <field name="serie" placeholder="Seleccione serie" required="is_warranty_team"/>
-                    <span class="mx-2">-</span>
+                    <span class="mx-2">#</span>
                     <field name="consecutive_number" readonly="1" placeholder="0"/>
                 </div>
             </xpath>
@@ -29,6 +29,12 @@
             <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="card_code" invisible="not is_warranty_team"/>
                 <field name="client_type" invisible="not is_warranty_team"/>
+                <field name="invoice_id" 
+                       invisible="not is_warranty_team"
+                       required="is_warranty_team"
+                       domain="[('move_type', '=', 'out_invoice'), ('state', '=', 'posted'), ('partner_id', '=', partner_id)]"
+                       context="{'default_partner_id': partner_id, 'default_move_type': 'out_invoice'}"
+                       options="{'no_create': True}"/>
             </xpath>
 
             <!-- Crear una pagina en el notebook para el comentario del área de garantías -->
@@ -63,7 +69,7 @@
             <!-- Agregar serie y consecutivo en el card después del nombre -->
             <xpath expr="//div[hasclass('fw-bold', 'fs-5')]" position="after">
                 <div t-if="record.is_warranty_team.raw_value and record.serie.raw_value" class="text-muted">
-                    <span t-esc="record.serie.value"/> - <span t-esc="record.consecutive_number.value"/>
+                    <span t-esc="record.serie.value"/> # <span t-esc="record.consecutive_number.value"/>
                 </div>
             </xpath>
         </field>
@@ -89,9 +95,15 @@
                 <div class="o_row" invisible="not is_warranty_team">
                     <field name="serie" placeholder="Seleccione serie" 
                            required="is_warranty_team"/>
-                    <span class="mx-2">-</span>
+                    <span class="mx-2">#</span>
                     <field name="consecutive_number" readonly="1" placeholder="Auto"/>
                 </div>
+                <field name="invoice_id" 
+                       invisible="not is_warranty_team"
+                       required="is_warranty_team"
+                       domain="[('move_type', '=', 'out_invoice'), ('state', '=', 'posted'), ('partner_id', '=', partner_id)]"
+                       context="{'default_partner_id': partner_id, 'default_move_type': 'out_invoice'}"
+                       options="{'no_create': True}"/>
             </xpath>
         </field>
     </record>
