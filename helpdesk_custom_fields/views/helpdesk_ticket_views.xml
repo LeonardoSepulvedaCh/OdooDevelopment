@@ -32,7 +32,6 @@
                 <field name="invoice_id" 
                        invisible="not is_warranty_team"
                        required="is_warranty_team"
-                       domain="[('move_type', '=', 'out_invoice'), ('state', '=', 'posted'), ('partner_id', '=', partner_id)]"
                        context="{'default_partner_id': partner_id, 'default_move_type': 'out_invoice'}"
                        options="{'no_create': True}"/>
             </xpath>
@@ -41,6 +40,93 @@
             <xpath expr="//notebook" position="inside">
                 <page string="Comentario del área de garantías" name="warranty_comment" invisible="not is_warranty_team">
                     <field name="warranty_comment" placeholder="Observaciones del área de garantías" />
+                </page>
+                
+                <page string="Gestión de Despacho" name="dispatch_management" invisible="not is_warranty_team">
+                    <group>
+                        <!-- COLUMNA IZQUIERDA: RETORNO (del cliente al almacén) -->
+                        <group string="Retorno del artículo al almacén" name="return_column">
+                            <field name="has_return"/>
+                            <field name="return_dispatch_method" 
+                                   invisible="not has_return" 
+                                   required="has_return"/>
+                            
+                            <!-- Datos de Transportadora (Retorno) -->
+                            <separator string="Datos de Transportadora" 
+                                       invisible="not has_return or return_dispatch_method != 'carrier'"/>
+                            
+                            <field name="return_carrier_name" 
+                                   invisible="not has_return or return_dispatch_method != 'carrier'"
+                                   required="has_return and return_dispatch_method == 'carrier'"/>
+                            
+                            <field name="return_carrier_guide_number" 
+                                   invisible="not has_return or return_dispatch_method != 'carrier'"
+                                   required="has_return and return_dispatch_method == 'carrier'"/>
+                            
+                            <field name="return_vehicle_plate" 
+                                   invisible="not has_return or return_dispatch_method != 'carrier'"
+                                   required="has_return and return_dispatch_method == 'carrier'"/>
+                            
+                            <field name="return_package_count" 
+                                   invisible="not has_return or return_dispatch_method != 'carrier'"
+                                   required="has_return and return_dispatch_method == 'carrier'"/>
+                            
+                            <field name="return_freight_value" 
+                                   widget="monetary"
+                                   invisible="not has_return or return_dispatch_method != 'carrier'"
+                                   required="has_return and return_dispatch_method == 'carrier'"/>
+                            
+                            <field name="return_declared_merchandise_value" 
+                                   widget="monetary"
+                                   invisible="not has_return or return_dispatch_method != 'carrier'"
+                                   required="has_return and return_dispatch_method == 'carrier'"/>
+                        </group>
+                        
+                        <!-- COLUMNA DERECHA: DESPACHO (del almacén al cliente) -->
+                        <group string="Despacho al cliente" name="dispatch_column">
+                            <field name="is_dispatched"/>
+                            <field name="dispatch_method" 
+                                   invisible="not is_dispatched" 
+                                   required="is_dispatched"/>
+                            
+                            <!-- Datos de Transportadora (Despacho) -->
+                            <separator string="Datos de Transportadora" 
+                                       invisible="not is_dispatched or dispatch_method != 'carrier'"/>
+                            
+                            <field name="carrier_name" 
+                                   invisible="not is_dispatched or dispatch_method != 'carrier'"
+                                   required="is_dispatched and dispatch_method == 'carrier'"/>
+                            
+                            <field name="carrier_guide_number" 
+                                   invisible="not is_dispatched or dispatch_method != 'carrier'"
+                                   required="is_dispatched and dispatch_method == 'carrier'"/>
+                            
+                            <field name="vehicle_plate" 
+                                   invisible="not is_dispatched or dispatch_method != 'carrier'"
+                                   required="is_dispatched and dispatch_method == 'carrier'"/>
+                            
+                            <field name="package_count" 
+                                   invisible="not is_dispatched or dispatch_method != 'carrier'"
+                                   required="is_dispatched and dispatch_method == 'carrier'"/>
+                            
+                            <field name="freight_value" 
+                                   widget="monetary"
+                                   invisible="not is_dispatched or dispatch_method != 'carrier'"
+                                   required="is_dispatched and dispatch_method == 'carrier'"/>
+                            
+                            <field name="declared_merchandise_value" 
+                                   widget="monetary"
+                                   invisible="not is_dispatched or dispatch_method != 'carrier'"
+                                   required="is_dispatched and dispatch_method == 'carrier'"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-warning" 
+                         invisible="not is_dispatched or dispatch_method == 'carrier'"
+                         role="alert">
+                        <p>
+                            <strong>Importante:</strong> Si es transportadora, debe de anexar la guía en la pestaña de Anexos.
+                        </p>
+                    </div>
                 </page>
                 
                 <page string="Anexos" name="attachments">
@@ -69,7 +155,7 @@
             <!-- Agregar serie y consecutivo en el card después del nombre -->
             <xpath expr="//div[hasclass('fw-bold', 'fs-5')]" position="after">
                 <div t-if="record.is_warranty_team.raw_value and record.serie.raw_value" class="text-muted">
-                    <span t-esc="record.serie.value"/> # <span t-esc="record.consecutive_number.value"/>
+                    <span t-out="record.serie.value"/> # <span t-out="record.consecutive_number.value"/>
                 </div>
             </xpath>
         </field>
@@ -101,7 +187,6 @@
                 <field name="invoice_id" 
                        invisible="not is_warranty_team"
                        required="is_warranty_team"
-                       domain="[('move_type', '=', 'out_invoice'), ('state', '=', 'posted'), ('partner_id', '=', partner_id)]"
                        context="{'default_partner_id': partner_id, 'default_move_type': 'out_invoice'}"
                        options="{'no_create': True}"/>
             </xpath>

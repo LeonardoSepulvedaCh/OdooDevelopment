@@ -14,7 +14,7 @@
                     resId="resId"
                 >
                     <i class="fa fa-upload me-2"/>
-                    <t t-esc="uploadText or 'Subir archivos'"/>
+                    <t t-out="uploadText or 'Subir archivos'"/>
                 </FileInput>
             </div>
 
@@ -60,19 +60,19 @@
                                     <div class="o_attachment_info">
                                         <div class="o_attachment_name small text-truncate fw-bold" 
                                              t-att-title="file.name">
-                                            <t t-esc="getNameWithoutExtension(file)"/>
+                                            <t t-out="getNameWithoutExtension(file)"/>
                                         </div>
                                         <div class="o_attachment_details small text-muted">
-                                            <span class="badge bg-secondary me-1" t-esc="getExtension(file)"/>
+                                            <span class="badge bg-secondary me-1" t-out="getExtension(file)"/>
                                         </div>
                                         <div class="o_attachment_meta small text-muted">
                                             <div t-if="getUserName(file)" class="mt-1">
                                                 <i class="fa fa-user me-1"/>
-                                                <t t-esc="getUserName(file)"/>
+                                                <t t-out="getUserName(file)"/>
                                             </div>
                                             <div t-if="getFormattedDate(file)" class="mt-1">
                                                 <i class="fa fa-clock-o me-1"/>
-                                                <t t-esc="getFormattedDate(file)"/>
+                                                <t t-out="getFormattedDate(file)"/>
                                             </div>
                                         </div>
                                     </div>

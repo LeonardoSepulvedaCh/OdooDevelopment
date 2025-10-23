@@ -1,6 +1,4 @@
 from odoo import fields, models, api
-from odoo.exceptions import ValidationError
-
 
 class HelpdeskTicket(models.Model):
     _inherit = 'helpdesk.ticket'
@@ -62,11 +60,10 @@ class HelpdeskTicket(models.Model):
     invoice_id = fields.Many2one(
         'account.move',
         string='Factura',
-        domain="[('move_type', '=', 'out_invoice'), ('state', '=', 'posted'), ('partner_id', '=', partner_id)]",
+        domain="[('partner_id', '=', partner_id)]",
         help='Factura relacionada con este ticket de garantía'
     )
     
-
     attachment_ids = fields.Many2many(
         'ir.attachment',
         'helpdesk_ticket_attachment_rel',
@@ -81,12 +78,6 @@ class HelpdeskTicket(models.Model):
         compute='_compute_attachment_count',
         store=True
     )
-    
-    @api.depends('attachment_ids')
-    def _compute_attachment_count(self):
-        """Calcular el número de adjuntos"""
-        for ticket in self:
-            ticket.attachment_count = len(ticket.attachment_ids)
 
     # Mapeo de series a códigos de secuencia
     _SERIE_SEQUENCE_MAP = {
@@ -106,61 +97,3 @@ class HelpdeskTicket(models.Model):
             self.card_code = self.partner_id.card_code
         elif not self.partner_id:
             self.card_code = False
-
-    # Validar que la serie sea obligatoria para equipos de garantías
-    @api.constrains('serie', 'team_id')
-    def _check_serie_required_for_warranty_team(self):
-        for ticket in self:
-            if ticket.is_warranty_team and not ticket.serie:
-                raise ValidationError(
-                    'El campo "Serie" es obligatorio para tickets del equipo de garantías.'
-                )
-    
-    # Validar que la factura sea obligatoria para equipos de garantías
-    @api.constrains('invoice_id', 'team_id')
-    def _check_invoice_required_for_warranty_team(self):
-        for ticket in self:
-            if ticket.is_warranty_team and not ticket.invoice_id:
-                raise ValidationError(
-                    'El campo "Factura" es obligatorio para tickets del equipo de garantías.'
-                )
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        for vals in vals_list:
-            if vals.get('partner_id') and not vals.get('card_code'):
-                partner = self.env['res.partner'].browse(vals['partner_id'])
-                if partner.card_code:
-                    vals['card_code'] = partner.card_code
-            
-            # Generar consecutivo usando secuencias de Odoo si se especifica una serie
-            if vals.get('serie'):
-                vals['consecutive_number'] = self._get_next_consecutive_number(vals['serie'])
-        
-        return super().create(vals_list)
-    
-    # Si se cambia la serie, regenerar el consecutivo. - Esto consumirá el numero de la secuencia anterior (ejem: si esta en la serie de cucuta con el 01 y cambio a bucara, el 01 de cucuta no se reutilizara)
-    def write(self, vals):
-        if 'serie' in vals:
-            for ticket in self:
-                # Solo asignar nuevo consecutivo si la serie cambió
-                if vals['serie'] != ticket.serie:
-                    vals['consecutive_number'] = self._get_next_consecutive_number(vals['serie'])
-        
-        return super().write(vals)
-    
-    # Obtener el siguiente número consecutivo usando ir.sequence.
-    def _get_next_consecutive_number(self, serie):
-        if not serie:
-            return 0
-        
-        sequence_code = self._SERIE_SEQUENCE_MAP.get(serie)
-        if not sequence_code:
-            return 0
-        
-        next_number = self.env['ir.sequence'].next_by_code(sequence_code)
-        
-        if next_number:
-            return int(next_number)
-        else:
-            return 0

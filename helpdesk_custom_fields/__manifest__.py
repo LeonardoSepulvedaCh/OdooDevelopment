@@ -11,6 +11,7 @@
     'author': '@LeonardoSepulvedaCh',
     'depends': ['helpdesk', 'contacts_birthday_alert', 'account', 'sale_management'],
     'data': [
+        'data/ir_config_parameter.xml',
         'data/helpdesk_sequences.xml',
         'data/helpdesk_tags.xml',
         'views/helpdesk_ticket_views.xml',
