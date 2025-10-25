@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Formato de papel personalizado para el reporte de garantía -->
+    <record id="paperformat_warranty_certificate" model="report.paperformat">
+        <field name="name">Formato Acta de Garantía</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">10</field>
+        <field name="margin_bottom">10</field>
+        <field name="margin_left">10</field>
+        <field name="margin_right">10</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">0</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <!-- Acción del reporte -->
+    <record id="action_report_warranty_certificate" model="ir.actions.report">
+        <field name="name">Acta de Garantía</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">helpdesk_custom_fields.report_warranty_certificate</field>
+        <field name="report_file">helpdesk_custom_fields.report_warranty_certificate</field>
+        <field name="binding_model_id" ref="helpdesk.model_helpdesk_ticket"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="helpdesk_custom_fields.paperformat_warranty_certificate"/>
+        <field name="print_report_name">'Acta_Garantia_%s_%s' % (object.serie or 'SIN_SERIE', object.consecutive_number or '0')</field>
+    </record>
+</odoo>
+

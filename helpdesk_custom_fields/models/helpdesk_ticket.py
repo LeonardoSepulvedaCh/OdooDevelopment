@@ -78,6 +78,28 @@ class HelpdeskTicket(models.Model):
         compute='_compute_attachment_count',
         store=True
     )
+    
+    # Campos para seguimiento de tiempo de resolución
+    date_closed = fields.Datetime(
+        string='Fecha de finalización',
+        readonly=True,
+        copy=False,
+        help='Fecha y hora en que el ticket fue cerrado/finalizado'
+    )
+    
+    resolution_time_hours = fields.Float(
+        string='Tiempo de resolución (horas)',
+        compute='_compute_resolution_time',
+        store=True,
+        help='Tiempo transcurrido desde la creación hasta la finalización del ticket en horas'
+    )
+    
+    resolution_time_days = fields.Float(
+        string='Tiempo de resolución (días)',
+        compute='_compute_resolution_time',
+        store=True,
+        help='Tiempo transcurrido desde la creación hasta la finalización del ticket en días'
+    )
 
     # Mapeo de series a códigos de secuencia
     _SERIE_SEQUENCE_MAP = {

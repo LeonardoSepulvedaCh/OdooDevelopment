@@ -9,19 +9,26 @@
     - Tipo de cliente
     """,
     'author': '@LeonardoSepulvedaCh',
-    'depends': ['helpdesk', 'contacts_birthday_alert', 'account', 'sale_management'],
+    'depends': ['helpdesk', 'contacts_birthday_alert', 'account', 'sale_management', 'stock'],
     'data': [
         'data/ir_config_parameter.xml',
         'data/helpdesk_sequences.xml',
         'data/helpdesk_tags.xml',
+        'data/res_partner_category.xml',
+        'report/helpdesk_warranty_report.xml',
+        'report/helpdesk_warranty_report_action.xml',
         'views/helpdesk_ticket_views.xml',
         'views/helpdesk_team_views.xml',
+        'views/res_users_views.xml',
     ],
     'assets': {
         'web.assets_backend': [
             'helpdesk_custom_fields/static/src/js/attachment_preview_field.js',
             'helpdesk_custom_fields/static/src/xml/attachment_preview_field.xml',
-            'helpdesk_custom_fields/static/src/css/attachment_preview_field.css',
+            'helpdesk_custom_fields/static/src/scss/attachment_preview_field.scss',
+        ],
+        'web.report_assets_common': [
+            'helpdesk_custom_fields/static/src/scss/warranty_report.scss',
         ],
     },
     'license': 'OPL-1',

@@ -6,9 +6,13 @@
         <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form" />
         <field name="arch" type="xml">
 
-            <!-- Campo invisible para controlar la visibilidad -->
-            <xpath expr="//field[@name='team_id']" position="after">
-                <field name="is_warranty_team" invisible="1"/>
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <button name="action_print_warranty_certificate" 
+                        string="Imprimir Acta" 
+                        type="object" 
+                        class="btn-primary"
+                        invisible="not is_warranty_team"
+                        icon="fa-print"/>
             </xpath>
 
             <xpath expr="//field[@name='user_id']" position="after">
@@ -20,10 +24,11 @@
                 </div>
             </xpath>
 
-
             <xpath expr="//field[@name='tag_ids']" position="after">
                 <field name="branch_id" invisible="not is_warranty_team"/>
                 <field name="origin" invisible="not is_warranty_team"/>
+                <field name="create_date" invisible="not is_warranty_team" string="Fecha de inicio"/>
+                <field name="date_closed" invisible="not is_warranty_team"/>
             </xpath>
 
             <xpath expr="//field[@name='partner_id']" position="after">
@@ -36,7 +41,6 @@
                        options="{'no_create': True}"/>
             </xpath>
 
-            <!-- Crear una pagina en el notebook para el comentario del área de garantías -->
             <xpath expr="//notebook" position="inside">
                 <page string="Comentario del área de garantías" name="warranty_comment" invisible="not is_warranty_team">
                     <field name="warranty_comment" placeholder="Observaciones del área de garantías" />
@@ -44,14 +48,12 @@
                 
                 <page string="Gestión de Despacho" name="dispatch_management" invisible="not is_warranty_team">
                     <group>
-                        <!-- COLUMNA IZQUIERDA: RETORNO (del cliente al almacén) -->
                         <group string="Retorno del artículo al almacén" name="return_column">
                             <field name="has_return"/>
                             <field name="return_dispatch_method" 
                                    invisible="not has_return" 
                                    required="has_return"/>
                             
-                            <!-- Datos de Transportadora (Retorno) -->
                             <separator string="Datos de Transportadora" 
                                        invisible="not has_return or return_dispatch_method != 'carrier'"/>
                             
@@ -82,14 +84,12 @@
                                    required="has_return and return_dispatch_method == 'carrier'"/>
                         </group>
                         
-                        <!-- COLUMNA DERECHA: DESPACHO (del almacén al cliente) -->
                         <group string="Despacho al cliente" name="dispatch_column">
                             <field name="is_dispatched"/>
                             <field name="dispatch_method" 
                                    invisible="not is_dispatched" 
                                    required="is_dispatched"/>
                             
-                            <!-- Datos de Transportadora (Despacho) -->
                             <separator string="Datos de Transportadora" 
                                        invisible="not is_dispatched or dispatch_method != 'carrier'"/>
                             
@@ -145,17 +145,23 @@
         <field name="model">helpdesk.ticket</field>
         <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_kanban"/>
         <field name="arch" type="xml">
-            <!-- Agregar campos necesarios -->
             <xpath expr="//kanban" position="inside">
                 <field name="is_warranty_team"/>
                 <field name="serie"/>
                 <field name="consecutive_number"/>
+                <field name="create_date"/>
+                <field name="date_closed"/>
             </xpath>
 
-            <!-- Agregar serie y consecutivo en el card después del nombre -->
             <xpath expr="//div[hasclass('fw-bold', 'fs-5')]" position="after">
                 <div t-if="record.is_warranty_team.raw_value and record.serie.raw_value" class="text-muted">
                     <span t-out="record.serie.value"/> # <span t-out="record.consecutive_number.value"/>
+                </div>
+                <div t-if="record.is_warranty_team.raw_value and record.create_date.raw_value" class="text-muted small">
+                    <i class="fa fa-calendar"/> Inicio: <span t-out="record.create_date.value"/>
+                </div>
+                <div t-if="record.is_warranty_team.raw_value and record.date_closed.raw_value" class="text-muted small">
+                    <i class="fa fa-check-circle"/> Finalizado: <span t-out="record.date_closed.value"/>
                 </div>
             </xpath>
         </field>
@@ -167,13 +173,7 @@
         <field name="model">helpdesk.ticket</field>
         <field name="inherit_id" ref="helpdesk.quick_create_ticket_form"/>
         <field name="arch" type="xml">
-            
-            <!-- Agregar campo is_warranty_team -->
-            <xpath expr="//field[@name='team_id'][1]" position="after">
-                <field name="is_warranty_team" invisible="1"/>
-            </xpath>
 
-            <!-- Agregar serie después del partner_id -->
             <xpath expr="//field[@name='partner_id']" position="after">
                 <label for="serie" string="Serie" 
                        invisible="not is_warranty_team" 
@@ -190,6 +190,7 @@
                        context="{'default_partner_id': partner_id, 'default_move_type': 'out_invoice'}"
                        options="{'no_create': True}"/>
             </xpath>
+
         </field>
     </record>
 </odoo>

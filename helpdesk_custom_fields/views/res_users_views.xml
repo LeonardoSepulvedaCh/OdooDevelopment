@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Herencia de la vista de formulario de usuario -->
+    <record id="res_users_view_form_inherit" model="ir.ui.view">
+        <field name="name">res.users.view.form.inherit</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <!-- Agregar el campo en la pestaña de Preferencias -->
+            <xpath expr="//page[@name='access_rights']" position="inside">
+                <group string="Permisos de Helpdesk" name="helpdesk_permissions">
+                    <field name="can_close_tickets"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
+

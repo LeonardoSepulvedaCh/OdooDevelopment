@@ -5,7 +5,13 @@
         <!-- Parámetro del sistema para configurar el nombre de la etapa que dispara actividades -->
         <record id="helpdesk_stage_trigger_name" model="ir.config_parameter">
             <field name="key">helpdesk_custom_fields.stage_trigger_name</field>
-            <field name="value">In Progress</field>
+            <field name="value">En Progreso</field>
+        </record>
+        
+        <!-- Parámetro del sistema para configurar el nombre de la etapa de finalización -->
+        <record id="helpdesk_stage_closed_name" model="ir.config_parameter">
+            <field name="key">helpdesk_custom_fields.stage_closed_name</field>
+            <field name="value">Resuelto</field>
         </record>
         
     </data>

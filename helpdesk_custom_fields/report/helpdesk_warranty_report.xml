@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Template principal del reporte -->
+    <template id="report_warranty_certificate">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.basic_layout">
+                    <t t-call="helpdesk_custom_fields.warranty_certificate_document"/>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <!-- Template del documento -->
+    <template id="warranty_certificate_document">
+        <div class="page warranty-certificate">
+                    <!-- Encabezado con título y número de ticket -->
+                    <div class="header-document">
+                        <h2>ACTA DE GARANTÍA - <span t-out="dict(o._fields['serie'].selection).get(o.serie, '') if o.serie else ''"/> No. <span t-out="o.consecutive_number or ''"/></h2>
+                    </div>
+
+                    <!-- Información del cliente -->
+                    <div class="header-section">Información del cliente</div>
+                    <table>
+                        <tr>
+                            <td class="field-label">Cliente:</td>
+                            <td colspan="3"><span t-out="o.partner_id.name or ''"/></td>
+                            <td class="field-label">Fecha reporte:</td>
+                            <td><span t-out="o.create_date and o.create_date.strftime('%d/%m/%Y') or ''"/></td>
+                        </tr>
+                        <tr>
+                            <td class="field-label">NIT:</td>
+                            <td colspan="3"><span t-out="o.partner_id.vat or o.card_code or ''"/></td>
+                            <td class="field-label">Estado:</td>
+                            <td><span t-out="o.stage_id.name or ''"/></td>
+                        </tr>
+                        <tr>
+                            <td class="field-label">Dirección:</td>
+                            <td colspan="3"><span t-out="o.partner_id.street or ''"/></td>
+                            <td class="field-label">Tratado por:</td>
+                            <td><span t-out="o.user_id.name or ''"/></td>
+                        </tr>
+                        <tr>
+                            <td class="field-label">Ciudad:</td>
+                            <td colspan="3"><span t-out="o.partner_id.city or ''"/></td>
+                            <td class="field-label">Factura:</td>
+                            <td><span t-out="o.invoice_id.name or ''"/></td>
+                        </tr>
+                        <tr>
+                            <td class="field-label">Teléfono:</td>
+                            <td colspan="3"><span t-out="o.partner_id.phone or o.partner_id.mobile or ''"/></td>
+                            <td class="field-label">Fecha Factura:</td>
+                            <td><span t-out="o.invoice_id.invoice_date and o.invoice_id.invoice_date.strftime('%d/%m/%Y') or ''"/></td>
+                        </tr>
+                    </table>
+
+                    <!-- Información de la garantía -->
+                    <div class="header-section">Detalle de la garantía</div>
+                    <table>
+                        <tr>
+                            <td class="field-label">Asunto:</td>
+                            <td colspan="3"><span t-out="', '.join(o.tag_ids.mapped('name')) if o.tag_ids else ''"/></td>
+                        </tr>
+                        <tr>
+                            <td class="field-label">Descripción detallada:</td>
+                            <td colspan="3">
+                                <div style="min-height: 50px;">
+                                    <span t-out="o.description or ''"/>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- Movimientos de Inventario -->
+                    <t t-set="movements_info" t-value="o._get_inventory_movements_info()"/>
+                    <t t-if="movements_info['has_movements']">
+                        <div class="header-section">Movimientos de Inventario</div>
+                        <table>
+                            <!-- Entradas de Inventario -->
+                            <t t-if="movements_info['incoming']">
+                                <tr>
+                                    <td colspan="4" style="background-color: #e8f5e9; font-weight: bold; padding: 5px;">
+                                        ENTRADAS AL INVENTARIO - <span t-out="len(movements_info['incoming'])"/> movimiento(s)
+                                    </td>
+                                </tr>
+                                <t t-foreach="movements_info['incoming']" t-as="picking">
+                                    <tr>
+                                        <td class="field-label">Número:</td>
+                                        <td><span t-out="picking['name']"/></td>
+                                        <td class="field-label">Estado:</td>
+                                        <td><span t-out="picking['state']"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="field-label">Productos:</td>
+                                        <td colspan="3">
+                                            <ul style="margin: 0; padding-left: 20px;">
+                                                <t t-foreach="picking['products']" t-as="product">
+                                                    <li>
+                                                        <span t-out="product['name']"/> - 
+                                                        Cantidad: <span t-out="product['qty']"/> 
+                                                        <span t-out="product['uom']"/>
+                                                    </li>
+                                                </t>
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </t>
+                            
+                            <!-- Salidas de Inventario -->
+                            <t t-if="movements_info['outgoing']">
+                                <tr>
+                                    <td colspan="4" style="background-color: #ffebee; font-weight: bold; padding: 5px;">
+                                        SALIDAS DEL INVENTARIO - <span t-out="len(movements_info['outgoing'])"/> movimiento(s)
+                                    </td>
+                                </tr>
+                                <t t-foreach="movements_info['outgoing']" t-as="picking">
+                                    <tr>
+                                        <td class="field-label">Número:</td>
+                                        <td><span t-out="picking['name']"/></td>
+                                        <td class="field-label">Estado:</td>
+                                        <td><span t-out="picking['state']"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="field-label">Productos:</td>
+                                        <td colspan="3">
+                                            <ul style="margin: 0; padding-left: 20px;">
+                                                <t t-foreach="picking['products']" t-as="product">
+                                                    <li>
+                                                        <span t-out="product['name']"/> - 
+                                                        Cantidad: <span t-out="product['qty']"/> 
+                                                        <span t-out="product['uom']"/>
+                                                    </li>
+                                                </t>
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </t>
+                            
+                            <!-- Movimientos Internos -->
+                            <t t-if="movements_info['internal']">
+                                <tr>
+                                    <td colspan="4" style="background-color: #e3f2fd; font-weight: bold; padding: 5px;">
+                                        MOVIMIENTOS INTERNOS (<span t-out="len(movements_info['internal'])"/> movimiento(s))
+                                    </td>
+                                </tr>
+                                <t t-foreach="movements_info['internal']" t-as="picking">
+                                    <tr>
+                                        <td class="field-label">Número:</td>
+                                        <td><span t-out="picking['name']"/></td>
+                                        <td class="field-label">Estado:</td>
+                                        <td><span t-out="picking['state']"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="field-label">Productos:</td>
+                                        <td colspan="3">
+                                            <ul style="margin: 0; padding-left: 20px;">
+                                                <t t-foreach="picking['products']" t-as="product">
+                                                    <li>
+                                                        <span t-out="product['name']"/> - 
+                                                        Cantidad: <span t-out="product['qty']"/> 
+                                                        <span t-out="product['uom']"/>
+                                                    </li>
+                                                </t>
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </t>
+                        </table>
+                    </t>
+
+                    <!-- Revisión técnica -->
+                    <div class="header-section">Revisión técnica</div>
+                    <table>
+                        <tr>
+                            <td class="field-label">Concepto técnico:</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="large-text-area">
+                                    <span t-out="o.warranty_comment or ''"/>
+                                </div>
+                                <div style="text-align: right; margin-top: 50px; border-top: 1px solid #000; display: inline-block; float: right; padding-top: 5px; min-width: 300px;">
+                                    Nombre legible y C.C. del técnico
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- Firma satisfacción del cliente -->
+                    <div style="margin-top: 30px;">
+                        <div style="font-weight: bold; margin-bottom: 10px;">Firma de Satisfacción del Cliente:</div>
+                        <div>
+                            <div style="margin-bottom: 8px;"><strong>NOMBRE:</strong></div>
+                            <div style="margin-bottom: 8px;"><strong>CÉDULA:</strong></div>
+                            <div style="margin-bottom: 8px;"><strong>FECHA:</strong></div>
+                            <div style="margin-bottom: 8px;"><strong>CELULAR:</strong></div>
+                        </div>
+                    </div>
+
+                    <!-- Pie de página -->
+                    <div style="text-align: right; margin-top: 15px;">
+                        Fecha de impresión: <span t-out="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y %H:%M')"/>
+                    </div>
+                </div>
+    </template>
+
+    <!-- Template para abrir el panel de impresión del navegador -->
+    <template id="print_warranty_template" name="Print Warranty Certificate">
+        <html>
+            <head>
+                <title>Imprimir Acta de Garantía</title>
+                <style>
+                    body {
+                        margin: 0;
+                        padding: 0;
+                        overflow: hidden;
+                    }
+                    iframe {
+                        width: 100%;
+                        height: 100vh;
+                        border: none;
+                    }
+                </style>
+            </head>
+            <body>
+                <iframe id="pdfFrame" t-att-src="pdf_url"></iframe>
+                <script type="text/javascript">
+                    window.addEventListener('load', function() {
+                        setTimeout(function() {
+                            var frame = document.getElementById('pdfFrame');
+                            if (frame.contentWindow) {
+                                frame.contentWindow.print();
+                            } else {
+                                window.print();
+                            }
+                        }, 500);
+                    });
+                </script>
+            </body>
+        </html>
+    </template>
+</odoo>
+

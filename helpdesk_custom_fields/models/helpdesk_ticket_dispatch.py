@@ -14,7 +14,7 @@ class HelpdeskTicket(models.Model):
 
     return_dispatch_method = fields.Selection(
         [
-            ('customer_pickup', 'RECOGE CLIENTE'),
+            ('customer_pickup', 'RETORNO CLIENTE'),
             ('carrier', 'TRANSPORTADORA'),
             ('independent', 'INDEPENDIENTE'),
             ('own_transport', 'TRANSPORTE PROPIO'),
@@ -24,9 +24,11 @@ class HelpdeskTicket(models.Model):
         string='Medio de transporte (retorno)'
     )
 
-    return_carrier_name = fields.Char(
+    return_carrier_name = fields.Many2one(
+        'res.partner',
         string='Transportador (retorno)',
-        help='Nombre de la empresa transportadora para el retorno'
+        domain="[('category_id.name', 'in', ['Transportadora', 'Transportadora independiente'])]",
+        help='Empresa transportadora para el retorno'
     )
 
     return_carrier_guide_number = fields.Char(
@@ -79,9 +81,11 @@ class HelpdeskTicket(models.Model):
         string='Medio de transporte (despacho)'
     )
 
-    carrier_name = fields.Char(
+    carrier_name = fields.Many2one(
+        'res.partner',
         string='Transportador (despacho)',
-        help='Nombre de la empresa transportadora'
+        domain="[('category_id.name', 'in', ['Transportadora', 'Transportadora independiente'])]",
+        help='Empresa transportadora para el despacho'
     )
 
     carrier_guide_number = fields.Char(
@@ -126,10 +130,10 @@ class HelpdeskTicket(models.Model):
             self.return_freight_value = 0.0
             self.return_declared_merchandise_value = 0.0
 
-    # Onchange para limpiar campos de retorno cuando no es transportadora
+    # Onchange para limpiar campos de retorno cuando no es transportadora o independiente
     @api.onchange('return_dispatch_method')
     def _onchange_return_dispatch_method(self):
-        if self.return_dispatch_method != 'carrier':
+        if self.return_dispatch_method not in ('carrier', 'independent'):
             self.return_carrier_name = False
             self.return_carrier_guide_number = False
             self.return_vehicle_plate = False
@@ -149,10 +153,10 @@ class HelpdeskTicket(models.Model):
             self.freight_value = 0.0
             self.declared_merchandise_value = 0.0
 
-    # Onchange para limpiar campos de despacho cuando no es transportadora
+    # Onchange para limpiar campos de despacho cuando no es transportadora o independiente
     @api.onchange('dispatch_method')
     def _onchange_dispatch_method(self):
-        if self.dispatch_method != 'carrier':
+        if self.dispatch_method not in ('carrier', 'independent'):
             self.carrier_name = False
             self.carrier_guide_number = False
             self.vehicle_plate = False

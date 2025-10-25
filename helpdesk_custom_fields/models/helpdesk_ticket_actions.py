@@ -54,6 +54,25 @@ class HelpdeskTicket(models.Model):
                     else:
                         _logger.info('La nueva etapa "%s" NO coincide con la etapa configurada "%s"', 
                                     new_stage.name, trigger_stage_name)
+                    
+                    # Detectar si el ticket pasa a una etapa de finalización
+                    closed_stage_name = self.env['ir.config_parameter'].sudo().get_param(
+                        'helpdesk_custom_fields.stage_closed_name', 
+                        default='Done'
+                    )
+                    
+                    _logger.info('Etapa configurada como finalización: "%s"', closed_stage_name)
+                    
+                    # Si el ticket pasa a la etapa de finalización y no tiene fecha de cierre
+                    if new_stage.name == closed_stage_name and not ticket.date_closed:
+                        # Registrar la fecha y hora de finalización
+                        vals['date_closed'] = fields.Datetime.now()
+                        _logger.info('Ticket #%s - Registrando fecha de finalización: %s', ticket.id, vals['date_closed'])
+                    
+                    # Si se reabre el ticket (pasa de etapa cerrada a una abierta), limpiar la fecha de cierre
+                    if ticket.stage_id.name == closed_stage_name and new_stage.name != closed_stage_name and ticket.date_closed:
+                        vals['date_closed'] = False
+                        _logger.info('Ticket #%s - Ticket reabierto, limpiando fecha de finalización', ticket.id)
         
         return super().write(vals)
     
@@ -128,4 +147,15 @@ class HelpdeskTicket(models.Model):
                 _logger.error('✗ Error al crear actividad para usuario %s: %s', user.name, str(e))
         
         _logger.info('=== FIN: Se crearon %s actividades ===', activities_created)
+    
+    # Método para imprimir el reporte de garantía con el panel de impresión del navegador
+    def action_print_warranty_certificate(self):
+        self.ensure_one()
+        print_url = '/helpdesk/warranty/print/%s' % self.id
+        
+        return {
+            'type': 'ir.actions.act_url',
+            'url': print_url,
+            'target': 'new',
+        }
 
