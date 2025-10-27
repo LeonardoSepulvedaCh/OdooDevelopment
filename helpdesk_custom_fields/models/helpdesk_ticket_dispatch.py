@@ -9,7 +9,8 @@ class HelpdeskTicket(models.Model):
     has_return = fields.Boolean(
         string='¿Hubo retorno?',
         default=False,
-        help='Indica si el artículo fue retornado del cliente al almacén para evaluación'
+        help='Indica si el artículo fue retornado del cliente al almacén para evaluación',
+        tracking=True
     )
 
     return_dispatch_method = fields.Selection(
@@ -21,7 +22,8 @@ class HelpdeskTicket(models.Model):
             ('cash_on_delivery', 'CONTRA ENTREGA'),
             ('not_applicable', 'NO APLICA')
         ],
-        string='Medio de transporte (retorno)'
+        string='Medio de transporte (retorno)',
+        tracking=True
     )
 
     return_carrier_name = fields.Many2one(
@@ -66,7 +68,8 @@ class HelpdeskTicket(models.Model):
     is_dispatched = fields.Boolean(
         string='¿Fue despachado?',
         default=False,
-        help='Indica si el artículo en garantía fue despachado al cliente'
+        help='Indica si el artículo en garantía fue despachado al cliente',
+        tracking=True
     )
 
     dispatch_method = fields.Selection(
@@ -78,7 +81,8 @@ class HelpdeskTicket(models.Model):
             ('cash_on_delivery', 'CONTRA ENTREGA'),
             ('not_applicable', 'NO APLICA')
         ],
-        string='Medio de transporte (despacho)'
+        string='Medio de transporte (despacho)',
+        tracking=True
     )
 
     carrier_name = fields.Many2one(
@@ -117,50 +121,3 @@ class HelpdeskTicket(models.Model):
         default=0.0,
         help='Valor declarado de la mercancía para el transporte'
     )
-
-    # Onchange para limpiar todos los campos de retorno cuando se desmarca has_return
-    @api.onchange('has_return')
-    def _onchange_has_return(self):
-        if not self.has_return:
-            self.return_dispatch_method = False
-            self.return_carrier_name = False
-            self.return_carrier_guide_number = False
-            self.return_vehicle_plate = False
-            self.return_package_count = 0
-            self.return_freight_value = 0.0
-            self.return_declared_merchandise_value = 0.0
-
-    # Onchange para limpiar campos de retorno cuando no es transportadora o independiente
-    @api.onchange('return_dispatch_method')
-    def _onchange_return_dispatch_method(self):
-        if self.return_dispatch_method not in ('carrier', 'independent'):
-            self.return_carrier_name = False
-            self.return_carrier_guide_number = False
-            self.return_vehicle_plate = False
-            self.return_package_count = 0
-            self.return_freight_value = 0.0
-            self.return_declared_merchandise_value = 0.0
-
-    # Onchange para limpiar todos los campos de despacho cuando se desmarca is_dispatched
-    @api.onchange('is_dispatched')
-    def _onchange_is_dispatched(self):
-        if not self.is_dispatched:
-            self.dispatch_method = False
-            self.carrier_name = False
-            self.carrier_guide_number = False
-            self.vehicle_plate = False
-            self.package_count = 0
-            self.freight_value = 0.0
-            self.declared_merchandise_value = 0.0
-
-    # Onchange para limpiar campos de despacho cuando no es transportadora o independiente
-    @api.onchange('dispatch_method')
-    def _onchange_dispatch_method(self):
-        if self.dispatch_method not in ('carrier', 'independent'):
-            self.carrier_name = False
-            self.carrier_guide_number = False
-            self.vehicle_plate = False
-            self.package_count = 0
-            self.freight_value = 0.0
-            self.declared_merchandise_value = 0.0
-

@@ -14,6 +14,12 @@
             <field name="value">Resuelto</field>
         </record>
         
+        <!-- Parámetro del sistema para configurar el nombre de la etapa de rechazo -->
+        <record id="helpdesk_stage_rejected_name" model="ir.config_parameter">
+            <field name="key">helpdesk_custom_fields.stage_rejected_name</field>
+            <field name="value">Rechazado</field>
+        </record>
+        
     </data>
 </odoo>
 

@@ -39,6 +39,12 @@
                        required="is_warranty_team"
                        context="{'default_partner_id': partner_id, 'default_move_type': 'out_invoice'}"
                        options="{'no_create': True}"/>
+                <field name="available_product_ids" invisible="1"/>
+                <field name="product_ids" 
+                       invisible="not is_warranty_team or not invoice_id"
+                       widget="many2many_tags"
+                       domain="[('id', 'in', available_product_ids)]"
+                       options="{'no_create': True, 'no_open': True}"/>
             </xpath>
 
             <xpath expr="//notebook" position="inside">
@@ -173,6 +179,10 @@
         <field name="model">helpdesk.ticket</field>
         <field name="inherit_id" ref="helpdesk.quick_create_ticket_form"/>
         <field name="arch" type="xml">
+            
+            <xpath expr="//field[@name='team_id']" position="after">
+                <field name="is_warranty_team" invisible="1"/>
+            </xpath>
 
             <xpath expr="//field[@name='partner_id']" position="after">
                 <label for="serie" string="Serie" 
@@ -189,6 +199,12 @@
                        required="is_warranty_team"
                        context="{'default_partner_id': partner_id, 'default_move_type': 'out_invoice'}"
                        options="{'no_create': True}"/>
+                <field name="available_product_ids" invisible="1"/>
+                <field name="product_ids" 
+                       invisible="not is_warranty_team or not invoice_id"
+                       widget="many2many_tags"
+                       domain="[('id', 'in', available_product_ids)]"
+                       options="{'no_create': True, 'no_open': True}"/>
             </xpath>
 
         </field>

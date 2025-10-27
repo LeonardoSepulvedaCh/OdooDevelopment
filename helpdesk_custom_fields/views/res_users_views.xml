@@ -9,7 +9,7 @@
             <!-- Agregar el campo en la pestaña de Preferencias -->
             <xpath expr="//page[@name='access_rights']" position="inside">
                 <group string="Permisos de Helpdesk" name="helpdesk_permissions">
-                    <field name="can_close_tickets"/>
+                    <field name="can_close_tickets" optional="show"/>
                 </group>
             </xpath>
         </field>

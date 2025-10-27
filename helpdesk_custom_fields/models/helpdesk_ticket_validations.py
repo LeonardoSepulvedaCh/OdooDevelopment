@@ -35,7 +35,8 @@ class HelpdeskTicket(models.Model):
                 
                 if ticket.stage_id.name == closed_stage_name:
                     current_user = self.env.user
-                    if not current_user.can_close_tickets:
+                    # Verificar si el campo existe antes de acceder a él
+                    if hasattr(current_user, 'can_close_tickets') and not current_user.can_close_tickets:
                         raise UserError(
                             'No tienes permisos para mover tickets a la etapa de finalización. '
                             'Contacta al administrador del sistema para obtener los permisos necesarios.'
@@ -62,4 +63,20 @@ class HelpdeskTicket(models.Model):
                             'Debe adjuntar al menos un documento marcado como "Acta de Garantía" '
                             'antes de finalizar el ticket.'
                         )
+
+    # Validar que los productos seleccionados pertenezcan a la factura
+    @api.constrains('product_ids', 'invoice_id')
+    def _check_products_from_invoice(self):
+        for ticket in self:
+            if ticket.product_ids and ticket.invoice_id:
+                invoice_products = ticket.invoice_id.invoice_line_ids.mapped('product_id')
+                
+                invalid_products = ticket.product_ids - invoice_products
+                
+                if invalid_products:
+                    product_names = ', '.join(invalid_products.mapped('name'))
+                    raise ValidationError(
+                        f'Los siguientes productos no pertenecen a la factura seleccionada: {product_names}. '
+                        'Solo puede seleccionar productos que estén en las líneas de la factura.'
+                    )
 

@@ -54,14 +54,35 @@ class HelpdeskTicket(models.Model):
         help='Número consecutivo único por serie. Este número es irrecuperable una vez asignado.'
     )
 
-    warranty_comment = fields.Text(string='Comentario del área de garantías')
+    warranty_comment = fields.Text(string='Comentario del área de garantías', tracking=True)
     
     # Campo para relacionar factura
     invoice_id = fields.Many2one(
         'account.move',
         string='Factura',
         domain="[('partner_id', '=', partner_id)]",
-        help='Factura relacionada con este ticket de garantía'
+        help='Factura relacionada con este ticket de garantía',
+        tracking=True
+    )
+    
+    # Productos disponibles de la factura (computed para dominio dinámico)
+    available_product_ids = fields.Many2many(
+        'product.product',
+        string='Productos disponibles',
+        compute='_compute_available_products',
+        store=False,
+        help='Productos disponibles en las líneas de la factura seleccionada'
+    )
+    
+    # Productos asociados al ticket
+    product_ids = fields.Many2many(
+        'product.product',
+        'helpdesk_ticket_product_rel',
+        'ticket_id',
+        'product_id',
+        string='Productos asociados',
+        help='Productos relacionados con este ticket de garantía',
+        tracking=True
     )
     
     attachment_ids = fields.Many2many(
@@ -70,7 +91,8 @@ class HelpdeskTicket(models.Model):
         'ticket_id',
         'attachment_id',
         string='Adjuntos',
-        help='Documentos, imágenes y otros archivos adjuntos al ticket'
+        help='Documentos, imágenes y otros archivos adjuntos al ticket',
+        tracking=True
     )
     
     attachment_count = fields.Integer(
@@ -119,3 +141,10 @@ class HelpdeskTicket(models.Model):
             self.card_code = self.partner_id.card_code
         elif not self.partner_id:
             self.card_code = False
+
+    @api.onchange('invoice_id')
+    def _onchange_invoice_id(self):
+        if self.invoice_id:
+            self.product_ids = [(5, 0, 0)]
+        else:
+            self.product_ids = [(5, 0, 0)]
