@@ -92,61 +92,112 @@ class HelpdeskTicket(models.Model):
         else:
             return 0
     
-    # Crear actividades para usuarios del mismo almacén cuando el ticket pasa a "En Progreso"
+    # Enviar mensaje al canal de garantías cuando el ticket pasa a "En Progreso"
     def _create_activities_for_warehouse_users(self):
         self.ensure_one()
         
-        _logger.info('=== INICIO: Creación de actividades para ticket %s ===', self.id)
+        _logger.info('=== INICIO: Notificación de ticket en progreso %s ===', self.id)
         _logger.info('Nombre del ticket: %s', self.name)
         _logger.info('Almacén del ticket (branch_id): %s (ID: %s)', 
                      self.branch_id.name if self.branch_id else 'NO ASIGNADO', 
                      self.branch_id.id if self.branch_id else None)
         
         if not self.branch_id:
-            _logger.warning('No se puede crear actividad: El ticket no tiene almacén (branch_id) asignado')
+            _logger.warning('No se puede enviar notificación: El ticket no tiene almacén (branch_id) asignado')
             return
         
-        all_users = self.env['res.users'].sudo().search([])
-        _logger.info('Total de usuarios en el sistema: %s', len(all_users))
+        # Buscar o crear el canal de garantías para este almacén
+        channel = self._get_or_create_warranty_channel()
         
-        matching_users = all_users.filtered(
-            lambda u: u.property_warehouse_id and u.property_warehouse_id.id == self.branch_id.id
+        if not channel:
+            _logger.error('No se pudo obtener o crear el canal de garantías para el almacén %s', self.branch_id.name)
+            return
+        
+        # Obtener el partner del OdooBot o del usuario actual
+        try:
+            odoobot_user = self.env.ref('base.user_root')
+            author_partner = odoobot_user.partner_id
+        except Exception:
+            author_partner = self.env.user.partner_id
+        
+        # Construir el mensaje
+        serie_display = dict(self._fields['serie'].selection).get(self.serie, self.serie) if self.serie else 'Sin serie'
+        
+        message_body = """
+        <div style="padding: 10px;">
+            <h4>
+                🎫Nuevo Ticket de Garantía
+            </h4>
+            <p style="margin: 2px 0;"><strong>Ticket:</strong> %s</p>
+            <p style="margin: 2px 0;"><strong>Serie:</strong> %s # %s</p>
+            <p style="margin: 2px 0;"><strong>Cliente:</strong> %s</p>
+            <p style="margin: 2px 0;"><strong>Almacén:</strong> %s</p>
+            <p style="margin: 2px 0;"><strong>Asignado a:</strong> %s</p>
+            <p style="margin: 2px 0;"><strong>Descripción:</strong> %s</p>
+            <p style="margin-top: 10px; margin-bottom: 0;">
+                <a href="/web#id=%s&model=helpdesk.ticket&view_type=form" 
+                   style="background-color: #2c3e50; color: white; padding: 8px 16px; text-decoration: none; border-radius: 4px; display: inline-block;">
+                    Ver Ticket
+                </a>
+            </p>
+        </div>
+        """ % (
+            self.name or 'Sin nombre',
+            serie_display,
+            self.consecutive_number or '0',
+            self.partner_id.name if self.partner_id else 'Sin cliente',
+            self.branch_id.name,
+            self.user_id.name if self.user_id else 'Sin asignar',
+            self.description or 'Sin descripción',
+            self.id
         )
         
-        _logger.info('Usuarios con el almacén %s:', self.branch_id.name)
-        for user in matching_users:
-            _logger.info('  - Usuario: %s (ID: %s) - Warehouse: %s', 
-                        user.name, user.id, 
-                        user.property_warehouse_id.name if user.property_warehouse_id else 'Ninguno')
+        # Enviar el mensaje al canal
+        try:
+            message = channel.sudo().message_post(
+                body=message_body,
+                body_is_html=True,
+                author_id=author_partner.id if author_partner else False,
+                message_type='comment',
+                subtype_xmlid='mail.mt_comment',
+            )
+            _logger.info('✓ Mensaje enviado al canal "%s" (ID: %s, Mensaje ID: %s)', 
+                        channel.name, channel.id, message.id)
+        except Exception as e:
+            _logger.exception('✗ Error al enviar mensaje al canal: %s', e)
         
-        if not matching_users:
-            _logger.warning('No se encontraron usuarios con el almacén %s (ID: %s)', 
-                          self.branch_id.name, self.branch_id.id)
-            return
+        _logger.info('=== FIN: Notificación enviada ===')
+    
+    # Busca o crea el canal de garantías para el almacén del ticket
+    def _get_or_create_warranty_channel(self):
+        self.ensure_one()
         
-        activity_type = self.env.ref('mail.mail_activity_data_todo', raise_if_not_found=False)
-        if not activity_type:
-            activity_type = self.env['mail.activity.type'].search([], limit=1)
+        if not self.branch_id:
+            return None
         
-        _logger.info('Tipo de actividad a usar: %s', activity_type.name if activity_type else 'Ninguno')
+        channel_name = f"Garantias {self.branch_id.name}"
+        Channel = self.env['discuss.channel']
         
-        activities_created = 0
-        for user in matching_users:
+        # Buscar el canal existente
+        channel = Channel.sudo().search([
+            ('name', '=', channel_name),
+            ('channel_type', '=', 'channel')
+        ], limit=1)
+        
+        # Si no existe, crearlo
+        if not channel:
             try:
-                activity = self.env['mail.activity'].create({
-                    'res_id': self.id,
-                    'res_model_id': self.env['ir.model']._get('helpdesk.ticket').id,
-                    'activity_type_id': activity_type.id if activity_type else False,
-                    'summary': f'Ticket en progreso: {self.name}',
-                    'note': f'El ticket #{self.id} de la sucursal {self.branch_id.name} ha pasado a estado "En Progreso".',
-                    'user_id': user.id,
+                channel = Channel.sudo().create({
+                    'name': channel_name,
+                    'channel_type': 'channel',
+                    'description': f'Canal de notificaciones de garantías para el almacén {self.branch_id.name}',
                 })
-                activities_created += 1
-                _logger.info('✓ Actividad creada para usuario: %s (ID actividad: %s)', user.name, activity.id)
+                _logger.info('Canal de garantías creado: "%s" (ID: %s)', channel_name, channel.id)
             except Exception as e:
-                _logger.error('✗ Error al crear actividad para usuario %s: %s', user.name, str(e))
+                _logger.exception('Error al crear el canal de garantías "%s": %s', channel_name, e)
+                return None
         
-        _logger.info('=== FIN: Se crearon %s actividades ===', activities_created)
+        return channel
     
     # Método para imprimir el reporte de garantía con el panel de impresión del navegador
     def action_print_warranty_certificate(self):

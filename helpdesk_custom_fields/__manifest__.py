@@ -9,7 +9,7 @@
     - Tipo de cliente
     """,
     'author': '@LeonardoSepulvedaCh',
-    'depends': ['helpdesk', 'contacts_birthday_alert', 'account', 'sale_management', 'stock'],
+    'depends': ['helpdesk', 'contacts_birthday_alert', 'account', 'sale_management', 'stock', 'mail'],
     'data': [
         'data/ir_config_parameter.xml',
         'data/helpdesk_sequences.xml',
