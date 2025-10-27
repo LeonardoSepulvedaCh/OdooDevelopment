@@ -24,7 +24,6 @@
                     <t t-foreach="files" t-as="file" t-key="file.id">
                         <div class="helpdesk_attachment_grid_item">
                             <div class="helpdesk_attachment_card">
-                                <!-- Miniatura / Icono -->
                                 <div class="helpdesk_attachment_preview" 
                                      t-att-class="file.isViewable ? 'cursor-pointer' : ''"
                                      t-on-click="() => this.onFileClick(file)">
@@ -41,7 +40,6 @@
                                         </div>
                                     </t>
                                     
-                                    <!-- Badge para archivos visibles -->
                                     <t t-if="file.isViewable">
                                         <div class="helpdesk_attachment_badge">
                                             <span class="helpdesk_attachment_badge_content">
@@ -70,6 +68,27 @@
                                                 <i class="fa fa-clock-o"/>
                                                 <t t-out="getFormattedDate(file)"/>
                                             </div>
+                                        </div>
+                                        
+                                        <div class="helpdesk_attachment_warranty_check" t-if="!props.readonly">
+                                            <label class="helpdesk_attachment_warranty_label" t-att-class="{'disabled': file.isDisabled}">
+                                                <input type="checkbox" 
+                                                       t-att-checked="file.is_warranty_certificate"
+                                                       t-att-disabled="file.isDisabled"
+                                                       t-on-click.stop="() => this.onWarrantyCertificateToggle(file.id, file.is_warranty_certificate)"
+                                                       class="helpdesk_attachment_warranty_checkbox"/>
+                                                <span class="helpdesk_attachment_warranty_text">
+                                                    <i class="fa fa-certificate me-1"/>
+                                                    Acta de garantía
+                                                </span>
+                                            </label>
+                                        </div>
+                                        
+                                        <div class="helpdesk_attachment_warranty_badge" t-if="props.readonly and file.is_warranty_certificate">
+                                            <span class="badge bg-success">
+                                                <i class="fa fa-certificate me-1"/>
+                                                Acta de garantía
+                                            </span>
                                         </div>
                                     </div>
                                 </div>

@@ -23,14 +23,11 @@ export class AttachmentPreviewField extends Component {
         this.notification = useService("notification");
         this.operations = useX2ManyCrud(() => this.props.record.data[this.props.name], true);
         
-        // ID único para el FileViewer
         this.fileViewerId = `attachment_preview_${Math.random().toString(36).substring(7)}`;
         
-        // Información del modelo y registro actual para FileInput
         this.resModel = this.props.record.resModel;
         this.resId = this.props.record.resId || false;
         
-        // Asegurar que se cierre el visor cuando el componente se destruya
         onWillDestroy(() => {
             this.closeFileViewer();
         });
@@ -47,7 +44,7 @@ export class AttachmentPreviewField extends Component {
     }
 
     get files() {
-        return this.props.record.data[this.props.name].records.map((record) => {
+        const allFiles = this.props.record.data[this.props.name].records.map((record) => {
             const data = record.data;
             const mimetype = data.mimetype || '';
             const fileName = data.name || 'Sin nombre';
@@ -58,7 +55,7 @@ export class AttachmentPreviewField extends Component {
                 mimetype: mimetype,
                 create_date: data.create_date,
                 create_uid: data.create_uid,
-                // Propiedades para el FileViewer
+                is_warranty_certificate: data.is_warranty_certificate || false,
                 isViewable: this.isFileViewable(mimetype),
                 isPdf: this.isPdf(mimetype),
                 isImage: this.isImage(mimetype),
@@ -68,6 +65,13 @@ export class AttachmentPreviewField extends Component {
                 defaultSource: this.getFileSource(record.resId, mimetype),
             };
         });
+        
+        const hasWarrantyCertificate = allFiles.some(file => file.is_warranty_certificate);
+        
+        return allFiles.map(file => ({
+            ...file,
+            isDisabled: hasWarrantyCertificate && !file.is_warranty_certificate
+        }));
     }
 
     getFileSource(id, mimetype) {
@@ -83,7 +87,8 @@ export class AttachmentPreviewField extends Component {
     }
 
     isVideo(mimetype) {
-        return mimetype && mimetype.startsWith('video/');
+        const videoMimeTypes = ['audio/mpeg', 'video/x-matroska', 'video/mp4', 'video/webm'];
+        return videoMimeTypes.includes(mimetype);
     }
 
     isPdf(mimetype) {
@@ -109,17 +114,14 @@ export class AttachmentPreviewField extends Component {
             return '';
         }
         
-        // Formato array [id, nombre] - el más común en Odoo
         if (Array.isArray(file.create_uid) && file.create_uid.length > 1) {
             return file.create_uid[1];
         }
         
-        // Formato objeto {id: X, display_name: 'nombre'}
         if (typeof file.create_uid === 'object' && file.create_uid.display_name) {
             return file.create_uid.display_name;
         }
         
-        // Formato número (solo ID)
         if (typeof file.create_uid === 'number') {
             return `Usuario #${file.create_uid}`;
         }
@@ -128,7 +130,6 @@ export class AttachmentPreviewField extends Component {
     }
     
     getFormattedDate(file) {
-        // Formatear la fecha de creación de forma amigable
         if (!file.create_date) return '';
         
         try {
@@ -161,6 +162,7 @@ export class AttachmentPreviewField extends Component {
         if (this.isImage(mimetype)) return 'fa-file-image-o';
         if (this.isPdf(mimetype)) return 'fa-file-pdf-o';
         if (this.isText(mimetype)) return 'fa-file-text-o';
+        if (mimetype === 'audio/mpeg') return 'fa-file-audio-o';
         if (this.isVideo(mimetype)) return 'fa-file-video-o';
         if (mimetype.includes('word')) return 'fa-file-word-o';
         if (mimetype.includes('excel') || mimetype.includes('spreadsheet')) return 'fa-file-excel-o';
@@ -169,7 +171,6 @@ export class AttachmentPreviewField extends Component {
     }
 
     async onFileUploaded(files) {
-        // Validar que el registro esté guardado
         if (!this.resId) {
             this.notification.add(_t("Por favor, guarda el registro antes de subir archivos."), {
                 title: _t("Advertencia"),
@@ -188,7 +189,6 @@ export class AttachmentPreviewField extends Component {
             }
             
             try {
-                // Agregar el attachment al campo many2many
                 await this.operations.saveRecord([file.id]);
             } catch (error) {
                 console.error("Error al guardar el archivo:", error);
@@ -199,7 +199,6 @@ export class AttachmentPreviewField extends Component {
             }
         }
         
-        // Mostrar mensaje de éxito
         this.notification.add(_t("Archivo(s) subido(s) exitosamente"), {
             type: "success",
         });
@@ -246,6 +245,35 @@ export class AttachmentPreviewField extends Component {
             });
         }
     }
+    
+    async onWarrantyCertificateToggle(fileId, currentValue) {
+        try {
+            await this.orm.write('ir.attachment', [fileId], { 
+                is_warranty_certificate: !currentValue 
+            });
+            
+            const record = this.props.record.data[this.props.name].records.find(
+                (record) => record.resId === fileId
+            );
+            
+            if (record) {
+                await record.update({ is_warranty_certificate: !currentValue });
+            }
+            
+            const message = !currentValue 
+                ? _t("Archivo marcado como acta de garantía") 
+                : _t("Marca de acta de garantía removida");
+            
+            this.notification.add(message, {
+                type: "success",
+            });
+        } catch (error) {
+            this.notification.add(_t("Error al actualizar el archivo"), {
+                title: _t("Error"),
+                type: "danger",
+            });
+        }
+    }
 
     onFileClick(file) {
         if (!file.isViewable) {
@@ -279,6 +307,7 @@ export const attachmentPreviewField = {
         { name: "mimetype", type: "char" },
         { name: "create_date", type: "datetime" },
         { name: "create_uid", type: "many2one", relation: "res.users" },
+        { name: "is_warranty_certificate", type: "boolean" },
     ],
 };
 

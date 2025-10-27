@@ -1,3 +1,4 @@
+from . import ir_attachment
 from . import helpdesk_ticket
 from . import helpdesk_ticket_computed
 from . import helpdesk_ticket_validations
