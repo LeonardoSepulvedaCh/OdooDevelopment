@@ -126,6 +126,76 @@ class SaleCreditQuotaApplication(models.Model):
                 e
             )
 
+    # Envía una notificación al canal de discusiones cuando se rechaza un cupo de crédito.
+    def _send_rejection_notification(self):
+        self.ensure_one()
+        
+        channel = self._get_or_create_credit_approval_channel()
+        
+        if not channel:
+            _logger.warning(
+                "No se pudo obtener el canal de rechazos para la solicitud %s", 
+                self.name
+            )
+            return
+
+        try:
+            odoobot_user = self.env.ref('base.user_root')
+            odoobot_partner = odoobot_user.partner_id
+        except Exception:
+            odoobot_partner = self.env.user.partner_id
+
+        try:
+            rejected_by_name = self.env.user.name
+            
+            solicitud = self.name or 'N/A'
+            cliente = self.customer_id.name or 'N/A'
+            documento = self.customer_vat or 'N/A'
+            sucursal = dict(self._fields['branch_office'].selection).get(self.branch_office, 'N/A')
+            asunto = dict(self._fields['subject'].selection).get(self.subject, 'N/A')
+            fecha_rechazo = self.rejected_date.strftime('%d/%m/%Y') if self.rejected_date else 'N/A'
+            
+            message_body = """
+                <h5><b>❌ CUPO DE CRÉDITO RECHAZADO</b></h5>
+                <ul>
+                <li><b>Solicitud:</b> {solicitud}</li>
+                <li><b>Cliente:</b> {cliente}</li>
+                <li><b>Documento:</b> {documento}</li>
+                <li><b>Sucursal:</b> {sucursal}</li>
+                <li><b>Asunto:</b> {asunto}</li>
+                <li><b>Rechazado por:</b> {rejected_by}</li>
+                <li><b>Fecha de Rechazo:</b> {fecha_rechazo}</li>
+                </ul>
+            """.format(
+                solicitud=solicitud,
+                cliente=cliente,
+                documento=documento,
+                sucursal=sucursal,
+                asunto=asunto,
+                rejected_by=rejected_by_name,
+                fecha_rechazo=fecha_rechazo
+            )
+            
+            channel.sudo().message_post(
+                body=message_body,
+                body_is_html=True,
+                author_id=odoobot_partner.id if odoobot_partner else False,
+                message_type='comment',
+                subtype_xmlid='mail.mt_comment',
+            )
+            
+            _logger.info(
+                "Notificación de rechazo enviada al canal para la solicitud %s", 
+                self.name
+            )
+            
+        except Exception as e:
+            _logger.exception(
+                "Error al enviar notificación de rechazo para la solicitud %s: %s", 
+                self.name, 
+                e
+            )
+
     # Método del cron para notificar solicitudes por vencer
     @api.model
     def _cron_notify_expiring_applications(self):

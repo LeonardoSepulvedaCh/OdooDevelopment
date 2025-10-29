@@ -257,7 +257,7 @@
                                     </group>
                                     <group string="Fechas del Cupo">
                                         <field name="credit_quota_start_date" readonly="state in ['approved', 'rejected', 'finished']"/>
-                                        <field name="credit_quota_end_date" readonly="state in ['approved', 'rejected', 'finished']"/>
+                                        <field name="credit_quota_end_date" />
                                     </group>
                                     <group string="Condiciones de Pago">
                                         <field name="property_payment_term_id" readonly="state in ['approved', 'rejected', 'finished']"/>
@@ -292,6 +292,23 @@
                                     </list>
                                 </field>
                             </page>
+
+                            <page string="Histórico">
+                                <div class="alert alert-info" role="alert">
+                                    <i class="fa fa-info-circle"/> Solicitudes de cupo de crédito anteriores del cliente.
+                                </div>
+                                <field name="customer_previous_applications" nolabel="1" readonly="1" domain="[('customer_id', '=', customer_id), ('id', '!=', id)]">
+                                    <list string="Solicitudes Previas" create="false" delete="false" edit="false" default_order="application_date desc">
+                                        <field name="name" string="Solicitud"/>
+                                        <field name="subject" string="Asunto"/>
+                                        <field name="state" widget="badge" decoration-success="state == 'approved'" decoration-danger="state == 'rejected'" decoration-muted="state == 'finished'"/>
+                                        <field name="approved_date" string="Fecha Aprobación"/>
+                                        <field name="credit_quota_end_date" string="Vencimiento"/>
+                                        <field name="final_normal_credit_quota" string="Cupo Normal" widget="monetary"/>
+                                        <field name="final_golden_credit_quota" string="Cupo Dorado" widget="monetary"/>
+                                    </list>
+                                </field>
+                            </page>
                         </notebook>
                     </sheet>
                     <chatter open_attachments="True" reload_on_attachment="True"/>
@@ -311,14 +328,47 @@
                     <field name="state" widget="badge" decoration-success="state == 'approved'" decoration-danger="state == 'rejected'" decoration-muted="state == 'finished'" />
                     <field name="application_date" />
                     <field name="user_id" />
+                    <field name="credit_quota_end_date" invisible="1" />
                 </list>
+            </field>
+        </record>
+
+        <record id="view_sale_credit_quota_application_search" model="ir.ui.view">
+            <field name="name">sale.credit.quota.application.search</field>
+            <field name="model">sale.credit.quota.application</field>
+            <field name="arch" type="xml">
+                <search string="Buscar Solicitudes de Cupo">
+                    <field name="name"/>
+                    <field name="customer_id"/>
+                    <field name="subject"/>
+                    <field name="branch_office"/>
+                    <field name="state"/>
+                    <field name="application_date"/>
+                    <field name="credit_quota_end_date"/>
+                    <field name="user_id"/>
+                    
+                    <filter string="Borrador" name="filter_draft" domain="[('state', '=', 'draft')]"/>
+                    <filter string="Aprobadas" name="filter_approved" domain="[('state', '=', 'approved')]"/>
+                    <filter string="Finalizadas" name="filter_finished" domain="[('state', '=', 'finished')]"/>
+                    <filter string="Rechazadas" name="filter_rejected" domain="[('state', '=', 'rejected')]"/>
+                    
+                    <separator/>
+                    <filter string="Pendientes de Aprobación" name="filter_pending_approval" domain="[('review_auditoria_state', '!=', 'approved'), ('state', '=', 'draft')]"/>
+                    
+                    <separator/>
+                    <filter name="group_by_state" string="Estado" context="{'group_by': 'state'}"/>
+                    <filter name="group_by_branch" string="Sucursal" context="{'group_by': 'branch_office'}"/>
+                    <filter name="group_by_subject" string="Asunto" context="{'group_by': 'subject'}"/>
+                    <filter name="group_by_user" string="Asesor" context="{'group_by': 'user_id'}"/>
+                    <filter name="group_by_customer" string="Cliente" context="{'group_by': 'customer_id'}"/>
+                </search>
             </field>
         </record>
 
         <record id="sale_credit_quota_application_action" model="ir.actions.act_window">
             <field name="name">Solicitudes de Cupo</field>
             <field name="res_model">sale.credit.quota.application</field>
-            <field name="view_mode">list,form</field>
+            <field name="view_mode">list,form,search</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     ¡Crea tu primera solicitud de cupo de crédito!
@@ -331,5 +381,7 @@
                 </p>
             </field>
         </record>
+
+        
     </data>
 </odoo>

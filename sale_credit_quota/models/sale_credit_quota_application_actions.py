@@ -296,7 +296,7 @@ class SaleCreditQuotaApplication(models.Model):
             missing_fields.append('Revisión por Auditoría debe estar aprobada')
         
         # Documentos requeridos para el cliente
-        customer_required_tags = ['CTL', 'RUT', 'Cedula de Ciudadanía', 'Pagare', 'Fotos del Negocio']
+        customer_required_tags = ['CTL', 'RUT', 'Cedula de Ciudadanía', 'Pagare', 'Fotos del Negocio', 'CIFIN']
         self._validate_required_documents(self.customer_id, 'Cliente', customer_required_tags, missing_fields)
         
         # Documentos requeridos para los codeudores
@@ -351,5 +351,14 @@ class SaleCreditQuotaApplication(models.Model):
             body=_('Solicitud rechazada por %s el %s') % (self.env.user.name, fields.Date.context_today(self)),
             message_type='notification'
         )
+        
+        # Enviar notificación al canal de discusiones
+        try:
+            self._send_rejection_notification()
+        except Exception as e:
+            _logger.warning(
+                'No se pudo enviar la notificación al canal para la solicitud rechazada %s: %s', 
+                self.name, str(e)
+            )
 
         return True

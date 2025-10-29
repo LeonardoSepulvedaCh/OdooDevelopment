@@ -272,3 +272,17 @@ class SaleCreditQuotaApplication(models.Model):
                     valid_invoices += 1
             
             record.average_days_to_pay = round(total_days / valid_invoices) if valid_invoices > 0 else 0
+    
+    @api.depends('customer_id')
+    def _compute_customer_previous_applications(self):
+        """Compute previous credit quota applications for the same customer"""
+        for record in self:
+            if record.customer_id and record.id:
+                # Buscar todas las solicitudes del cliente excluyendo la actual
+                previous_apps = self.env['sale.credit.quota.application'].search([
+                    ('customer_id', '=', record.customer_id.id),
+                    ('id', '!=', record.id)
+                ], order='application_date desc, name desc')
+                record.customer_previous_applications = [(6, 0, previous_apps.ids)]
+            else:
+                record.customer_previous_applications = [(6, 0, [])]

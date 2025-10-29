@@ -12,6 +12,7 @@
     "data": [
         "security/ir.model.access.csv",
         "data/ir_cron_data.xml",
+        "data/documents_tags.xml",
         "wizards/sale_credit_quota_document_wizard_views.xml",
         "views/sale_credit_quota_views.xml",
         "views/sale_credit_quota_menu.xml",

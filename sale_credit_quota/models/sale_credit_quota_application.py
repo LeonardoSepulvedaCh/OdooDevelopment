@@ -81,6 +81,7 @@ class SaleCreditQuotaApplication(models.Model):
     customer_child_ids = fields.Many2many('res.partner', compute='_compute_customer_child_ids', string='Clientes Hijos', help='Clientes hijos del cliente principal', store=True)
     customer_child_count = fields.Integer(string='Cantidad de Clientes Hijos', compute='_compute_customer_child_count', store=True)
     is_legal_entity = fields.Boolean(string='¿Es una Persona Jurídica?', default=False)
+    customer_previous_applications = fields.Many2many('sale.credit.quota.application', compute='_compute_customer_previous_applications', string='Solicitudes Previas del Cliente', help='Solicitudes de cupo de crédito previas del mismo cliente')
 
     average_days_to_pay = fields.Integer(string='Días Promedio de Pago', default=0, compute='_compute_average_days_to_pay', store=False)
 
