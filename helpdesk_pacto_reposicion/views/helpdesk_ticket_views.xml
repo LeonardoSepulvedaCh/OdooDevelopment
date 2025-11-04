@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_helpdesk_ticket_form_pacto_reposicion" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.form.pacto.reposicion</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
+        <field name="arch" type="xml">
+            <!-- Agregar Smart Button para el Liquidador -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_open_liquidador_pacto" 
+                        type="object" 
+                        class="oe_stat_button" 
+                        icon="fa-calculator"
+                        invisible="not is_pacto_reposicion or not is_warranty_team"
+                        help="Abrir el liquidador del Pacto de Reposición">
+                    <span>Liquidador<br/>Pacto</span>
+                </button>
+
+                <!-- Smart Button para ver/crear venta -->
+                <button name="action_open_venta_wizard" 
+                        type="object" 
+                        class="oe_stat_button" 
+                        icon="fa-shopping-cart"
+                        invisible="not is_pacto_reposicion or not is_warranty_team"
+                        help="Ver o crear la orden de venta de este ticket">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="sale_order_id" widget="many2one" readonly="1"/>
+                        </span>
+                        <span class="o_stat_text">Or. Vta.</span>
+                    </div>
+                </button>
+            </xpath>
+
+            <!-- Insertar el campo principal después de la etiqueta de prioridad -->
+            <xpath expr="//field[@name='priority']" position="after">
+                <field name="is_warranty_team" invisible="1"/>
+                <field name="is_pacto_reposicion" 
+                       invisible="not is_warranty_team"
+                       widget="boolean_toggle"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Herencia de la vista kanban para agregar identificador de pacto de reposición -->
+    <record id="view_helpdesk_ticket_kanban_pacto_reposicion" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.kanban.pacto.reposicion</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_kanban"/>
+        <field name="arch" type="xml">
+            <!-- Agregar el campo is_pacto_reposicion a los campos disponibles -->
+            <xpath expr="//kanban" position="inside">
+                <field name="is_pacto_reposicion"/>
+            </xpath>
+
+            <!-- Agregar icono identificador en la tarjeta kanban, encima del icono de usuario asignado -->
+            <xpath expr="//field[@name='user_id' and @widget='many2one_avatar_user']" position="before">
+                <span t-if="record.is_pacto_reposicion.raw_value" class="me-1" style="display: inline-block;">
+                    <i class="fa fa-bicycle" 
+                       title="Pacto de Reposición"
+                       style="font-size: 1.2em; cursor: help; vertical-align: middle;"
+                       role="img"
+                       aria-label="Pacto de Reposición"/>
+                </span>
+            </xpath>
+        </field>
+    </record>
+</odoo>

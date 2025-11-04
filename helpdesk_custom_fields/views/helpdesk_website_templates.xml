@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Agregar información al header de equipos de garantías -->
+    <template id="team_warranty_info" name="Helpdesk Team: Warranty Info" inherit_id="website_helpdesk.team">
+        
+        <!-- Reemplazar el contenido del formulario para equipos de garantías sin autenticación -->
+        <xpath expr="//div[@class='col-md-8 ps-4']//div[@t-if='team.use_website_helpdesk_form']" position="replace">
+            <div t-if="team.use_website_helpdesk_form">
+                
+                <!-- Si es equipo de garantías y usuario no autenticado, mostrar advertencia -->
+                <t t-if="team.is_warranty_team and request.env.user._is_public()">
+                    <div class="alert alert-warning alert-dismissible fade show mt-4 mb-5" role="alert">
+                        <div class="d-flex align-items-start">
+                            <i class="fa fa-exclamation-triangle fa-2x me-3" aria-hidden="true"></i>
+                            <div>
+                                <h5 class="alert-heading mb-2">
+                                    <strong>Autenticación requerida para tickets de garantías</strong>
+                                </h5>
+                                <p class="mb-2">
+                                    Este equipo gestiona solicitudes de garantías. Para crear un ticket de garantía, 
+                                    debe iniciar sesión con su cuenta.
+                                </p>
+                                <p class="mb-3">
+                                    Al iniciar sesión, podrá:
+                                </p>
+                                <ul class="mb-3">
+                                    <li>Seleccionar sus facturas para el ticket de garantía</li>
+                                    <li>Ver sus productos asociados a las facturas</li>
+                                    <li>Hacer seguimiento del estado de su ticket</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+                
+                <!-- Si es equipo de garantías Y usuario está autenticado, usar formulario personalizado -->
+                <t t-if="team.is_warranty_team and not request.env.user._is_public()">
+                    <t t-call="helpdesk_custom_fields.warranty_ticket_submit_form"/>
+                </t>
+                
+                <!-- Si NO es equipo de garantías, mostrar formulario normal -->
+                <t t-if="not team.is_warranty_team">
+                    <t t-set="template_xmlid" t-value="team.website_form_view_id.xml_id"/>
+                    <t t-call="#{template_xmlid}"/>
+                </t>
+            </div>
+        </xpath>
+    </template>
+    
+    <!-- Formulario personalizado para tickets de garantía -->
+    <template id="warranty_ticket_submit_form" name="Helpdesk: Warranty Ticket Form">
+        <div class="container">
+            <h2>
+                Crear Ticket de Garantía
+                <t t-if="multiple_teams"> - <t t-out="team.name" /></t>
+            </h2>
+            <div class="oe_structure" id="oe_structure_whelpdesk_warranty_form_1"/>
+            <span class="hidden" data-for="helpdesk_warranty_ticket_form" t-att-data-values="{'team_id': team and team.id or ''}" />
+            <div id="helpdesk_warranty_section">
+                <section class="s_website_form pt16 pb16 o_colored_level" data-vcss="001" data-snippet="s_website_form" data-name="Form">
+                    <div class="container">
+                        <form id="helpdesk_warranty_ticket_form" action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-pre-fill="true" data-success-mode="redirect" data-success-page="/your-ticket-has-been-submitted" data-model_name="helpdesk.ticket" hide-change-model="true">
+                            <div class="s_website_form_rows row s_col_no_bgcolor">
+                                <!-- Asunto -->
+                                <div class="mb-0 py-2 s_website_form_field col-12 s_website_form_model_required" data-type="char" data-name="Field">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-form-label col-sm-auto s_website_form_label " style="width: 200px" for="warranty_subject">
+                                            <span class="s_website_form_label_content">Asunto</span>
+                                            <span class="s_website_form_mark"> *</span>
+                                        </label>
+                                        <div class="col-sm">
+                                            <input type="text" class="form-control s_website_form_input" name="name" required="true" id="warranty_subject" placeholder="Describe el problema brevemente"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Serie -->
+                                <div class="mb-0 py-2 s_website_form_field col-12 s_website_form_model_required" data-type="selection" data-name="Field">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="warranty_serie">
+                                            <span class="s_website_form_label_content">Serie</span>
+                                            <span class="s_website_form_mark"> *</span>
+                                        </label>
+                                        <div class="col-sm">
+                                            <select class="form-select s_website_form_input" name="serie" required="true" id="warranty_serie">
+                                                <option value="">Seleccione una serie</option>
+                                                <option value="pqrs">PQRS</option>
+                                                <option value="ticket_cuc">Ticket Cucuta</option>
+                                                <option value="ticket_med">Ticket Medellín</option>
+                                                <option value="ticket_bog">Ticket Bogotá</option>
+                                                <option value="ticket_bga">Ticket Bucaramanga</option>
+                                                <option value="ticket_baq">Ticket Barranquilla</option>
+                                                <option value="ticket_cal">Ticket Cali</option>
+                                                <option value="other">Otro</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Factura -->
+                                <div class="mb-0 py-2 s_website_form_field col-12 s_website_form_model_required" data-type="many2one" data-name="Field">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="warranty_invoice">
+                                            <span class="s_website_form_label_content">Factura</span>
+                                            <span class="s_website_form_mark"> *</span>
+                                        </label>
+                                        <div class="col-sm">
+                                            <select class="form-select s_website_form_input" name="invoice_id" required="true" id="warranty_invoice">
+                                                <option value="">Cargando facturas...</option>
+                                            </select>
+                                            <small class="form-text text-muted">Seleccione la factura relacionada con la garantía</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Productos -->
+                                <div class="mb-0 py-2 s_website_form_field col-12" data-type="many2many" data-name="Field" id="warranty_products_field" style="display: none;">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="warranty_products">
+                                            <span class="s_website_form_label_content">Productos</span>
+                                        </label>
+                                        <div class="col-sm">
+                                            <div id="warranty_products_container" class="border rounded p-2">
+                                                <small class="text-muted">Seleccione una factura primero</small>
+                                            </div>
+                                            <small class="form-text text-muted">Seleccione los productos relacionados con el ticket</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Descripción -->
+                                <div class="mb-0 py-2 s_website_form_field col-12" data-type="char" data-name="Field">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-form-label col-sm-auto s_website_form_label " style="width: 200px" for="warranty_description">
+                                            <span class="s_website_form_label_content">Descripción del problema</span>
+                                            <span class="s_website_form_mark"> *</span>
+                                        </label>
+                                        <div class="col-sm">
+                                            <textarea type="text" class="form-control s_website_form_input" name="description" required="true" id="warranty_description" rows="5" placeholder="Describa el problema en detalle"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Adjuntos -->
+                                <div class="mb-0 py-2 s_website_form_field col-12 s_website_form_custom" data-type="binary" data-name="Field">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class=" col-sm-auto s_website_form_label " style="width: 200px" for="warranty_attachment">
+                                            <span class="s_website_form_label_content">Adjuntos</span>
+                                        </label>
+                                        <div class="col-sm">
+                                            <input type="file" class="form-control s_website_form_input" name="Attachment" id="warranty_attachment" multiple="true"/>
+                                            <small class="form-text text-muted">Puede adjuntar imágenes o documentos relacionados</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Campo oculto: Team ID -->
+                                <div class="mb-0 py-2 s_website_form_field col-12 s_website_form_dnone" data-name="Field" data-type="record" data-model="helpdesk.team">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px">
+                                            <span class="s_website_form_label_content">Equipo de Helpdesk</span>
+                                        </label>
+                                        <div class="col-sm">
+                                            <input type="hidden" class="form-control s_website_form_input" name="team_id" id="warranty_team_id" />
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Campo oculto: Partner ID (se llenará automáticamente con el usuario logueado) -->
+                                <input type="hidden" name="partner_id" t-att-value="request.env.user.partner_id.id"/>
+                                
+                                <!-- Botón Submit -->
+                                <div class="mb-0 py-2 col-12 s_website_form_submit" data-name="Submit Button">
+                                    <div style="width: 200px;" class="s_website_form_label"/>
+                                    <a href="#" role="button" class="btn btn-primary btn-lg s_website_form_send">Crear Ticket de Garantía</a>
+                                    <span id="s_website_form_result"/>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </template>
+</odoo>
+

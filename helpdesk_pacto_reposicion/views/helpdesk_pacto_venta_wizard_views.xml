@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vista del wizard para crear ventas -->
+    <record id="view_helpdesk_pacto_venta_wizard_form" model="ir.ui.view">
+        <field name="name">helpdesk.pacto.venta.wizard.form</field>
+        <field name="model">helpdesk.pacto.venta.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Crear Venta - Pacto de Reposición">
+                <sheet>
+                    <group>
+                        <field name="ticket_id" invisible="1"/>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="partner_id" 
+                                   options="{'no_create_edit': True}"/>
+                        </group>
+                        <group>
+                            <field name="product_ids" 
+                                   widget="many2many_tags"
+                                   options="{'no_create_edit': True}"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Crear Venta" 
+                            name="action_crear_venta" 
+                            type="object" 
+                            class="btn-primary"/>
+                    <button string="Cancelar" 
+                            class="btn-secondary" 
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
+

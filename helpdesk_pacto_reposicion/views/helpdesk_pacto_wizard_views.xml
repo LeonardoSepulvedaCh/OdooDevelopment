@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vista del Wizard Liquidador -->
+    <record id="view_helpdesk_pacto_wizard_form" model="ir.ui.view">
+        <field name="name">helpdesk.pacto.wizard.form</field>
+        <field name="model">helpdesk.pacto.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Liquidador Pacto de Reposición Optimus">
+                <sheet>
+                    <field name="ticket_id" invisible="1"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="pacto_puntos_maximos" invisible="1"/>
+                    
+                    <group>
+                        <group string="Datos Generales del Caso">
+                            <field name="pacto_fecha_envio_comercial"/>
+                            <field name="pacto_almacen_venta"/>
+                            <field name="pacto_nombre_cliente"/>
+                            <field name="pacto_descripcion_bicicleta"/>
+                        </group>
+                        <group string="Información de Compra">
+                            <field name="pacto_cod_base_liquidacion"/>
+                            <field name="pacto_fecha_compra"/>
+                            <field name="pacto_fecha_registro_web"/>
+                            <field name="pacto_descripcion_entrega"/>
+                        </group>
+                    </group>
+
+                    <separator/>
+
+                    <!-- Tabla de Criterios -->
+                    <div class="o_group">
+                        <table class="o_list_table table table-sm table-bordered">
+                            <thead>
+                                <tr class="table-active">
+                                    <th style="width: 50%;">Criterio</th>
+                                    <th style="width: 20%;">Respuesta</th>
+                                    <th style="width: 15%;">Puntos</th>
+                                    <th style="width: 15%;">Máximo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>¿Registra su Optimus en página web &lt;30 días?</td>
+                                    <td>
+                                        <field name="pacto_registro_web_30dias" 
+                                               widget="radio" 
+                                               options="{'horizontal': true}"
+                                               nolabel="1"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <field name="pacto_puntos_registro_web" readonly="1" nolabel="1"/>
+                                    </td>
+                                    <td class="text-center">400</td>
+                                </tr>
+                                <tr>
+                                    <td>¿Presenta la factura legal de compra?</td>
+                                    <td>
+                                        <field name="pacto_factura_legal" 
+                                               widget="radio" 
+                                               options="{'horizontal': true}"
+                                               nolabel="1"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <field name="pacto_puntos_factura" readonly="1" nolabel="1"/>
+                                    </td>
+                                    <td class="text-center">300</td>
+                                </tr>
+                                <tr>
+                                    <td>¿Presenta documento de identidad?</td>
+                                    <td>
+                                        <field name="pacto_documento_identidad" 
+                                               widget="radio" 
+                                               options="{'horizontal': true}"
+                                               nolabel="1"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <field name="pacto_puntos_documento" readonly="1" nolabel="1"/>
+                                    </td>
+                                    <td class="text-center">200</td>
+                                </tr>
+                                <tr>
+                                    <td>Testigos del hurto en denuncio</td>
+                                    <td>
+                                        <field name="pacto_testigos_hurto" 
+                                               widget="radio" 
+                                               options="{'horizontal': true}"
+                                               nolabel="1"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <field name="pacto_puntos_testigos" readonly="1" nolabel="1"/>
+                                    </td>
+                                    <td class="text-center">700</td>
+                                </tr>
+                                <tr>
+                                    <td>¿Carta con datos personales y detalle bicicleta?</td>
+                                    <td>
+                                        <field name="pacto_carta_datos_personales" 
+                                               widget="radio" 
+                                               options="{'horizontal': true}"
+                                               nolabel="1"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <field name="pacto_puntos_carta" readonly="1" nolabel="1"/>
+                                    </td>
+                                    <td class="text-center">200</td>
+                                </tr>
+                                <tr>
+                                    <td>¿Firma Pacto vigente en señal de conocimiento?</td>
+                                    <td>
+                                        <field name="pacto_firma_pacto_vigente" 
+                                               widget="radio" 
+                                               options="{'horizontal': true}"
+                                               nolabel="1"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <field name="pacto_puntos_firma" readonly="1" nolabel="1"/>
+                                    </td>
+                                    <td class="text-center">200</td>
+                                </tr>
+                                <tr>
+                                    <td>¿Presenta denuncio entidad competente?</td>
+                                    <td>
+                                        <field name="pacto_presenta_denuncio" 
+                                               widget="radio" 
+                                               options="{'horizontal': true}"
+                                               nolabel="1"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <field name="pacto_puntos_denuncio" readonly="1" nolabel="1"/>
+                                    </td>
+                                    <td class="text-center">200</td>
+                                </tr>
+                                <tr>
+                                    <td>¿Tiempo reporte autoridades inferior a 24h?</td>
+                                    <td>
+                                        <field name="pacto_tiempo_reporte" 
+                                               widget="radio" 
+                                               options="{'horizontal': true}"
+                                               nolabel="1"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <field name="pacto_puntos_tiempo" readonly="1" nolabel="1"/>
+                                    </td>
+                                    <td class="text-center">200</td>
+                                </tr>
+                                <tr>
+                                    <td>¿Se cataloga como hurto con violencia?</td>
+                                    <td>
+                                        <field name="pacto_hurto_con_violencia" 
+                                               widget="radio" 
+                                               options="{'horizontal': true}"
+                                               nolabel="1"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <field name="pacto_puntos_violencia" readonly="1" nolabel="1"/>
+                                    </td>
+                                    <td class="text-center">200</td>
+                                </tr>
+                                <tr class="table-active">
+                                    <td colspan="2" class="text-end"><strong>TOTAL:</strong></td>
+                                    <td class="text-center">
+                                        <strong>
+                                            <field name="pacto_puntuacion_obtenida" readonly="1" nolabel="1"/>
+                                        </strong>
+                                    </td>
+                                    <td class="text-center">
+                                        <strong>
+                                            <field name="pacto_puntos_maximos" readonly="1" nolabel="1"/>
+                                        </strong>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <separator/>
+
+                    <group>
+                        <group string="Porcentaje de Aprobación">
+                            <field name="pacto_puntuacion_obtenida" invisible="1"/>
+                            <label for="pacto_porcentaje_aprobacion" string="Porcentaje de aprobación"/>
+                            <div>
+                                <field name="pacto_porcentaje_aprobacion" 
+                                       readonly="1" 
+                                       force_save="1"
+                                       class="oe_inline"
+                                       nolabel="1"/>
+                                <span class="o_form_label"> %</span>
+                            </div>
+                        </group>
+                        <group string="Valores Monetarios">
+                            <field name="pacto_valor_factura_iva" 
+                                   widget="monetary" 
+                                   options="{'currency_field': 'currency_id'}"/>
+                            <field name="pacto_pvp_actual_iva" 
+                                   widget="monetary" 
+                                   options="{'currency_field': 'currency_id'}"/>
+                        </group>
+                    </group>
+                </sheet>
+                
+                <footer>
+                    <button name="action_save_liquidador" 
+                            string="Guardar Liquidador" 
+                            type="object" 
+                            class="btn-primary"/>
+                    <button name="action_restablecer_valores" 
+                            string="Reestablecer Valores" 
+                            type="object" 
+                            class="btn-warning"
+                            confirm="¿Está seguro de que desea reestablecer todos los valores? Esta acción no guardará los cambios."
+                            save="0"/>
+                    <button string="Cancelar" 
+                            class="btn-secondary" 
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
