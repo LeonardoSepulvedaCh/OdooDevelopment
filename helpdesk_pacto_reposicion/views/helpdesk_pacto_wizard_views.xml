@@ -201,10 +201,22 @@
                 </sheet>
                 
                 <footer>
+                    <field name="datos_completos" invisible="1"/>
                     <button name="action_save_liquidador" 
                             string="Guardar Liquidador" 
                             type="object" 
                             class="btn-primary"/>
+                    <button name="action_imprimir_carta" 
+                            string="Imprimir Carta" 
+                            type="object" 
+                            class="btn-success"
+                            invisible="not datos_completos"/>
+                    <button name="action_enviar_email" 
+                            string="Enviar Email" 
+                            type="object" 
+                            class="btn-info"
+                            invisible="not datos_completos"
+                            confirm="¿Está seguro de que desea enviar la carta de liquidación por email al cliente?"/>
                     <button name="action_restablecer_valores" 
                             string="Reestablecer Valores" 
                             type="object" 

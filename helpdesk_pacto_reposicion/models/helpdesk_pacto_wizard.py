@@ -1,6 +1,4 @@
-from odoo import fields, models, api, _
-from odoo.exceptions import ValidationError
-
+from odoo import fields, models, api
 
 class HelpdeskPactoWizard(models.TransientModel):
     _name = 'helpdesk.pacto.wizard'
@@ -12,6 +10,12 @@ class HelpdeskPactoWizard(models.TransientModel):
         string='Ticket',
         required=True,
         readonly=True
+    )
+    
+    datos_completos = fields.Boolean(
+        string='Datos Completos',
+        compute='_compute_datos_completos',
+        store=False
     )
 
     # Sobrescribir campos del mixin para hacerlos requeridos en el wizard
@@ -33,6 +37,19 @@ class HelpdeskPactoWizard(models.TransientModel):
     pacto_hurto_con_violencia = fields.Selection(required=True)
     pacto_valor_factura_iva = fields.Monetary(required=True)
     pacto_pvp_actual_iva = fields.Monetary(required=True)
+
+    # Calcular si todos los datos del liquidador están completos.
+    @api.depends(
+        'pacto_fecha_envio_comercial', 'pacto_almacen_venta', 'pacto_descripcion_bicicleta',
+        'pacto_cod_base_liquidacion', 'pacto_fecha_compra', 'pacto_fecha_registro_web',
+        'pacto_descripcion_entrega', 'pacto_registro_web_30dias', 'pacto_factura_legal',
+        'pacto_documento_identidad', 'pacto_testigos_hurto', 'pacto_carta_datos_personales',
+        'pacto_firma_pacto_vigente', 'pacto_presenta_denuncio', 'pacto_tiempo_reporte',
+        'pacto_hurto_con_violencia', 'pacto_valor_factura_iva', 'pacto_pvp_actual_iva'
+    )
+    def _compute_datos_completos(self):
+        for record in self:
+            record.datos_completos = record._check_datos_completos_liquidador()
 
     @api.model
     def default_get(self, fields_list):
@@ -114,6 +131,7 @@ class HelpdeskPactoWizard(models.TransientModel):
         
         return res
 
+    # Obtener los datos del ticket para cargarlos en el wizard.
     def _get_datos_ticket_to_wizard(self, ticket):
         return {
             'pacto_fecha_envio_comercial': ticket.pacto_fecha_envio_comercial,
@@ -137,11 +155,9 @@ class HelpdeskPactoWizard(models.TransientModel):
             'pacto_pvp_actual_iva': ticket.pacto_pvp_actual_iva,
         }
 
+    # Obtener los datos del wizard para guardarlos en el ticket.
     def _get_datos_wizard_to_ticket(self):
         self.ensure_one()
-        # Guardar los criterios de validación y valores monetarios.
-        # Los campos computados (puntos, puntuación y porcentaje) se recalcularán automáticamente
-        # gracias a las dependencias @api.depends
         return {
             'pacto_fecha_envio_comercial': self.pacto_fecha_envio_comercial,
             'pacto_nombre_cliente': self.pacto_nombre_cliente,
@@ -162,33 +178,4 @@ class HelpdeskPactoWizard(models.TransientModel):
             'pacto_hurto_con_violencia': self.pacto_hurto_con_violencia,
             'pacto_valor_factura_iva': self.pacto_valor_factura_iva,
             'pacto_pvp_actual_iva': self.pacto_pvp_actual_iva,
-        }
-
-    def action_save_liquidador(self):
-        self.ensure_one()
-        
-        if not self.ticket_id:
-            raise ValidationError(_('No se encontró el ticket asociado.'))
-        
-        # Guardar todos los datos en el ticket
-        valores = self._get_datos_wizard_to_ticket()
-        self.ticket_id.write(valores)
-        
-        return {'type': 'ir.actions.act_window_close'}
-
-    def action_restablecer_valores(self):
-        """Reestablece todos los campos del wizard abriendo uno nuevo con valores por defecto."""
-        self.ensure_one()
-        
-        return {
-            'name': _('Liquidador Pacto de Reposición Optimus'),
-            'type': 'ir.actions.act_window',
-            'res_model': 'helpdesk.pacto.wizard',
-            'view_mode': 'form',
-            'target': 'new',
-            'context': {
-                'default_ticket_id': self.ticket_id.id,
-                'active_id': self.ticket_id.id,
-                'force_default_values': True,
-            },
         }

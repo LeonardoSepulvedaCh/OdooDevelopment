@@ -1,17 +1,9 @@
-from odoo import fields, models, api, _
-from odoo.exceptions import ValidationError
-import logging
-
-_logger = logging.getLogger(__name__)
+from odoo import fields, models
 
 
 class HelpdeskPactoMixin(models.AbstractModel):
-    """
-    Mixin que contiene toda la lógica compartida del Pacto de Reposición
-    entre el ticket y el wizard.
-    """
     _name = 'helpdesk.pacto.mixin'
-    _description = 'Mixin para Pacto de Reposición'
+    _description = 'Mixin para Pacto de Reposición - Campos Base'
 
     # ========== DATOS GENERALES ==========
     pacto_fecha_envio_comercial = fields.Date(string='Fecha de envío a comercial')
@@ -105,7 +97,7 @@ class HelpdeskPactoMixin(models.AbstractModel):
         compute='_compute_pacto_porcentaje',
         store=True,
         digits=(16, 2),
-        help='Porcentaje de aprobación del pacto de reposición basado en la puntuación obtenida'
+        help='Porcentaje de aprobación del pacto de reposición basado en la puntuación obtenida (máximo 2600 puntos)'
     )
 
     # ========== VALORES MONETARIOS ==========
@@ -122,11 +114,24 @@ class HelpdeskPactoMixin(models.AbstractModel):
     # ========== PUNTOS MÁXIMOS ==========
     pacto_puntos_maximos = fields.Integer(
         string='Puntos máximos',
-        compute='_compute_pacto_puntos_maximos',
-        store=True,
+        default=lambda self: self._get_puntos_maximos_default(),
         readonly=True,
         help='Puntuación máxima posible del pacto de reposición'
     )
+
+    # Calcular el valor por defecto de los puntos máximos.
+    def _get_puntos_maximos_default(self):
+        return (
+            self.PUNTOS_REGISTRO_WEB +
+            self.PUNTOS_FACTURA +
+            self.PUNTOS_DOCUMENTO +
+            max(self.PUNTOS_TESTIGOS.values()) +
+            self.PUNTOS_CARTA +
+            self.PUNTOS_FIRMA +
+            self.PUNTOS_DENUNCIO +
+            self.PUNTOS_TIEMPO +
+            self.PUNTOS_VIOLENCIA
+        )
 
     # ========== CONFIGURACIÓN DE PUNTOS ==========
     PUNTOS_REGISTRO_WEB = 400
@@ -138,101 +143,3 @@ class HelpdeskPactoMixin(models.AbstractModel):
     PUNTOS_DENUNCIO = 200
     PUNTOS_TIEMPO = 200
     PUNTOS_VIOLENCIA = 200
-
-    def _compute_pacto_puntos_maximos(self):
-        """Calcula los puntos máximos posibles del pacto de reposición."""
-        for record in self:
-            record.pacto_puntos_maximos = (
-                self.PUNTOS_REGISTRO_WEB +
-                self.PUNTOS_FACTURA +
-                self.PUNTOS_DOCUMENTO +
-                max(self.PUNTOS_TESTIGOS.values()) +
-                self.PUNTOS_CARTA +
-                self.PUNTOS_FIRMA +
-                self.PUNTOS_DENUNCIO +
-                self.PUNTOS_TIEMPO +
-                self.PUNTOS_VIOLENCIA
-            )
-
-    # Calcular los puntos por cada criterio de validación
-    @api.depends(
-        'pacto_registro_web_30dias', 'pacto_factura_legal', 'pacto_documento_identidad', 'pacto_testigos_hurto', 'pacto_carta_datos_personales',
-        'pacto_firma_pacto_vigente', 'pacto_presenta_denuncio', 'pacto_tiempo_reporte', 'pacto_hurto_con_violencia'
-    )
-    def _compute_pacto_puntos(self):
-        for record in self:
-            record.pacto_puntos_registro_web = (
-                self.PUNTOS_REGISTRO_WEB if record.pacto_registro_web_30dias == 'si' else 0
-            )
-            record.pacto_puntos_factura = (
-                self.PUNTOS_FACTURA if record.pacto_factura_legal == 'si' else 0
-            )
-            record.pacto_puntos_documento = (
-                self.PUNTOS_DOCUMENTO if record.pacto_documento_identidad == 'si' else 0
-            )
-            record.pacto_puntos_testigos = self.PUNTOS_TESTIGOS.get(record.pacto_testigos_hurto, 0)
-            record.pacto_puntos_carta = (
-                self.PUNTOS_CARTA if record.pacto_carta_datos_personales == 'si' else 0
-            )
-            record.pacto_puntos_firma = (
-                self.PUNTOS_FIRMA if record.pacto_firma_pacto_vigente == 'si' else 0
-            )
-            record.pacto_puntos_denuncio = (
-                self.PUNTOS_DENUNCIO if record.pacto_presenta_denuncio == 'si' else 0
-            )
-            record.pacto_puntos_tiempo = (
-                self.PUNTOS_TIEMPO if record.pacto_tiempo_reporte == 'si' else 0
-            )
-            record.pacto_puntos_violencia = (
-                self.PUNTOS_VIOLENCIA if record.pacto_hurto_con_violencia == 'si' else 0
-            )
-
-    # Calcular la puntuación total obtenida
-    @api.depends(
-        'pacto_puntos_registro_web', 'pacto_puntos_factura', 'pacto_puntos_documento', 'pacto_puntos_testigos',
-        'pacto_puntos_carta', 'pacto_puntos_firma', 'pacto_puntos_denuncio', 'pacto_puntos_tiempo', 'pacto_puntos_violencia'
-    )
-    def _compute_pacto_puntuacion_total(self):
-        for record in self:
-            record.pacto_puntuacion_obtenida = sum([
-                record.pacto_puntos_registro_web,
-                record.pacto_puntos_factura,
-                record.pacto_puntos_documento,
-                record.pacto_puntos_testigos,
-                record.pacto_puntos_carta,
-                record.pacto_puntos_firma,
-                record.pacto_puntos_denuncio,
-                record.pacto_puntos_tiempo,
-                record.pacto_puntos_violencia
-            ])
-
-    @api.depends('pacto_puntuacion_obtenida', 'pacto_puntos_maximos')
-    def _compute_pacto_porcentaje(self):
-        for record in self:
-            if record.pacto_puntos_maximos > 0:
-                porcentaje = ((record.pacto_puntuacion_obtenida / record.pacto_puntos_maximos) * 100) / 2
-                record.pacto_porcentaje_aprobacion = round(porcentaje)
-            else:
-                record.pacto_porcentaje_aprobacion = 0.0
-            _logger.info(f"=> Puntuación obtenida: {record.pacto_puntuacion_obtenida}, Puntos máximos: {record.pacto_puntos_maximos}, Porcentaje de aprobación: {record.pacto_porcentaje_aprobacion}")
-
-    # Validar que la fecha de registro web no sea menor a la fecha de compra
-    @api.constrains('pacto_fecha_registro_web', 'pacto_fecha_compra')
-    def _check_fecha_registro_web(self):
-        for record in self:
-            if record.pacto_fecha_registro_web and record.pacto_fecha_compra:
-                if record.pacto_fecha_registro_web < record.pacto_fecha_compra:
-                    raise ValidationError(_(
-                        'La fecha de registro en la página web no puede ser menor a la fecha de compra. '
-                        'Fecha de compra: %s, Fecha de registro web: %s'
-                    ) % (
-                        record.pacto_fecha_compra.strftime('%d/%m/%Y'),
-                        record.pacto_fecha_registro_web.strftime('%d/%m/%Y')
-                    ))
-
-    # Sincronizar la descripción de entrega con la descripción hurtada
-    @api.onchange('pacto_descripcion_bicicleta')
-    def _onchange_pacto_descripcion_bicicleta(self):
-        if self.pacto_descripcion_bicicleta:
-            self.pacto_descripcion_entrega = self.pacto_descripcion_bicicleta
-

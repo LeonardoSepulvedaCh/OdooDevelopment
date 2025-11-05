@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Formato de papel personalizado para la carta del pacto -->
+    <record id="paperformat_pacto_carta" model="report.paperformat">
+        <field name="name">Formato Carta Pacto de Reposición</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">0</field>
+        <field name="margin_bottom">0</field>
+        <field name="margin_left">0</field>
+        <field name="margin_right">0</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">0</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <!-- Acción del reporte -->
+    <record id="action_report_pacto_carta" model="ir.actions.report">
+        <field name="name">Carta de Liquidación Pacto Reposición</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">helpdesk_pacto_reposicion.report_pacto_carta</field>
+        <field name="report_file">helpdesk_pacto_reposicion.report_pacto_carta</field>
+        <field name="binding_model_id" ref="helpdesk.model_helpdesk_ticket"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="helpdesk_pacto_reposicion.paperformat_pacto_carta"/>
+        <field name="print_report_name">'Carta_Pacto_Reposicion_%s' % (object.name or 'SIN_TICKET')</field>
+    </record>
+</odoo>
+

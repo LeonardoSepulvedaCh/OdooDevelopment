@@ -1,0 +1,137 @@
+.pacto-carta-page {
+    font-family: Arial, sans-serif;
+    font-size: 10.5pt !important;
+    line-height: 1.5;
+    color: #000;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    padding: 0 !important;
+    margin: 0 !important;
+
+    // ========== IMÁGENES DE ENCABEZADO Y PIE ==========
+    .header-image,
+    .footer-image {
+        margin: 0 -40px !important;
+        padding: 0 !important;
+        width: calc(100% + 80px) !important;
+        overflow: visible !important;
+        
+        img {
+            width: 100% !important;
+            max-width: 100% !important;
+            height: 95% !important;
+            display: block;
+            margin: 0 !important;
+            padding: 0 !important;
+            object-fit: cover !important;
+        }
+    }
+
+    .footer-image {
+        page-break-inside: avoid;
+    }
+
+    // ========== CONTENIDO ==========
+    .content-wrapper {
+        padding: 20px 40px;
+    }
+
+    .ciudad-fecha {
+        margin: -10px 0 50px 0 !important;
+        text-align: left;
+    }
+
+    .destinatario {
+        margin-bottom: 50px !important;
+        text-align: left;
+
+        .label,
+        .documento,
+        .direccion {
+            margin-bottom: 5px;
+        }
+
+        .nombre {
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+    }
+
+    .saludo {
+        margin-bottom: 30px;
+    }
+
+    // ========== PÁRRAFOS ==========
+    .parrafo-justificado,
+    .parrafo-consignacion {
+        text-align: justify;
+        margin-bottom: 15px;
+    }
+
+    .parrafo-consignacion {
+        margin-bottom: 20px;
+    }
+
+    .nota-anulacion {
+        text-align: justify;
+        font-weight: bold;
+        margin-bottom: 25px;
+    }
+
+    // ========== TABLAS ==========
+    .tabla-bancaria {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+
+        td {
+            padding: 5px;
+            vertical-align: top;
+
+            &.label-col {
+                width: 35%;
+            }
+
+            &.nota {
+                font-size: 9pt;
+            }
+        }
+    }
+
+    // ========== FIRMA ==========
+    .firma-container {
+        margin: 40px 0 25px 0 !important;
+
+        .atencion {
+            margin-bottom: 20px;
+        }
+
+        .firma-bloque {
+            margin-top: 60px;
+            border-top: 1px solid #000;
+            display: inline-block;
+            padding-top: 5px;
+            min-width: 400px;
+
+            .cargo {
+                font-weight: bold;
+            }
+
+            .email-container a {
+                color: #0563c1;
+                text-decoration: none;
+            }
+        }
+    }
+
+    // ========== ELEMENTOS GENERALES ==========
+    strong {
+        font-weight: bold;
+    }
+
+    a {
+        color: #0563c1;
+        text-decoration: underline;
+    }
+}

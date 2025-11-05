@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Template principal del reporte -->
+    <template id="report_pacto_carta">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.basic_layout">
+                    <t t-call="helpdesk_pacto_reposicion.pacto_carta_document"/>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <!-- Template del documento de la carta -->
+    <template id="pacto_carta_document">
+        <t t-set="valor_consignar" t-value="o._get_valor_a_consignar()"/>
+        <t t-set="valor_texto" t-value="o._get_valor_en_texto(valor_consignar)"/>
+        <t t-set="fecha_hoy" t-value="context_timestamp(datetime.datetime.now()).strftime('%d de %B de %Y')"/>
+        
+        <div class="page pacto-carta-page">
+            <!-- Encabezado -->
+            <div class="header-image">
+                <img src="/helpdesk_pacto_reposicion/static/img/encabezado.jpg" alt="Encabezado"/>
+            </div>
+
+            <!-- Contenido con padding -->
+            <div class="content-wrapper">
+            <!-- Ciudad y fecha -->
+            <div class="ciudad-fecha">
+                Bucaramanga, <span t-out="fecha_hoy"/>
+            </div>
+            
+            <!-- Destinatario -->
+            <div class="destinatario">
+                <div class="label">Señor(a):</div>
+                <div class="nombre">
+                    <span t-out="o.partner_id.name or o.pacto_nombre_cliente or ''"/>
+                </div>
+                <div class="documento">
+                    <strong>C.C.</strong> <span t-out="o.partner_id.vat or o.card_code or ''"/>
+                </div>
+                <div class="direccion">
+                    <span t-out="o.partner_id.street or ''"/>
+                    <span t-if="o.partner_id.street2" t-out="' ' + o.partner_id.street2"/>, <span t-out="o.partner_id.city or ''"/> <span t-if="o.partner_id.state_id" t-out="', ' + o.partner_id.state_id.name"/>
+                </div>
+            </div>
+
+            <!-- Saludo -->
+            <div class="saludo">
+                Apreciado cliente:
+            </div>
+
+            <!-- Cuerpo del documento -->
+            <div class="parrafo-justificado">
+                De acuerdo con la documentación recibida para el proceso de pacto de reposición de su bicicleta: 
+                <strong>
+                    <span t-out="o.pacto_descripcion_bicicleta or ''"/>.
+                </strong>Nos permitimos informar lo siguiente:
+            </div>
+
+            <div class="parrafo-justificado">
+                El cliente incumple al pacto de reposición <strong>Capítulo II</strong> (Condiciones para que la reposición parcial del producto comprado sea válida), 
+                <strong>Numeral 5</strong> (Que en la denuncia se identifiquen plenamente los 
+                <strong>TRES (03)</strong> 
+                acompañantes del hurto, los cuales deben dar fe de la ocurrencia del mismo.) 
+                <strong>Numeral 7</strong> 
+                (Presentar la solicitud de Bike Pact a Industrias Bicicletas Milán dentro de un plazo no mayor a treinta días calendarios contados).
+                Sin embargo, luego de validar su caso INDUSTRIAS BICICLETAS MILAN S.A.S resuelve autorizar el 
+                <strong><span t-out="'%.0f' % o.pacto_porcentaje_aprobacion"/>%</strong> 
+                del precio de la compra en su factura excluyendo el IVA sobre el mismo modelo de la bicicleta hurtada.
+                De acuerdo con el porcentaje autorizado el valor que la empresa asume para la reposición parcial del bien y/o producto es de: <strong>$<span t-out="'{:,.0f}'.format(valor_consignar).replace(',', '.')"/></strong>
+                <strong>(<span t-out="valor_texto"/>)</strong> 
+                del cual el cliente cancelara la diferencia incluyendo impuestos de acuerdo al PVP (precio de venta al público) vigente en los términos y plazas descritos en el pacto.
+            </div>
+
+            <div class="parrafo-consignacion">
+                Para tal efecto se debe realizar consignación a nombre de INDUSTRIAS BICICLETAS MILAN S.A.S, a la siguiente cuenta bancaria:
+            </div>
+
+            <!-- Datos bancarios -->
+            <table class="tabla-bancaria">
+                <tr>
+                    <td class="label-col"><strong>Entidad financiera:</strong></td>
+                    <td>BANCO DE BOGOTÁ</td>
+                </tr>
+                <tr>
+                    <td class="label-col"><strong>Tipo de cuenta:</strong></td>
+                    <td>Cuenta corriente</td>
+                </tr>
+                <tr>
+                    <td class="label-col"><strong>Número de cuenta:</strong></td>
+                    <td>162-18877-5 Convenio 11527</td>
+                </tr>
+                <tr>
+                    <td class="label-col"><strong>Valor a consignar:</strong></td>
+                    <td>
+                        $ <span t-out="'{:,.0f}'.format(valor_consignar).replace(',', '.')"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label-col"><strong>Modelo de la Bicicleta</strong></td>
+                    <td>
+                        <span t-out="o.pacto_descripcion_entrega or o.pacto_descripcion_bicicleta or ''"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="nota">
+                        * Se identifica con el número de cédula del cliente.
+                    </td>
+                </tr>
+            </table>
+
+            <!-- Párrafo de disponibilidad -->
+            <div class="parrafo-justificado">
+                Recuerde que la disponibilidad del producto asegura al momento del recibo y reporte de la consignación aquí descrita. 
+                Antes de consignar confirme la disponibilidad del producto en nuestras líneas de atención al cliente 
+                al celular <strong>318 7346271</strong> o al correo <strong>servicioalcliente@bicicletasmilan.com</strong> para confirmar el producto.
+            </div>
+
+            <!-- Plazo -->
+            <div class="parrafo-justificado">
+                El plazo máximo para realizar esta consignación será de 15 días calendario a partir de la fecha de este comunicado, 
+                de lo contrario se dará por entendido que el cliente desiste de la reposición del bien y/o producto objeto de este trámite 
+                y se procederá a cerrar el caso.
+            </div>
+
+            <!-- Nota sobre anulación -->
+            <div class="nota-anulacion">
+                Al hacer efectivo el BIKE PACT se anulará este beneficio
+            </div>
+
+            <!-- Firma -->
+            <div class="firma-container">
+                <div class="atencion">Atentamente,</div>
+                <div class="firma-bloque">
+                    <div class="cargo">AUDITORA DEPARTAMENTO DE GARANTÍAS</div>
+                    <div>INDUSTRIAS BICICLETAS MILÁN S.A.S</div>
+                    <div class="email-container">
+                        <a href="mailto:servicioalcliente@bicicletasmilan.com">
+                            servicioalcliente@bicicletasmilan.com
+                        </a>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+            <!-- Pie de página -->
+            <div class="footer-image">
+                <img src="/helpdesk_pacto_reposicion/static/img/PiePagina.jpg" alt="Pie de página"/>
+            </div>
+        </div>
+    </template>
+</odoo>
+

@@ -114,7 +114,6 @@ class HelpdeskTicket(models.Model):
         if not self.is_pacto_reposicion:
             self._limpiar_campos_pacto()
         else:
-            # Establecer fecha de envío a comercial con la fecha de creación del ticket
             if not self.pacto_fecha_envio_comercial and self.create_date:
                 fecha_creacion = self.create_date.date() if hasattr(self.create_date, 'date') else self.create_date
                 self.pacto_fecha_envio_comercial = fecha_creacion
@@ -122,18 +121,15 @@ class HelpdeskTicket(models.Model):
     @api.onchange('invoice_id')
     def _onchange_invoice_id_pacto(self):
         if self.is_pacto_reposicion and self.invoice_id and self.invoice_id.invoice_date:
-            # Solo actualizar si no hay una fecha de compra ya establecida
             if not self.pacto_fecha_compra:
                 self.pacto_fecha_compra = self.invoice_id.invoice_date
 
     @api.onchange('product_ids')
     def _onchange_product_ids_pacto(self):
         if self.is_pacto_reposicion and self.product_ids:
-            # Solo actualizar si no hay una descripción ya establecida
             if not self.pacto_descripcion_bicicleta:
                 productos_nombres = ', '.join(self.product_ids.mapped('name'))
                 self.pacto_descripcion_bicicleta = productos_nombres
-                # La descripción de entrega es la misma que la hurtada
                 if not self.pacto_descripcion_entrega:
                     self.pacto_descripcion_entrega = productos_nombres
 
