@@ -1,6 +1,7 @@
 from odoo import models, _
 from odoo.exceptions import ValidationError
 import base64
+from .helpdesk_pacto_email_template import get_email_template_html
 
 
 class HelpdeskPactoWizardActions(models.TransientModel):
@@ -42,6 +43,17 @@ class HelpdeskPactoWizardActions(models.TransientModel):
         if not self._check_datos_completos_liquidador():
             raise ValidationError(_('Debe completar todos los datos del liquidador antes de imprimir la carta.'))
         
+        if not self.pacto_beneficio_aplica:
+            raise ValidationError(_(
+                'El beneficio de pacto de reposición NO aplica para este ticket.\n\n'
+                'Las siguientes condiciones deben estar en SI:\n'
+                '- ¿Registra su equipo Optimus en la página web dentro de los 30 días posteriores a la compra?\n'
+                '- ¿Presenta la factura legal de compra?\n'
+                '- ¿Presenta documento de identidad?\n'
+                '- ¿Firma el pacto vigente como señal de conocimiento?\n'
+                '- ¿Presenta denuncio ante la entidad competente?'
+            ))
+        
         self.action_save_liquidador()
         
         return self.env.ref('helpdesk_pacto_reposicion.action_report_pacto_carta').report_action(self.ticket_id)
@@ -52,6 +64,17 @@ class HelpdeskPactoWizardActions(models.TransientModel):
         
         if not self._check_datos_completos_liquidador():
             raise ValidationError(_('Debe completar todos los datos del liquidador antes de enviar el email.'))
+        
+        if not self.pacto_beneficio_aplica:
+            raise ValidationError(_(
+                'El beneficio de pacto de reposición NO aplica para este ticket.\n\n'
+                'Las siguientes condiciones deben estar en SI:\n'
+                '- ¿Registra su equipo Optimus en la página web dentro de los 30 días posteriores a la compra?\n'
+                '- ¿Presenta la factura legal de compra?\n'
+                '- ¿Presenta documento de identidad?\n'
+                '- ¿Firma el pacto vigente como señal de conocimiento?\n'
+                '- ¿Presenta denuncio ante la entidad competente?'
+            ))
         
         if not self.ticket_id.partner_id:
             raise ValidationError(_('El ticket no tiene un cliente asociado.'))
@@ -79,37 +102,24 @@ class HelpdeskPactoWizardActions(models.TransientModel):
             'mimetype': 'application/pdf'
         })
         
-        nombre_cliente = self.ticket_id.partner_id.name or 'Estimado cliente'
+        # Preparar variables para el template
         valor_consignar = self._get_valor_a_consignar()
         valor_formateado = '{:,.0f}'.format(valor_consignar).replace(',', '.')
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        logo_url = f"{base_url}/helpdesk_pacto_reposicion/static/src/img/logo_milan.png"
+        porcentaje_aprobacion = f'{self.pacto_porcentaje_aprobacion:.0f}'
         
-        cuerpo_email = f"""
-            <p>Estimado(a) <strong>{nombre_cliente}</strong>,</p>
-            
-            <p>Nos permitimos enviarle la carta de liquidación de su pacto de reposición correspondiente al ticket <strong>{self.ticket_id.name}</strong>.</p>
-            
-            <p>De acuerdo con la evaluación realizada, se ha autorizado el <strong>{self.pacto_porcentaje_aprobacion:.0f}%</strong> 
-            del precio de compra para la reposición de su bicicleta <strong>{self.pacto_descripcion_bicicleta}</strong>.</p>
-            
-            <p>El valor a consignar es de: <strong>${valor_formateado} COP</strong></p>
-            
-            <p>Por favor, revise el documento adjunto para conocer todos los detalles de esta liquidación, 
-            incluyendo los datos bancarios para realizar la consignación y los plazos establecidos.</p>
-            
-            <p>Si tiene alguna duda o consulta, no dude en contactarnos a través de nuestras líneas de atención:</p>
-            <ul>
-                <li><strong>Teléfono:</strong> 013000950000</li>
-                <li><strong>Celular:</strong> 318 7346271</li>
-                <li><strong>Email:</strong> servicioalcliente@bicicletasmilan.com</li>
-            </ul>
-            
-            <p>Atentamente,<br/>
-            <strong>Departamento de Garantías</strong><br/>
-            INDUSTRIAS BICICLETAS MILÁN S.A.S</p>
-        """
+        # Generar el HTML del correo
+        cuerpo_email = get_email_template_html(
+            self.ticket_id,
+            logo_url,
+            valor_formateado,
+            porcentaje_aprobacion
+        )
         
+        # Crear y enviar el correo
         mail_values = {
-            'subject': f'Carta de Liquidación Pacto de Reposición - Ticket {self.ticket_id.name}',
+            'subject': f'Solicitud de Pacto de Reposición - {self.ticket_id.partner_id.name}',
             'body_html': cuerpo_email,
             'email_to': self.ticket_id.partner_id.email,
             'email_from': self.env.user.email or self.env.company.email or 'servicioalcliente@bicicletasmilan.com',

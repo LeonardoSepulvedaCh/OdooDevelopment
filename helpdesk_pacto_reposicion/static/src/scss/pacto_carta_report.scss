@@ -1,35 +1,48 @@
+// ========== IMÁGENES DE ENCABEZADO Y PIE (fuera del contenedor) ==========
+.header-image {
+    width: calc(100% + 80px) !important;
+    margin: 0 -40px 0 -40px !important;
+    padding: 0 !important;
+    display: block;
+    overflow: hidden;
+    position: relative;
+
+    img {
+        width: 100%;
+        height: auto;
+        display: block;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+}
+
+.footer-image {
+    width: calc(100% + 80px) !important;
+    margin: 10px -40px -40px -40px !important;
+    padding: 0 !important;
+    display: block;
+    page-break-inside: avoid;
+    overflow: hidden;
+    position: relative;
+
+    img {
+        width: 100%;
+        height: auto;
+        display: block;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+}
+
+// ========== CONTENEDOR PRINCIPAL ==========
 .pacto-carta-page {
     font-family: Arial, sans-serif;
-    font-size: 10.5pt !important;
+    font-size: 10.1pt !important;
     line-height: 1.5;
-    color: #000;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     padding: 0 !important;
     margin: 0 !important;
-
-    // ========== IMÁGENES DE ENCABEZADO Y PIE ==========
-    .header-image,
-    .footer-image {
-        margin: 0 -40px !important;
-        padding: 0 !important;
-        width: calc(100% + 80px) !important;
-        overflow: visible !important;
-        
-        img {
-            width: 100% !important;
-            max-width: 100% !important;
-            height: 95% !important;
-            display: block;
-            margin: 0 !important;
-            padding: 0 !important;
-            object-fit: cover !important;
-        }
-    }
-
-    .footer-image {
-        page-break-inside: avoid;
-    }
 
     // ========== CONTENIDO ==========
     .content-wrapper {
@@ -37,12 +50,12 @@
     }
 
     .ciudad-fecha {
-        margin: -10px 0 50px 0 !important;
+        margin: -10px 0 40px 0 !important;
         text-align: left;
     }
 
     .destinatario {
-        margin-bottom: 50px !important;
+        margin-bottom: 40px !important;
         text-align: left;
 
         .label,
@@ -76,18 +89,39 @@
     .nota-anulacion {
         text-align: justify;
         font-weight: bold;
-        margin-bottom: 25px;
+        margin-bottom: 5px;
     }
 
     // ========== TABLAS ==========
-    .tabla-bancaria {
+    table.tabla-bancaria {
         width: 100%;
-        border-collapse: collapse;
         margin-bottom: 20px;
+        border-collapse: collapse !important;
+        border: none !important;
+        border-width: 0 !important;
+        border-style: none !important;
+        outline: none !important;
+
+        table, thead, tbody, tfoot, tr, th, td {
+            border: none !important;
+            border-width: 0 !important;
+            border-style: none !important;
+            outline: none !important;
+        }
+
+        tr {
+            border: none !important;
+            border-width: 0 !important;
+            border-top: none !important;
+            border-bottom: none !important;
+        }
 
         td {
             padding: 5px;
             vertical-align: top;
+            border: none !important;
+            border-width: 0 !important;
+            border-style: none !important;
 
             &.label-col {
                 width: 35%;
@@ -103,12 +137,8 @@
     .firma-container {
         margin: 40px 0 25px 0 !important;
 
-        .atencion {
-            margin-bottom: 20px;
-        }
-
         .firma-bloque {
-            margin-top: 60px;
+            margin-top: 50px;
             border-top: 1px solid #000;
             display: inline-block;
             padding-top: 5px;

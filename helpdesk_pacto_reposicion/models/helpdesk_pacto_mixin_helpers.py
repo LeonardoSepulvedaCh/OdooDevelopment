@@ -1,4 +1,4 @@
-from odoo import models
+from odoo import models, fields, api
 from num2words import num2words
 import logging
 
@@ -7,6 +7,14 @@ _logger = logging.getLogger(__name__)
 
 class HelpdeskPactoMixinHelpers(models.AbstractModel):
     _inherit = 'helpdesk.pacto.mixin'
+
+    pacto_beneficio_aplica = fields.Boolean(
+        string='Beneficio Aplica',
+        compute='_compute_pacto_beneficio_aplica',
+        store=True,
+        help='Indica si el beneficio de pacto de reposición aplica. '
+             'Se valida que todas las condiciones críticas estén en SI.'
+    )
 
     # Calcular el valor a consignar (PVP actual CON IVA - porcentaje de aprobación).
     def _get_valor_a_consignar(self):
@@ -34,6 +42,26 @@ class HelpdeskPactoMixinHelpers(models.AbstractModel):
             _logger.error(f"Error al convertir valor a texto: {e}")
             return "ERROR EN CONVERSIÓN"
 
+    # Verificar si el beneficio de pacto de reposición aplica.
+    @api.depends(
+        'pacto_registro_web_30dias',
+        'pacto_factura_legal',
+        'pacto_documento_identidad',
+        'pacto_firma_pacto_vigente',
+        'pacto_presenta_denuncio'
+    )
+    def _compute_pacto_beneficio_aplica(self):
+        for record in self:
+            condiciones_criticas = [
+                record.pacto_registro_web_30dias == 'si',
+                record.pacto_factura_legal == 'si',
+                record.pacto_documento_identidad == 'si',
+                record.pacto_firma_pacto_vigente == 'si',
+                record.pacto_presenta_denuncio == 'si',
+            ]
+            
+            # El beneficio aplica solo si TODAS las condiciones críticas son True
+            record.pacto_beneficio_aplica = all(condiciones_criticas)
 
     # Verificar si todos los campos requeridos del liquidador están completos.
     def _check_datos_completos_liquidador(self):

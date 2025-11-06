@@ -40,6 +40,17 @@ class HelpdeskTicket(models.Model):
     def action_open_venta_wizard(self):
         self.ensure_one()
         
+        if not self.pacto_beneficio_aplica:
+            raise UserError(_(
+                'El beneficio de pacto de reposición NO aplica para este ticket.\n\n'
+                'Las siguientes condiciones deben estar en SI:\n'
+                '- ¿Registra su equipo Optimus en la página web dentro de los 30 días posteriores a la compra?\n'
+                '- ¿Presenta la factura legal de compra?\n'
+                '- ¿Presenta documento de identidad?\n'
+                '- ¿Firma el pacto vigente como señal de conocimiento?\n'
+                '- ¿Presenta denuncio ante la entidad competente?'
+            ))
+        
         if self.sale_order_id:
             return {
                 'name': _('Orden de Venta'),

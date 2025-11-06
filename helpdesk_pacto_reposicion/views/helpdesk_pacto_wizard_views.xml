@@ -132,7 +132,7 @@
                                     <td class="text-center">200</td>
                                 </tr>
                                 <tr>
-                                    <td>¿Tiempo reporte autoridades inferior a 24h?</td>
+                                    <td>¿Tiempo reporte autoridades inferior a 5 días?</td>
                                     <td>
                                         <field name="pacto_tiempo_reporte" 
                                                widget="radio" 
@@ -198,10 +198,29 @@
                                    options="{'currency_field': 'currency_id'}"/>
                         </group>
                     </group>
+
+                    <!-- Alerta cuando el beneficio NO aplica -->
+                    <div invisible="pacto_beneficio_aplica" 
+                         class="alert alert-danger" 
+                         role="alert" 
+                         style="background-color: #f8d7da; color: #721c24; padding: 15px; margin: 16px 0; border: 1px solid #f5c6cb; border-radius: 4px;">
+                        <h4 style="margin: 0 0 10px 0; color: #721c24;">
+                            <strong><i class="fa fa-times-circle" title="Beneficio no aprobado"/> - El beneficio de pacto de reposición NO APLICA</strong>
+                        </h4>
+                        <p style="margin: 0 0 10px 0;">Una o más condiciones críticas no están cumplidas:</p>
+                        <ul style="margin: 0; padding-left: 25px;">
+                            <li>Registro en web dentro de 30 días</li>
+                            <li>Presentación de factura legal</li>
+                            <li>Presentación de documento de identidad</li>
+                            <li>Firma del pacto vigente</li>
+                            <li>Presentación de denuncio</li>
+                        </ul>
+                    </div>
                 </sheet>
                 
                 <footer>
                     <field name="datos_completos" invisible="1"/>
+                    <field name="pacto_beneficio_aplica" invisible="1"/>
                     <button name="action_save_liquidador" 
                             string="Guardar Liquidador" 
                             type="object" 
@@ -210,12 +229,12 @@
                             string="Imprimir Carta" 
                             type="object" 
                             class="btn-success"
-                            invisible="not datos_completos"/>
+                            invisible="not datos_completos or not pacto_beneficio_aplica"/>
                     <button name="action_enviar_email" 
                             string="Enviar Email" 
                             type="object" 
                             class="btn-info"
-                            invisible="not datos_completos"
+                            invisible="not datos_completos or not pacto_beneficio_aplica"
                             confirm="¿Está seguro de que desea enviar la carta de liquidación por email al cliente?"/>
                     <button name="action_restablecer_valores" 
                             string="Reestablecer Valores" 

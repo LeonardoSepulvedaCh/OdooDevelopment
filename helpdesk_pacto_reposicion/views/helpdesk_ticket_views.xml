@@ -17,11 +17,12 @@
                 </button>
 
                 <!-- Smart Button para ver/crear venta -->
+                <field name="pacto_beneficio_aplica" invisible="1"/>
                 <button name="action_open_venta_wizard" 
                         type="object" 
                         class="oe_stat_button" 
                         icon="fa-shopping-cart"
-                        invisible="not is_pacto_reposicion or not is_warranty_team"
+                        invisible="not is_pacto_reposicion or not is_warranty_team or not pacto_beneficio_aplica"
                         help="Ver o crear la orden de venta de este ticket">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value">
