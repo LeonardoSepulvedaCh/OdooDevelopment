@@ -5,9 +5,11 @@ class ResUsers(models.Model):
     _inherit = 'res.users'
 
     can_close_tickets = fields.Boolean(
-        string='Puede finalizar tickets',
+        string='Puede gestionar todas las etapas de tickets',
         default=False,
-        help='Si está activado, este usuario podrá mover tickets a la etapa de finalización'
+        help='Si está activado, este usuario podrá mover tickets a través de todas las etapas del flujo, '
+             'incluyendo "Por Realizar (Despacho)", "Rechazado" y "Resuelto". '
+             'Los usuarios sin este permiso solo pueden mover tickets de "Nuevo" a "Pendiente de Revisión".'
     )
     
     @api.model

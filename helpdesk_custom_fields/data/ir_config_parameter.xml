@@ -2,10 +2,10 @@
 <odoo>
     <data noupdate="1">
         
-        <!-- Parámetro del sistema para configurar el nombre de la etapa que dispara actividades -->
+        <!-- Parámetro del sistema para configurar el nombre de la etapa que dispara actividades y notificaciones -->
         <record id="helpdesk_stage_trigger_name" model="ir.config_parameter">
             <field name="key">helpdesk_custom_fields.stage_trigger_name</field>
-            <field name="value">En Progreso</field>
+            <field name="value">Por Realizar (Despacho)</field>
         </record>
         
         <!-- Parámetro del sistema para configurar el nombre de la etapa de finalización -->
@@ -18,6 +18,24 @@
         <record id="helpdesk_stage_rejected_name" model="ir.config_parameter">
             <field name="key">helpdesk_custom_fields.stage_rejected_name</field>
             <field name="value">Rechazado</field>
+        </record>
+        
+        <!-- Parámetro del sistema para configurar el nombre de la etapa Nuevo -->
+        <record id="helpdesk_stage_new_name" model="ir.config_parameter">
+            <field name="key">helpdesk_custom_fields.stage_new_name</field>
+            <field name="value">Nuevo</field>
+        </record>
+        
+        <!-- Parámetro del sistema para configurar el nombre de la etapa Pendiente de Revisión -->
+        <record id="helpdesk_stage_pending_review_name" model="ir.config_parameter">
+            <field name="key">helpdesk_custom_fields.stage_pending_review_name</field>
+            <field name="value">Pendiente de Revisión</field>
+        </record>
+        
+        <!-- Parámetro del sistema para configurar el nombre de la etapa Por Realizar (Despacho) -->
+        <record id="helpdesk_stage_dispatch_name" model="ir.config_parameter">
+            <field name="key">helpdesk_custom_fields.stage_dispatch_name</field>
+            <field name="value">Por Realizar (Despacho)</field>
         </record>
         
     </data>

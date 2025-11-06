@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Parámetro del sistema para configurar el nombre de la etapa En espera de pago -->
+        <record id="helpdesk_stage_waiting_payment_name" model="ir.config_parameter">
+            <field name="key">helpdesk_pacto_reposicion.stage_waiting_payment_name</field>
+            <field name="value">En espera de pago</field>
+        </record>
+        
+    </data>
+</odoo>
+

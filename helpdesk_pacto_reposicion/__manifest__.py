@@ -7,6 +7,7 @@
     'author': '@LeonardoSepulvedaCh',
     'depends': ['helpdesk', 'helpdesk_custom_fields', 'sale'],
     'data': [
+        'data/ir_config_parameter.xml',
         'security/ir.model.access.csv',
         'report/helpdesk_pacto_carta_report.xml',
         'report/helpdesk_pacto_carta_report_action.xml',

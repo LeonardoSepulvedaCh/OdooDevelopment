@@ -17,6 +17,13 @@ class HelpdeskPactoWizard(models.TransientModel):
         compute='_compute_datos_completos',
         store=False
     )
+    
+    is_pacto_stage_critical = fields.Boolean(
+        string='Etapa Crítica',
+        related='ticket_id.is_pacto_stage_critical',
+        store=False,
+        help='Indica si el ticket está en una etapa crítica para mostrar los botones de imprimir/enviar'
+    )
 
     # Sobrescribir campos del mixin para hacerlos requeridos en el wizard
     pacto_fecha_envio_comercial = fields.Date(required=True)
