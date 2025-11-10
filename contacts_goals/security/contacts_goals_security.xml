@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        
+        <!-- Categoría de módulo -->
+        <record id="module_category_contacts_goals" model="ir.module.category">
+            <field name="name">Metas de Clientes</field>
+            <field name="description">Gestión de metas comerciales por cliente</field>
+            <field name="sequence">15</field>
+        </record>
+
+        <!-- Privilegio para el módulo -->
+        <record id="res_groups_privilege_contacts_goals" model="res.groups.privilege">
+            <field name="name">Metas de Clientes</field>
+            <field name="category_id" ref="module_category_contacts_goals"/>
+            <field name="description">Acceso a las funcionalidades de Metas de Clientes</field>
+        </record>
+
+        <!-- Grupo: Usuario de Metas (Solo lectura) -->
+        <record id="group_contacts_goals_user" model="res.groups">
+            <field name="name">Usuario: Ver Metas</field>
+            <field name="privilege_id" ref="res_groups_privilege_contacts_goals"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="comment">El usuario puede ver las metas de clientes pero no modificarlas.</field>
+        </record>
+
+        <!-- Grupo: Gestor de Metas (Crear y modificar) -->
+        <record id="group_contacts_goals_manager" model="res.groups">
+            <field name="name">Gestor: Crear y Modificar Metas</field>
+            <field name="privilege_id" ref="res_groups_privilege_contacts_goals"/>
+            <field name="implied_ids" eval="[(4, ref('group_contacts_goals_user'))]"/>
+            <field name="comment">El gestor puede crear, modificar y gestionar las metas de clientes.</field>
+        </record>
+
+        <!-- Grupo: Administrador de Metas (Acceso total) -->
+        <record id="group_contacts_goals_admin" model="res.groups">
+            <field name="name">Administrador: Acceso Total</field>
+            <field name="privilege_id" ref="res_groups_privilege_contacts_goals"/>
+            <field name="implied_ids" eval="[(4, ref('group_contacts_goals_manager'))]"/>
+            <field name="comment">El administrador tiene acceso total incluyendo eliminación de metas.</field>
+        </record>
+
+        <!-- Reglas de acceso a registros -->
+        
+        <!-- Regla: Usuario puede ver todas las metas -->
+        <record id="customer_goal_user_rule" model="ir.rule">
+            <field name="name">Metas: Usuario puede ver todas</field>
+            <field name="model_id" ref="model_customer_goal"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_contacts_goals_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <!-- Regla: Gestor puede crear y modificar metas -->
+        <record id="customer_goal_manager_rule" model="ir.rule">
+            <field name="name">Metas: Gestor puede crear y modificar</field>
+            <field name="model_id" ref="model_customer_goal"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_contacts_goals_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <!-- Regla: Administrador tiene acceso total -->
+        <record id="customer_goal_admin_rule" model="ir.rule">
+            <field name="name">Metas: Administrador acceso total</field>
+            <field name="model_id" ref="model_customer_goal"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_contacts_goals_admin'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <!-- Reglas para las líneas de objetivos -->
+        
+        <record id="customer_goal_line_user_rule" model="ir.rule">
+            <field name="name">Líneas de Metas: Usuario puede ver todas</field>
+            <field name="model_id" ref="model_customer_goal_line"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_contacts_goals_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="customer_goal_line_manager_rule" model="ir.rule">
+            <field name="name">Líneas de Metas: Gestor puede crear y modificar</field>
+            <field name="model_id" ref="model_customer_goal_line"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_contacts_goals_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record id="customer_goal_line_admin_rule" model="ir.rule">
+            <field name="name">Líneas de Metas: Administrador acceso total</field>
+            <field name="model_id" ref="model_customer_goal_line"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_contacts_goals_admin'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+    </data>
+</odoo>
+

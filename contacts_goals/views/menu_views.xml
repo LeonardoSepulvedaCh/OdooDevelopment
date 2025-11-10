@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Menú principal en Configuración de Ventas -->
+    <menuitem id="menu_customer_goals_root"
+              name="Metas Clientes"
+              parent="sale.menu_sale_config"
+              groups="group_contacts_goals_user"
+              sequence="50"/>
+    
+    <!-- Submenú: Gestión de Metas -->
+    <menuitem id="menu_customer_goals_config"
+              name="Gestión de Metas"
+              parent="menu_customer_goals_root"
+              action="action_customer_goal"
+              groups="group_contacts_goals_user"
+              sequence="10"/>
+</odoo>
+

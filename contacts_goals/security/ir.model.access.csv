@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_customer_goal_user,customer.goal.user,model_customer_goal,group_contacts_goals_user,1,0,0,0
+access_customer_goal_manager,customer.goal.manager,model_customer_goal,group_contacts_goals_manager,1,1,1,0
+access_customer_goal_admin,customer.goal.admin,model_customer_goal,group_contacts_goals_admin,1,1,1,1
+access_customer_goal_line_user,customer.goal.line.user,model_customer_goal_line,group_contacts_goals_user,1,0,0,0
+access_customer_goal_line_manager,customer.goal.line.manager,model_customer_goal_line,group_contacts_goals_manager,1,1,1,1
+access_customer_goal_line_admin,customer.goal.line.admin,model_customer_goal_line,group_contacts_goals_admin,1,1,1,1

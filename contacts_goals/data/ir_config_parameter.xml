@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Parámetro del sistema para configurar el salario mínimo mensual vigente -->
+        <record id="config_minimum_wage" model="ir.config_parameter">
+            <field name="key">contacts_goals.minimum_wage</field>
+            <field name="value">1423500</field>
+        </record>
+        
+    </data>
+</odoo>
+

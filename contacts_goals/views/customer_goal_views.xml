@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vista de árbol/lista -->
+    <record id="view_customer_goal_list" model="ir.ui.view">
+        <field name="name">customer.goal.list</field>
+        <field name="model">customer.goal</field>
+        <field name="arch" type="xml">
+            <list string="Metas de Clientes" decoration-success="state == 'achieved'" 
+                  decoration-muted="state == 'expired' or state == 'cancelled'" 
+                  decoration-info="state == 'active'"
+                  decoration-warning="state == 'draft'">
+                <field name="partner_id"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="is_active" widget="boolean_toggle"/>
+                <field name="target_amount" widget="monetary"/>
+                <field name="achieved_amount" widget="monetary"/>
+                <field name="achievement_percentage" widget="progressbar"/>
+                <field name="state" widget="badge" 
+                       decoration-success="state == 'achieved'"
+                       decoration-warning="state == 'active'"
+                       decoration-danger="state == 'expired'"
+                       decoration-muted="state == 'cancelled'"
+                       decoration-info="state == 'draft'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Vista de formulario -->
+    <record id="view_customer_goal_form" model="ir.ui.view">
+        <field name="name">customer.goal.form</field>
+        <field name="model">customer.goal</field>
+        <field name="arch" type="xml">
+            <form string="Meta de Cliente">
+                <header>
+                    <button name="action_activate_goal" string="Activar Meta" 
+                            type="object" class="btn-success"
+                            invisible="is_active"
+                            groups="contacts_goals.group_contacts_goals_manager"/>
+                    <button name="action_deactivate_goal" string="Desactivar Meta" 
+                            type="object" class="btn-warning"
+                            invisible="not is_active"
+                            groups="contacts_goals.group_contacts_goals_manager"/>
+                    <button name="action_view_sales" string="Ver Ventas del Periodo" 
+                            type="object" class="btn-primary"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,active,achieved,expired"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_sales" type="object" class="oe_stat_button" icon="fa-shopping-cart">
+                            <div class="o_stat_info">
+                                <field name="achieved_amount" widget="monetary"/>
+                                <span class="o_stat_text">Ventas</span>
+                            </div>
+                        </button>
+                    </div>
+                    
+                    <widget name="web_ribbon" title="Meta Activa" bg_color="text-bg-success" invisible="not is_active"/>
+                    <widget name="web_ribbon" title="Meta Inactiva" bg_color="text-bg-secondary" invisible="is_active"/>
+                    
+                    <group>
+                        <group name="main_info" string="Información Principal">
+                            <field name="partner_id" options="{'no_create': True}"/>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                            <field name="is_active" widget="boolean_toggle" groups="contacts_goals.group_contacts_goals_manager"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        
+                        <group name="achievement_info" string="Cumplimiento General">
+                            <field name="achieved_amount" widget="monetary" readonly="1"/>
+                            <field name="achievement_percentage" readonly="1"/>
+                            <field name="minimum_wage" readonly="1" widget="monetary"/>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Líneas de Objetivos" name="lines">
+                            <field name="line_ids">
+                                <list editable="bottom" edit="false" delete="false" create="false" groups="contacts_goals.group_contacts_goals_user">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="minimum_wage_multiplier"/>
+                                    <field name="target_amount" widget="monetary"/>
+                                    <field name="achieved_amount" widget="monetary"/>
+                                    <field name="achievement_percentage" widget="progressbar"/>
+                                    <field name="notes"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                                <list editable="bottom" groups="contacts_goals.group_contacts_goals_manager">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="minimum_wage_multiplier"/>
+                                    <field name="target_amount" widget="monetary" readonly="1"/>
+                                    <field name="achieved_amount" widget="monetary" readonly="1"/>
+                                    <field name="achievement_percentage" widget="progressbar" readonly="1"/>
+                                    <field name="notes"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        
+                        <page string="Notas" name="notes">
+                            <field name="notes" placeholder="Notas adicionales sobre esta meta..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vista de búsqueda/filtros -->
+    <record id="view_customer_goal_search" model="ir.ui.view">
+        <field name="name">customer.goal.search</field>
+        <field name="model">customer.goal</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="partner_id"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <separator/>
+                <filter string="Metas Activas" name="filter_is_active" domain="[('is_active', '=', True)]"/>
+                <filter string="Estado: Activas" name="filter_state_active" domain="[('state', '=', 'active')]"/>
+                <filter string="Cumplidas" name="filter_achieved" domain="[('state', '=', 'achieved')]"/>
+                <filter string="Vencidas" name="filter_expired" domain="[('state', '=', 'expired')]"/>
+                <filter string="Borradores" name="filter_draft" domain="[('state', '=', 'draft')]"/>
+                <separator/>
+                <filter string="Cliente" name="group_partner" context="{'group_by': 'partner_id'}"/>
+                <filter string="Estado" name="group_state" context="{'group_by': 'state'}"/>
+                <filter string="Fecha Inicio" name="group_date_start" context="{'group_by': 'date_start'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Vista Kanban -->
+    <record id="view_customer_goal_kanban" model="ir.ui.view">
+        <field name="name">customer.goal.kanban</field>
+        <field name="model">customer.goal</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="partner_id"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="is_active"/>
+                <field name="target_amount"/>
+                <field name="achieved_amount"/>
+                <field name="achievement_percentage"/>
+                <field name="state"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_global_click">
+                            <div class="o_kanban_record_top">
+                                <div class="o_kanban_record_headings">
+                                    <strong class="o_kanban_record_title">
+                                        <t t-out="record.partner_id.value"/>
+                                    </strong>
+                                </div>
+                                <span class="float-end">
+                                    <span class="badge rounded-pill me-1" 
+                                          t-if="record.is_active.raw_value"
+                                          t-attf-class="badge text-bg-success">
+                                        ACTIVA
+                                    </span>
+                                    <span class="badge rounded-pill" 
+                                          t-attf-class="badge {{record.state.raw_value === 'achieved' ? 'text-bg-success' : record.state.raw_value === 'expired' ? 'text-bg-secondary' : record.state.raw_value === 'cancelled' ? 'text-bg-danger' : 'text-bg-info'}}">
+                                        <t t-out="record.state.value"/>
+                                    </span>
+                                </span>
+                            </div>
+                            <div class="o_kanban_record_body">
+                                <div>
+                                    <i class="fa fa-calendar" title="Periodo"/> 
+                                    <t t-out="record.date_start.value"/> - <t t-out="record.date_end.value"/>
+                                </div>
+                                <div>
+                                    <i class="fa fa-bullseye" title="Objetivo"/> 
+                                    Objetivo: <t t-out="record.target_amount.value"/>
+                                </div>
+                                <div>
+                                    <i class="fa fa-line-chart" title="Progreso"/> 
+                                    Alcanzado: <t t-out="record.achieved_amount.value"/>
+                                </div>
+                                <div class="mt-2">
+                                    <div class="progress">
+                                        <div class="progress-bar" role="progressbar" 
+                                             t-attf-style="width: {{record.achievement_percentage.raw_value}}%"
+                                             t-attf-class="progress-bar {{record.achievement_percentage.raw_value >= 100 ? 'bg-success' : record.achievement_percentage.raw_value >= 80 ? 'bg-info' : 'bg-warning'}}">
+                                            <t t-out="Math.round(record.achievement_percentage.raw_value)"/>%
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Acción de ventana -->
+    <record id="action_customer_goal" model="ir.actions.act_window">
+        <field name="name">Metas de Clientes</field>
+        <field name="res_model">customer.goal</field>
+        <field name="view_mode">list,form,kanban</field>
+        <field name="context">{'search_default_filter_is_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Crear una nueva meta de cliente
+            </p>
+            <p>
+                Las metas permiten definir objetivos comerciales para sus clientes
+                basados en múltiplos del salario mínimo vigente.
+            </p>
+            <p>
+                <em>Nota: Solo usuarios con permisos de Gestor o superior pueden crear y modificar metas.</em>
+            </p>
+            <p>
+                <em>Para ver análisis y gráficos, utilice el menú "Reporte de Cumplimiento".</em>
+            </p>
+        </field>
+    </record>
+</odoo>
+
