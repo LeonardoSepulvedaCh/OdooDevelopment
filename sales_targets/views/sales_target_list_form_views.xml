@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Vista List de Metas Comerciales -->
+    <record id="view_sales_target_list" model="ir.ui.view">
+        <field name="name">sales.target.list</field>
+        <field name="model">sales.target</field>
+        <field name="arch" type="xml">
+            <list decoration-success="achievement_percentage &gt;= 100" 
+                  decoration-warning="achievement_percentage &gt;= 80 and achievement_percentage &lt; 100"
+                  decoration-danger="achievement_percentage &lt; 80">
+                <field name="salesperson_id"/>
+                <field name="month"/>
+                <field name="year" options="{'type': 'number'}"/>
+                <field name="target_amount" widget="monetary"/>
+                <field name="invoiced_amount" widget="monetary"/>
+                <field name="achievement_percentage" string="% Cumplimiento" widget="progressbar"/>
+                <field name="state" widget="badge" 
+                       decoration-info="state == 'draft'"
+                       decoration-success="state == 'active'"
+                       decoration-muted="state == 'closed'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Vista Form de Metas Comerciales -->
+    <record id="view_sales_target_form" model="ir.ui.view">
+        <field name="name">sales.target.form</field>
+        <field name="model">sales.target</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_set_active" string="Activar" 
+                            type="object" class="oe_highlight"
+                            invisible="state != 'draft'"/>
+                    <button name="action_set_closed" string="Cerrar" 
+                            type="object"
+                            invisible="state != 'active'"/>
+                    <button name="action_recalculate" string="Recalcular" 
+                            type="object" class="oe_highlight"/>
+                    <field name="state" widget="statusbar" 
+                           statusbar_visible="draft,active,closed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="display_name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group name="period" string="Periodo">
+                            <field name="salesperson_id" options="{'no_create': True}"/>
+                            <field name="month"/>
+                            <field name="year" options="{'type': 'number'}"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group name="amounts" string="Montos">
+                            <field name="target_amount" widget="monetary"/>
+                            <field name="invoiced_amount" widget="monetary"/>
+                            <field name="achievement_percentage_display" string="% Cumplimiento"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Metas por Categoría" name="target_lines">
+                            <field name="target_line_ids" widget="one2many"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vista Search de Metas Comerciales -->
+    <record id="view_sales_target_search" model="ir.ui.view">
+        <field name="name">sales.target.search</field>
+        <field name="model">sales.target</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="salesperson_id"/>
+                <field name="year"/>
+                <field name="month"/>
+                <separator/>
+                <filter string="Activas" name="active" 
+                        domain="[('state', '=', 'active')]"/>
+                <filter string="Borrador" name="draft" 
+                        domain="[('state', '=', 'draft')]"/>
+                <filter string="Cerradas" name="closed" 
+                        domain="[('state', '=', 'closed')]"/>
+                <separator/>
+                <filter string="Cumplimiento ≥ 100%" name="achieved" 
+                        domain="[('achievement_percentage', '&gt;=', 100)]"/>
+                <filter string="Cumplimiento 80-99%" name="partial" 
+                        domain="[('achievement_percentage', '&gt;=', 80), ('achievement_percentage', '&lt;', 100)]"/>
+                <filter string="Cumplimiento &lt; 80%" name="low" 
+                        domain="[('achievement_percentage', '&lt;', 80)]"/>
+                <separator/>
+                <filter string="Mes Actual" name="current_month" 
+                        domain="[('year', '=', context_today().year), ('month', '=', str(context_today().month))]"/>
+                <filter string="Año Actual" name="current_year" 
+                        domain="[('year', '=', context_today().year)]"/>
+                <separator string="Agrupar por"/>
+                <filter string="Vendedor" name="group_salesperson" 
+                        context="{'group_by': 'salesperson_id'}"/>
+                <filter string="Mes" name="group_month" 
+                        context="{'group_by': 'month'}"/>
+                <filter string="Año" name="group_year" 
+                        context="{'group_by': 'year'}"/>
+                <filter string="Estado" name="group_state" 
+                        context="{'group_by': 'state'}"/>
+            </search>
+        </field>
+    </record>
+
+</odoo>
+

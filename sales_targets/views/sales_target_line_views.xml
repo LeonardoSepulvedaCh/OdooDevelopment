@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Vista List de Líneas de Meta -->
+    <record id="view_sales_target_line_list" model="ir.ui.view">
+        <field name="name">sales.target.line.list</field>
+        <field name="model">sales.target.line</field>
+        <field name="arch" type="xml">
+            <list editable="bottom" 
+                  decoration-success="achievement_percentage &gt;= 100" 
+                  decoration-warning="achievement_percentage &gt;= 80 and achievement_percentage &lt; 100"
+                  decoration-danger="achievement_percentage &lt; 80">
+                <field name="category_id" options="{'no_create': True, 'no_open': True}"/>
+                <field name="target_amount" widget="monetary" sum="Total Objetivo"/>
+                <field name="invoiced_amount" widget="monetary" sum="Total Facturado"/>
+                <field name="achievement_percentage" string="% Cumplimiento" widget="progressbar"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="company_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+</odoo>
+
