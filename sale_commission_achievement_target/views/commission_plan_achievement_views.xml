@@ -6,13 +6,40 @@
         <field name="model">sale.commission.plan</field>
         <field name="inherit_id" ref="sale_commission.sale_commission_plan_view_form"/>
         <field name="arch" type="xml">
-            <!-- Agregar el campo target_amount en la lista de achievements -->
+            <!-- Ocultar el campo product_id -->
+            <xpath expr="//field[@name='achievement_ids']//field[@name='product_id']" position="attributes">
+                <attribute name="column_invisible">1</attribute>
+            </xpath>
+
+            <!-- Ocultar el campo recurring_plan_id -->
+            <xpath expr="//field[@name='achievement_ids']//field[@name='recurring_plan_id']" position="attributes">
+                <attribute name="column_invisible">1</attribute>
+            </xpath>
+            
+            <!-- Agregar el campo target_amount y campos informativos en la lista de achievements -->
             <xpath expr="//field[@name='achievement_ids']//field[@name='product_categ_id']" position="after">
                 <field name="target_amount" 
                        widget="monetary" 
                        options="{'currency_field': 'currency_id'}"
                        optional="show"/>
-                <field name="currency_id" column_invisible="1"/>
+                <field name="actual_amount" 
+                       widget="monetary" 
+                       options="{'currency_field': 'currency_id'}"
+                       optional="show"
+                       readonly="1"/>
+                <field name="achievement_percentage" 
+                       widget="progressbar"
+                       readonly="1"/>
+            </xpath>
+            
+            <!-- Agregar el objetivo total por categorías en la pestaña de Targets/Periods -->
+            <xpath expr="//field[@name='target_ids']//field[@name='amount']" position="after">
+                <field name="total_target_by_category" 
+                       widget="monetary" 
+                       options="{'currency_field': 'currency_id'}"
+                       optional="show"
+                       readonly="1"
+                       string="Obj. por Categorías"/>
             </xpath>
         </field>
     </record>

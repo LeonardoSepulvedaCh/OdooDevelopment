@@ -69,6 +69,7 @@ class SaleCommissionAchievementReport(models.Model):
         """
         Sobrescribir para agregar condición que verifica si se alcanzó el target_amount.
         Si no se alcanzó el objetivo, el rate será 0.
+        Además, valida si hay una categoría obligatoria y si el usuario cumplió con ella.
         """
         _logger.info("=== RATE TO CASE DEBUG ===")
         _logger.info(f"Rates recibidos: {rates}")
@@ -79,17 +80,96 @@ class SaleCommissionAchievementReport(models.Model):
         
         _logger.info(f"is_sales: {is_sales}, is_invoices: {is_invoices}")
         
+        # Obtener configuración de categoría obligatoria desde parámetros del sistema
+        mandatory_enabled = self.env['ir.config_parameter'].sudo().get_param(
+            'sale_commission_achievement_target.mandatory_category_enabled', 'False'
+        )
+        mandatory_category_id = self.env['ir.config_parameter'].sudo().get_param(
+            'sale_commission_achievement_target.mandatory_category_id', False
+        )
+        
+        # Convertir a valores apropiados
+        mandatory_enabled_bool = mandatory_enabled == 'True'
+        mandatory_category_id_int = int(mandatory_category_id) if mandatory_category_id and mandatory_category_id.isdigit() else None
+        
+        _logger.info(f"Categoría obligatoria habilitada: {mandatory_enabled_bool}")
+        _logger.info(f"ID categoría obligatoria: {mandatory_category_id_int}")
+        
         # Obtener el ID de la moneda de la compañía actual para conversiones
         company_currency_id = self.env.company.currency_id.id
+        
+        # Construir la condición de categoría obligatoria si está habilitada
+        mandatory_check_sales = ""
+        mandatory_check_invoices = ""
+        
+        if mandatory_enabled_bool and mandatory_category_id_int:
+            # Para ventas
+            mandatory_check_sales = f"""
+                        -- Validación de categoría obligatoria
+                        WHEN {mandatory_category_id_int} NOT IN (
+                            SELECT scpa_check.product_categ_id
+                            FROM sale_commission_plan_achievement scpa_check
+                            WHERE scpa_check.plan_id = scp.id
+                              AND scpa_check.product_categ_id = {mandatory_category_id_int}
+                              AND scpa_check.target_amount > 0
+                              AND (
+                                SELECT COALESCE(SUM(sol_check.price_subtotal / fo_check.currency_rate), 0)
+                                FROM sale_order fo_check
+                                JOIN sale_order_line sol_check ON sol_check.order_id = fo_check.id
+                                LEFT JOIN product_product pp_check ON sol_check.product_id = pp_check.id
+                                LEFT JOIN product_template pt_check ON pp_check.product_tmpl_id = pt_check.id
+                                WHERE fo_check.user_id = scpu.user_id
+                                  AND fo_check.state = 'sale'
+                                  AND fo_check.company_id = scp.company_id
+                                  AND fo_check.date_order BETWEEN COALESCE(scpu.date_from, scp.date_from) AND COALESCE(scpu.date_to, scp.date_to)
+                                  AND pt_check.categ_id = {mandatory_category_id_int}
+                                  AND sol_check.display_type IS NULL
+                                  AND COALESCE(sol_check.is_expense, false) = false
+                                  AND COALESCE(sol_check.is_downpayment, false) = false
+                              ) >= scpa_check.target_amount
+                        ) THEN 0
+            """
+            
+            # Para facturas
+            mandatory_check_invoices = f"""
+                        -- Validación de categoría obligatoria
+                        WHEN {mandatory_category_id_int} NOT IN (
+                            SELECT scpa_check.product_categ_id
+                            FROM sale_commission_plan_achievement scpa_check
+                            WHERE scpa_check.plan_id = scp.id
+                              AND scpa_check.product_categ_id = {mandatory_category_id_int}
+                              AND scpa_check.target_amount > 0
+                              AND (
+                                SELECT COALESCE(SUM(
+                                    CASE
+                                        WHEN fm_check.move_type = 'out_invoice' THEN aml_check.price_subtotal / fm_check.invoice_currency_rate
+                                        WHEN fm_check.move_type = 'out_refund' THEN -1 * aml_check.price_subtotal / fm_check.invoice_currency_rate
+                                        ELSE 0
+                                    END
+                                ), 0)
+                                FROM account_move fm_check
+                                JOIN account_move_line aml_check ON aml_check.move_id = fm_check.id
+                                LEFT JOIN product_product pp_check ON aml_check.product_id = pp_check.id
+                                LEFT JOIN product_template pt_check ON pp_check.product_tmpl_id = pt_check.id
+                                WHERE fm_check.invoice_user_id = scpu.user_id
+                                  AND fm_check.state = 'posted'
+                                  AND fm_check.move_type IN ('out_invoice', 'out_refund')
+                                  AND fm_check.company_id = scp.company_id
+                                  AND fm_check.date BETWEEN COALESCE(scpu.date_from, scp.date_from) AND COALESCE(scpu.date_to, scp.date_to)
+                                  AND pt_check.categ_id = {mandatory_category_id_int}
+                                  AND aml_check.display_type = 'product'
+                              ) >= scpa_check.target_amount
+                        ) THEN 0
+            """
         
         if is_sales:
             # Para ventas (sale orders)
             _logger.info("Generando CASE template para VENTAS con validación de target_amount")
-            case_template = """
+            case_template = f"""
             -- DEBUG: Validación de target_amount para ventas
             CASE 
                 WHEN scpa.type = '%s' THEN
-                    CASE
+                    CASE{mandatory_check_sales}
                         -- Si no hay target_amount, aplicar rate normal
                         WHEN scpa.target_amount IS NULL OR scpa.target_amount = 0 THEN rate
                         -- Si hay target_amount, verificar que se alcanzó
@@ -121,11 +201,11 @@ class SaleCommissionAchievementReport(models.Model):
         elif is_invoices:
             # Para facturas (invoices)
             _logger.info("Generando CASE template para FACTURAS con validación de target_amount")
-            case_template = """
+            case_template = f"""
             -- DEBUG: Validación de target_amount para facturas
             CASE 
                 WHEN scpa.type = '%s' THEN
-                    CASE
+                    CASE{mandatory_check_invoices}
                         -- Si no hay target_amount, aplicar rate normal
                         WHEN scpa.target_amount IS NULL OR scpa.target_amount = 0 THEN rate
                         -- Si hay target_amount, verificar que se alcanzó

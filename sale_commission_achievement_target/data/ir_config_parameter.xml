@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Parámetro para habilitar/deshabilitar la validación de categoría obligatoria -->
+        <record id="commission_mandatory_category_enabled" model="ir.config_parameter">
+            <field name="key">sale_commission_achievement_target.mandatory_category_enabled</field>
+            <field name="value">False</field>
+        </record>
+        
+        <!-- Parámetro para configurar el ID de la categoría obligatoria -->
+        <record id="commission_mandatory_category_id" model="ir.config_parameter">
+            <field name="key">sale_commission_achievement_target.mandatory_category_id</field>
+            <field name="value"></field>
+        </record>
+        
+    </data>
+</odoo>
+

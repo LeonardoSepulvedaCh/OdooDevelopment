@@ -16,6 +16,7 @@
         'sale_commission_subscription',
     ],
     'data': [
+        'data/ir_config_parameter.xml',
         'views/commission_plan_achievement_views.xml',
     ],
     'installable': True,
