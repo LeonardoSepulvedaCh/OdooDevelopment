@@ -1,9 +1,14 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from odoo import models, fields, api
 
 
 class SaleCommissionPlanTarget(models.Model):
+    """
+    Extensión del modelo de objetivos de planes de comisión.
+    
+    Agrega un campo computado que suma todos los montos objetivo definidos
+    en los logros (achievements) asociados al plan de comisiones, permitiendo
+    visualizar el objetivo total acumulado por todas las categorías configuradas.
+    """
     _inherit = 'sale.commission.plan.target'
 
     total_target_by_category = fields.Monetary(
@@ -16,7 +21,19 @@ class SaleCommissionPlanTarget(models.Model):
 
     @api.depends('plan_id.achievement_ids.target_amount')
     def _compute_total_target_by_category(self):
-        """Calcular la suma de todos los target_amount de los achievements del plan"""
+        """
+        Calcula la suma total de todos los montos objetivo de los logros del plan.
+        
+        Recorre todos los achievements asociados al plan de comisiones y suma
+        los valores de target_amount configurados. Solo considera montos mayores
+        a cero para evitar contar logros sin objetivo definido.
+        
+        El resultado se almacena en el campo total_target_by_category y se muestra
+        en la moneda del plan de comisiones.
+        
+        Returns:
+            None: El método actualiza el campo computado directamente en cada registro.
+        """
         for target in self:
             if target.plan_id and target.plan_id.achievement_ids:
                 # Sumar solo los target_amount que están configurados (> 0)

@@ -1,5 +1,5 @@
 {
-    'name': 'Sale Commission Achievement Target',
+    'name': 'Ventas - Comisiones por Asesor',
     'version': '1.0.0',
     'category': 'Rutavity/Commission',
     'summary': 'Agrega monto objetivo a los logros de comisiones por categoría',
@@ -13,7 +13,6 @@
     'depends': [
         'sale_commission',
         'sale_commission_margin',
-        'sale_commission_subscription',
     ],
     'data': [
         'data/ir_config_parameter.xml',

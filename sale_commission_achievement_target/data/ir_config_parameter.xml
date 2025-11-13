@@ -14,6 +14,12 @@
             <field name="value"></field>
         </record>
         
+        <!-- Parámetro para configurar el porcentaje mínimo de cumplimiento de la categoría obligatoria -->
+        <record id="commission_mandatory_category_percentage" model="ir.config_parameter">
+            <field name="key">sale_commission_achievement_target.mandatory_category_percentage</field>
+            <field name="value">50</field>
+        </record>
+        
     </data>
 </odoo>
 
