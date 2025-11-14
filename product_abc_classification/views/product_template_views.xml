@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Extensión de Vista de Formulario de Producto -->
+    <record id="view_product_template_form_abc" model="ir.ui.view">
+        <field name="name">product.template.form.abc</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="stock.view_template_property_form"/>
+        <field name="arch" type="xml">
+            
+            <!-- Agregar campos ABC después de group_lots_and_weight -->
+            <xpath expr="//group[@name='group_lots_and_weight']" position="after">
+                <group string="Clasificación ABC" name="abc_classification">
+                    <!-- ABC Global -->
+                    <group>
+                        <field name="abc_classification_global" string="ABC Global" widget="badge" 
+                               decoration-success="abc_classification_global == 'aaa'"
+                               decoration-info="abc_classification_global == 'aa'"
+                               decoration-primary="abc_classification_global == 'a'"
+                               decoration-warning="abc_classification_global == 'b'"
+                               decoration-muted="abc_classification_global == 'c'"/>
+                        <field name="abc_sales_value_global" string="Valor de Ventas Global" widget="monetary"/>
+                    </group>
+                    <group/>
+                    
+                    <!-- Selector de Bodega y ABC -->
+                    <group>
+                        <field name="abc_selected_warehouse_id" string="Bodega" placeholder="Seleccione una bodega..."/>
+                        <field name="abc_selected_warehouse_classification" string="ABC Bodega" widget="badge" 
+                               decoration-success="abc_selected_warehouse_classification == 'aaa'"
+                               decoration-info="abc_selected_warehouse_classification == 'aa'"
+                               decoration-primary="abc_selected_warehouse_classification == 'a'"
+                               decoration-warning="abc_selected_warehouse_classification == 'b'"
+                               decoration-muted="abc_selected_warehouse_classification == 'c'"
+                               invisible="not abc_selected_warehouse_id"/>
+                        <field name="abc_selected_warehouse_sales" string="Valor de Ventas Bodega" widget="monetary"
+                               invisible="not abc_selected_warehouse_id"/>
+                    </group>
+                    <group/>
+                </group>
+                
+                <!-- Campos invisibles para mantener compatibilidad -->
+                <field name="abc_classification" invisible="1"/>
+                <field name="abc_sales_value" invisible="1"/>
+                <field name="abc_warehouse_ids" invisible="1"/>
+            </xpath>
+            
+        </field>
+    </record>
+    
+    <!-- Extensión de Vista de Lista de Producto -->
+    <record id="view_product_template_tree_abc" model="ir.ui.view">
+        <field name="name">product.template.tree.abc</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="abc_classification_global" optional="show" widget="badge" 
+                       string="ABC Global"
+                       decoration-success="abc_classification_global == 'aaa'"
+                       decoration-info="abc_classification_global == 'aa'"
+                       decoration-primary="abc_classification_global == 'a'"
+                       decoration-warning="abc_classification_global == 'b'"
+                       decoration-muted="abc_classification_global == 'c'"/>
+                <field name="abc_classification" optional="hide" widget="badge" 
+                       string="ABC Primary"
+                       decoration-success="abc_classification == 'aaa'"
+                       decoration-info="abc_classification == 'aa'"
+                       decoration-primary="abc_classification == 'a'"
+                       decoration-warning="abc_classification == 'b'"
+                       decoration-muted="abc_classification == 'c'"/>
+                <field name="abc_sales_value_global" optional="hide" widget="monetary" string="Sales Value (Global)"/>
+            </xpath>
+        </field>
+    </record>
+    
+    <!-- Extensión de Vista de Búsqueda de Producto -->
+    <record id="view_product_template_search_abc" model="ir.ui.view">
+        <field name="name">product.template.search.abc</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_search_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <separator/>
+                <filter string="AAA (Global)" name="filter_abc_global_aaa" domain="[('abc_classification_global', '=', 'aaa')]"/>
+                <filter string="AA (Global)" name="filter_abc_global_aa" domain="[('abc_classification_global', '=', 'aa')]"/>
+                <filter string="A (Global)" name="filter_abc_global_a" domain="[('abc_classification_global', '=', 'a')]"/>
+                <filter string="B (Global)" name="filter_abc_global_b" domain="[('abc_classification_global', '=', 'b')]"/>
+                <filter string="C (Global)" name="filter_abc_global_c" domain="[('abc_classification_global', '=', 'c')]"/>
+                <separator/>
+                <filter string="With ABC Classification" name="filter_abc_classified" domain="[('abc_classification_global', '!=', False)]"/>
+                <filter string="Without ABC Classification" name="filter_abc_not_classified" domain="[('abc_classification_global', '=', False)]"/>
+                
+                <group>
+                    <filter string="ABC Global" name="group_abc_global" context="{'group_by': 'abc_classification_global'}"/>
+                    <filter string="ABC Primary" name="group_abc_primary" context="{'group_by': 'abc_classification'}"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+    
+
+</odoo>

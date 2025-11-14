@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- List View: Commission Collection Report -->
+    <record id="view_commission_collection_report_list" model="ir.ui.view">
+        <field name="name">sale.commission.collection.report.list</field>
+        <field name="model">sale.commission.collection.report</field>
+        <field name="arch" type="xml">
+            <list string="Collection commissions" create="false" edit="false" delete="false"
+                decoration-success="total_commission &gt; 0">
+                <field name="payment_date" string="Payment date" />
+                <field name="user_id" string="Salesperson" />
+                <field name="partner_id" string="Customer" optional="hide" />
+                <field name="invoice_id" string="Invoice" />
+                <field name="public_categ_id" string="Category" />
+                <field name="collected_amount" string="Collected amount"
+                    sum="Total collected amount" />
+                <field name="is_on_time" string="On-time" class="text-center" />
+                <field name="on_time_commission_amount" string="On-time commission"
+                    sum="Total on-time commission" />
+                <field name="target_achieved" string="Target achieved" class="text-center" />
+                <field name="promotion_requirement_met" string="Promotion requirement met"
+                    class="text-center" />
+                <field name="target_commission_amount" string="Target commission"
+                    sum="Total target commission" />
+                <field name="total_commission" string="Total commission" sum="Total commissions" />
+                <field name="company_id" column_invisible="True" />
+                <field name="currency_id" column_invisible="True" />
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View: Commission Collection Report (Read-only) -->
+    <record id="view_commission_collection_report_form" model="ir.ui.view">
+        <field name="name">sale.commission.collection.report.form</field>
+        <field name="model">sale.commission.collection.report</field>
+        <field name="arch" type="xml">
+            <form string="Detail of Commission Collection Report" create="false" edit="false"
+                delete="false">
+                <sheet>
+                    <group>
+                        <group name="payment_info" string="Payment Information">
+                            <field name="payment_date" />
+                            <field name="partial_reconcile_id" />
+                            <field name="invoice_id" />
+                            <field name="partner_id" />
+                        </group>
+                        <group name="plan_info" string="Plan and Salesperson">
+                            <field name="plan_id" />
+                            <field name="user_id" />
+                            <field name="public_categ_id" />
+                            <field name="company_id" />
+                            <field name="currency_id" />
+                        </group>
+                    </group>
+                    <group>
+                        <group name="amounts" string="Amounts">
+                            <field name="collected_amount" />
+                            <field name="category_collected_amount" />
+                            <field name="target_amount" />
+                        </group>
+                        <group name="dates" string="Dates and Control">
+                            <field name="invoice_date_due" />
+                            <field name="effective_due_date" />
+                            <field name="is_on_time" />
+                            <field name="target_achieved" />
+                            <field name="promotion_requirement_met" />
+                        </group>
+                    </group>
+                    <group>
+                        <group name="commissions" string="Commissions">
+                            <field name="commission_rate" widget="percentage" />
+                            <field name="on_time_commission_amount" />
+                            <field name="target_commission_amount" />
+                            <field name="total_commission" class="oe_subtotal_footer_separator" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View: Commission Collection Report -->
+    <record id="view_commission_collection_report_search" model="ir.ui.view">
+        <field name="name">sale.commission.collection.report.search</field>
+        <field name="model">sale.commission.collection.report</field>
+        <field name="arch" type="xml">
+            <search string="Commission Collection Report">
+                <field name="user_id" />
+                <field name="partner_id" />
+                <field name="invoice_id" />
+                <field name="public_categ_id" />
+                <field name="plan_id" />
+                <filter string="On-time payments" name="filter_on_time"
+                    domain="[('is_on_time', '=', True)]" />
+                <filter string="Late payments" name="filter_late"
+                    domain="[('is_on_time', '=', False)]" />
+                <separator />
+                <filter string="Target achieved" name="filter_target_achieved"
+                    domain="[('target_achieved', '=', True)]" />
+                <filter string="Target not achieved" name="filter_target_not_achieved"
+                    domain="[('target_achieved', '=', False)]" />
+                <separator />
+                <filter string="Promotion requirement met" name="filter_promo_met"
+                    domain="[('promotion_requirement_met', '=', True)]" />
+                <filter string="Promotion requirement not met" name="filter_promo_not_met"
+                    domain="[('promotion_requirement_met', '=', False)]" />
+                <separator />
+                <filter string="With commission" name="filter_with_commission"
+                    domain="[('total_commission', '>', 0)]" />
+                <filter string="No commission" name="filter_no_commission"
+                    domain="[('total_commission', '=', 0)]" />
+                <separator />
+                <filter string="Payment date" name="filter_payment_date" date="payment_date" />
+                <filter string="This Month" name="filter_month"
+                    domain="[
+                    ('payment_date', '&gt;=', '=1d'),
+                    ('payment_date', '&lt;', '=1d +1m'),
+                ]" />
+                <separator />
+                <group>
+                    <filter string="Asesor" name="group_user" context="{'group_by': 'user_id'}" />
+                    <filter string="Category" name="group_category"
+                        context="{'group_by': 'public_categ_id'}" />
+                    <filter string="Customer" name="group_partner"
+                        context="{'group_by': 'partner_id'}" />
+                    <filter string="Plan" name="group_plan" context="{'group_by': 'plan_id'}" />
+                    <filter string="Payment date" name="group_payment_date"
+                        context="{'group_by': 'payment_date'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Pivot View: Commission Collection Report -->
+    <record id="view_commission_collection_report_pivot" model="ir.ui.view">
+        <field name="name">sale.commission.collection.report.pivot</field>
+        <field name="model">sale.commission.collection.report</field>
+        <field name="arch" type="xml">
+            <pivot string="Analysis of Commission Collection Report" sample="1">
+                <field name="user_id" type="row" />
+                <field name="public_categ_id" type="row" />
+                <field name="payment_date" interval="month" type="col" />
+                <field name="collected_amount" type="measure" />
+                <field name="on_time_commission_amount" type="measure" />
+                <field name="target_commission_amount" type="measure" />
+                <field name="total_commission" type="measure" />
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Graph View: Commission Collection Report -->
+    <record id="view_commission_collection_report_graph" model="ir.ui.view">
+        <field name="name">sale.commission.collection.report.graph</field>
+        <field name="model">sale.commission.collection.report</field>
+        <field name="arch" type="xml">
+            <graph string="Graph of Commission Collection Report" type="bar" sample="1">
+                <field name="user_id" />
+                <field name="total_commission" type="measure" />
+                <field name="on_time_commission_amount" type="measure" />
+                <field name="target_commission_amount" type="measure" />
+            </graph>
+        </field>
+    </record>
+
+    <!-- Action: Open Commission Collection Report -->
+    <record id="action_commission_collection_report" model="ir.actions.act_window">
+        <field name="name">Commission Collection Report</field>
+        <field name="res_model">sale.commission.collection.report</field>
+        <field name="view_mode">list,pivot,graph,form</field>
+        <field name="search_view_id" ref="view_commission_collection_report_search" />
+        <field name="context">{
+            'search_default_group_user': 1,
+            }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_neutral_face">
+                Unfortunately, there are no commissions for you
+            </p>
+            <p>
+                This report shows the commissions calculated based on the payments received
+                (collections).
+                The commissions are calculated considering:
+                - Base commission for on-time payments
+                - Additional commissions for achieving target categories
+                - Validation of promotion category requirement
+            </p>
+        </field>
+    </record>
+
+    <!-- Override native "My Commissions" action to use custom collection report -->
+    <record id="sale_commission.sale_commission_action_my_report" model="ir.actions.act_window">
+        <field name="name">My Commissions</field>
+        <field name="res_model">sale.commission.collection.report</field>
+        <field name="view_mode">list,pivot,graph,form</field>
+        <field name="search_view_id" ref="view_commission_collection_report_search" />
+        <field name="domain">[('user_id', '=', uid)]</field>
+        <field name="context">{
+            'search_default_filter_with_commission': 1,
+            'search_default_filter_month': 1,
+            }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_neutral_face">
+                Unfortunately, there are no commissions for you
+            </p>
+            <p>
+                Ensure you are assigned to a commission plan and have made sales that qualify for
+                commissions
+            </p>
+        </field>
+    </record>
+
+    <!-- Override native "Commissions" action to use custom collection report -->
+    <record id="sale_commission.sale_commission_action_report" model="ir.actions.act_window">
+        <field name="name">Commissions</field>
+        <field name="res_model">sale.commission.collection.report</field>
+        <field name="view_mode">list,pivot,graph,form</field>
+        <field name="search_view_id" ref="view_commission_collection_report_search" />
+        <field name="context">{
+            'search_default_group_user': 1,
+            'search_default_filter_with_commission': 1,
+            'search_default_filter_month': 1,
+            }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_neutral_face">
+                Unfortunately, there are no commissions
+            </p>
+            <p>
+                Ensure users are assigned to commission plans and have made sales that qualify for
+                commissions
+            </p>
+        </field>
+    </record>
+
+    <!-- Override native "Commissions" (Sale) action to use custom collection report -->
+    <record id="sale_commission.sale_commission_action_report_sale" model="ir.actions.act_window">
+        <field name="name">Commissions</field>
+        <field name="res_model">sale.commission.collection.report</field>
+        <field name="view_mode">pivot,graph,list,form</field>
+        <field name="search_view_id" ref="view_commission_collection_report_search" />
+        <field name="context">{
+            'search_default_group_user': 1,
+            'search_default_filter_with_commission': 1,
+            }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_neutral_face">
+                Unfortunately, there are no commissions
+            </p>
+            <p>
+                Ensure users are assigned to commission plans and have made sales that qualify for
+                commissions
+            </p>
+        </field>
+    </record>
+
+</odoo>

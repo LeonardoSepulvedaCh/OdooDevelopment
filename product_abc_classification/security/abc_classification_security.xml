@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        
+        <!-- Grupos de seguridad -->
+        <record id="group_abc_user" model="res.groups">
+            <field name="name">ABC User</field>
+            <field name="comment">Can view ABC classifications</field>
+        </record>
+
+        <record id="group_abc_manager" model="res.groups">
+            <field name="name">ABC Manager</field>
+            <field name="implied_ids" eval="[(4, ref('group_abc_user'))]"/>
+            <field name="comment">Can configure and run ABC classification calculations</field>
+        </record>
+
+    </data>
+</odoo>
+

@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_commission_collection_report_user,sale.commission.collection.report.user,model_sale_commission_collection_report,sales_team.group_sale_salesman,1,0,0,0
+access_commission_collection_report_manager,sale.commission.collection.report.manager,model_sale_commission_collection_report,sales_team.group_sale_manager,1,1,1,1
+access_commission_collection_report_admin,sale.commission.collection.report.admin,model_sale_commission_collection_report,base.group_system,1,1,1,1
+

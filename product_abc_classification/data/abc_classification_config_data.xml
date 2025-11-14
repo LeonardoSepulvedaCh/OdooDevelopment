@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Configuración por defecto de ABC -->
+        <record id="default_abc_classification_config" model="abc.classification.config">
+            <field name="name">ABC Configuration - Default</field>
+            <field name="active" eval="True"/>
+            <field name="threshold_aaa" eval="51.2"/>
+            <field name="threshold_aa" eval="64.0"/>
+            <field name="threshold_a" eval="80.0"/>
+            <field name="threshold_b" eval="95.0"/>
+            <field name="analysis_period_months" eval="12"/>
+            <field name="include_zero_sales" eval="True"/>
+        </record>
+        
+    </data>
+</odoo>
+

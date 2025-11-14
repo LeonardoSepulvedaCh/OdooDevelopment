@@ -6,6 +6,13 @@
         <field name="model">sale.commission.plan</field>
         <field name="inherit_id" ref="sale_commission.sale_commission_plan_view_form"/>
         <field name="arch" type="xml">
+            <!-- Agregar decoraciones de color a las líneas de achievements basadas en el porcentaje -->
+            <xpath expr="//field[@name='achievement_ids']/list" position="attributes">
+                <attribute name="decoration-success">achievement_percentage &gt;= 100</attribute>
+                <attribute name="decoration-warning">achievement_percentage &gt;= 70 and achievement_percentage &lt; 100</attribute>
+                <attribute name="decoration-danger">achievement_percentage &lt; 70</attribute>
+            </xpath>
+            
             <!-- Ocultar el campo product_id -->
             <xpath expr="//field[@name='achievement_ids']//field[@name='product_id']" position="attributes">
                 <attribute name="column_invisible">1</attribute>

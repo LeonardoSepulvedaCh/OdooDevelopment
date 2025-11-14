@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- El Historial de Clasificaciones está UNIFICADO en el módulo ABC -->
+    <!-- Los usuarios de Rotación pueden acceder mediante el grupo agregado al menú unificado -->
+    
+    <!-- Agregar grupo de Rotación al menú unificado de Historial de Clasificaciones -->
+    <record id="product_abc_classification.menu_classification_history" model="ir.ui.menu">
+        <field name="group_ids" eval="[(4, ref('product_rotation_classification.group_rotation_user'))]"/>
+    </record>
+    
+    <!-- Configuración de Rotación en Inventario → Configuración → Productos -->
+    
+    <!-- Configuración de Rotación -->
+    <menuitem id="menu_rotation_classification_config"
+              name="Configuración de Rotación"
+              parent="stock.menu_product_in_config_stock"
+              action="action_rotation_classification_config"
+              sequence="102"
+              groups="product_rotation_classification.group_rotation_manager"/>
+
+</odoo>

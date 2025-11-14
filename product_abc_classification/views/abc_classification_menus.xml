@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Reportes ABC en Inventario → Reportes -->
+    
+    <!-- ABC por Bodega -->
+    <menuitem id="menu_abc_by_warehouse"
+              name="ABC por Bodega"
+              parent="stock.menu_warehouse_report"
+              action="action_product_abc_warehouse"
+              sequence="150"
+              groups="product_abc_classification.group_abc_user"/>
+    
+    <!-- Historial de Clasificaciones UNIFICADO (ABC + Rotación) -->
+    <!-- Visible para usuarios de ABC (Rotación agregará su grupo si está instalado) -->
+    <menuitem id="menu_classification_history"
+              name="Historial de Clasificaciones"
+              parent="stock.menu_warehouse_report"
+              action="action_classification_history"
+              sequence="151"
+              groups="product_abc_classification.group_abc_user"/>
+    
+    <!-- Configuración ABC en Inventario → Configuración → Productos -->
+    
+    <!-- Configuración ABC -->
+    <menuitem id="menu_abc_classification_config"
+              name="Configuración ABC"
+              parent="stock.menu_product_in_config_stock"
+              action="action_abc_classification_config"
+              sequence="100"
+              groups="product_abc_classification.group_abc_manager"/>
+
+</odoo>

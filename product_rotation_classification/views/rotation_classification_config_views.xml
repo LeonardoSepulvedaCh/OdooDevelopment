@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Vista de formulario para configuración de clasificación por rotación -->
+    <record id="view_rotation_classification_config_form" model="ir.ui.view">
+        <field name="name">rotation.classification.config.form</field>
+        <field name="model">rotation.classification.config</field>
+        <field name="arch" type="xml">
+            <form string="Configuración de Clasificación por Rotación">
+                <header>
+                    <button name="action_calculate_rotation_now" 
+                            string="Calcular Rotación Ahora" 
+                            type="object" 
+                            class="oe_highlight"
+                            groups="product_rotation_classification.group_rotation_manager"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="id" invisible="1"/>
+                            Configuración de Clasificación por Rotación
+                        </h1>
+                    </div>
+                    
+                    <group>
+                        <group string="Umbrales de Rotación (en meses)">
+                            <field name="threshold_high"/>
+                            <field name="threshold_low"/>
+                            <field name="threshold_bone"/>
+                        </group>
+                        
+                        <group string="Parámetros de Análisis">
+                            <field name="analysis_period_months"/>
+                            <field name="include_zero_stock"/>
+                            <field name="include_no_consumption"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    
+                    <separator string="Niveles de Clasificación"/>
+                    <group>
+                        <group>
+                            <div class="o_form_label fw-bold">ALTA:</div>
+                            <div class="text-muted">≤ <field name="threshold_high" readonly="1" class="oe_inline"/> meses</div>
+                        </group>
+                        <group>
+                            <div class="o_form_label fw-bold">BAJA:</div>
+                            <div class="text-muted">&gt; <field name="threshold_high" readonly="1" class="oe_inline"/> y ≤ <field name="threshold_low" readonly="1" class="oe_inline"/> meses</div>
+                        </group>
+                        <group>
+                            <div class="o_form_label fw-bold">HUESO:</div>
+                            <div class="text-muted">&gt; <field name="threshold_low" readonly="1" class="oe_inline"/> y &lt; <field name="threshold_bone" readonly="1" class="oe_inline"/> meses</div>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <div class="o_form_label fw-bold">FÉMUR:</div>
+                            <div class="text-muted">≥ <field name="threshold_bone" readonly="1" class="oe_inline"/> meses</div>
+                        </group>
+                        <group>
+                            <div class="o_form_label fw-bold">AGOTADO:</div>
+                            <div class="text-muted">Sin stock disponible</div>
+                        </group>
+                        <group>
+                            <div class="o_form_label fw-bold">INFINITO:</div>
+                            <div class="text-muted">Tiene stock pero sin consumo</div>
+                        </group>
+                    </group>
+                    
+                    <group string="Estadísticas del Último Cálculo">
+                        <group>
+                            <field name="last_calculation"/>
+                            <field name="last_calculation_products"/>
+                        </group>
+                        <group>
+                            <field name="last_calculation_duration"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vista de lista para configuración -->
+    <record id="view_rotation_classification_config_tree" model="ir.ui.view">
+        <field name="name">rotation.classification.config.list</field>
+        <field name="model">rotation.classification.config</field>
+        <field name="arch" type="xml">
+            <list string="Rotation Classification Configurations">
+                <field name="threshold_high"/>
+                <field name="threshold_low"/>
+                <field name="threshold_bone"/>
+                <field name="analysis_period_months"/>
+                <field name="last_calculation"/>
+                <field name="last_calculation_products"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Acción para abrir la configuración -->
+    <record id="action_rotation_classification_config" model="ir.actions.act_window">
+        <field name="name">Rotation Configuration</field>
+        <field name="res_model">rotation.classification.config</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Configure Rotation Classification Parameters
+            </p>
+            <p>
+                Set thresholds for rotation levels and analysis period.
+            </p>
+        </field>
+    </record>
+
+</odoo>
+

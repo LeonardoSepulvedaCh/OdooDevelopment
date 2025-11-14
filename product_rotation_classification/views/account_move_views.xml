@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Extender vista de formulario de factura para agregar columnas de Rotación -->
+    <record id="view_move_form_inherit_rotation" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.rotation</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="product_abc_classification.view_move_form_inherit_abc"/>
+        <field name="arch" type="xml">
+            <!-- Agregar columnas de Rotación después de las columnas ABC -->
+            <xpath expr="//field[@name='abc_warehouse_id']" position="after">
+                <!-- Rotación Global al Vender -->
+                <field name="rotation_classification_global_at_sale" 
+                       string="Rot. Global" 
+                       optional="hide"
+                       widget="badge"
+                       decoration-success="rotation_classification_global_at_sale == 'HIGH'"
+                       decoration-info="rotation_classification_global_at_sale == 'LOW'"
+                       decoration-warning="rotation_classification_global_at_sale == 'BONE'"
+                       decoration-danger="rotation_classification_global_at_sale == 'FEMUR'"
+                       decoration-muted="rotation_classification_global_at_sale in ['DEPLETED', 'INFINITE']"
+                       help="Clasificación de rotación global del producto al momento de validar la factura"/>
+                
+                <!-- Rotación de Bodega al Vender -->
+                <field name="rotation_classification_at_sale" 
+                       string="Rot. Bodega" 
+                       optional="hide"
+                       widget="badge"
+                       decoration-success="rotation_classification_at_sale == 'HIGH'"
+                       decoration-info="rotation_classification_at_sale == 'LOW'"
+                       decoration-warning="rotation_classification_at_sale == 'BONE'"
+                       decoration-danger="rotation_classification_at_sale == 'FEMUR'"
+                       decoration-muted="rotation_classification_at_sale in ['DEPLETED', 'INFINITE']"
+                       help="Clasificación de rotación del producto en la bodega al momento de validar la factura"/>
+                
+                <!-- Bodega de Rotación -->
+                <field name="rotation_warehouse_id" 
+                       string="Bodega Rot." 
+                       optional="hide"
+                       help="Bodega usada para el cálculo de clasificación por rotación"/>
+            </xpath>
+        </field>
+    </record>
+    
+</odoo>
+

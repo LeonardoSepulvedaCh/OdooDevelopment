@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Extensión de la Vista de Lista UNIFICADA para agregar campos de Rotación -->
+    <record id="view_account_move_line_classification_history_tree_inherit" model="ir.ui.view">
+        <field name="name">account.move.line.classification.history.tree.inherit.rotation</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="product_abc_classification.view_account_move_line_classification_history_tree"/>
+        <field name="arch" type="xml">
+            <!-- Agregar campos de Rotación después de los campos ABC -->
+            <field name="abc_sales_value_at_sale" position="after">
+                <!-- Clasificación por Rotación Global -->
+                <field name="rotation_classification_global_at_sale" string="Rotación Global" widget="badge" 
+                       decoration-success="rotation_classification_global_at_sale == 'HIGH'"
+                       decoration-info="rotation_classification_global_at_sale == 'LOW'"
+                       decoration-warning="rotation_classification_global_at_sale == 'BONE'"
+                       decoration-danger="rotation_classification_global_at_sale == 'FEMUR'"
+                       decoration-muted="rotation_classification_global_at_sale in ['DEPLETED', 'INFINITE']"
+                       optional="show"/>
+                
+                <!-- Clasificación por Rotación de Bodega -->
+                <field name="rotation_classification_at_sale" string="Rotación Bodega" widget="badge" 
+                       decoration-success="rotation_classification_at_sale == 'HIGH'"
+                       decoration-info="rotation_classification_at_sale == 'LOW'"
+                       decoration-warning="rotation_classification_at_sale == 'BONE'"
+                       decoration-danger="rotation_classification_at_sale == 'FEMUR'"
+                       decoration-muted="rotation_classification_at_sale in ['DEPLETED', 'INFINITE']"
+                       optional="show"/>
+                <field name="rotation_months_at_sale" string="Meses Stock" optional="hide"/>
+            </field>
+            
+            <!-- Agregar campo de bodega de rotación -->
+            <field name="abc_warehouse_id" position="after">
+                <field name="rotation_warehouse_id" string="Bodega (Rotación)" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

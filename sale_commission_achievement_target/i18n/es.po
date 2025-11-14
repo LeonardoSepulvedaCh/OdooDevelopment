@@ -1,0 +1,474 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_commission_achievement_target
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-11-14 14:02+0000\n"
+"PO-Revision-Date: 2025-11-14 14:02+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: sale_commission_achievement_target
+#: model:ir.model.fields,field_description:sale_commission_achievement_target.field_sale_commission_plan_achievement__achievement_percentage
+msgid "% Alcanzado"
+msgstr ""
+
+#. module: sale_commission_achievement_target
+#: model:ir.model.fields,help:sale_commission_achievement_target.field_sale_commission_collection_report__target_commission_amount
+msgid "Additional commission for achieving the target category"
+msgstr "Comisión adicional por cumplimiento de la categoría objetivo"
+
+#. module: sale_commission_achievement_target
+#: model_terms:ir.ui.view,arch_db:sale_commission_achievement_target.view_commission_collection_report_form
+msgid "Amounts"
+msgstr "Montos"
+
+#. module: sale_commission_achievement_target
+#: model_terms:ir.ui.view,arch_db:sale_commission_achievement_target.view_commission_collection_report_pivot
+msgid "Analysis of Commission Collection Report"
+msgstr "Análisis del reporte de comisiones por recaudo"
+
+#. module: sale_commission_achievement_target
+#: model_terms:ir.ui.view,arch_db:sale_commission_achievement_target.view_commission_collection_report_search
+msgid "Asesor"
+msgstr ""
+
+#. module: sale_commission_achievement_target
+#: model:ir.model.fields,field_description:sale_commission_achievement_target.field_sale_commission_collection_report__public_categ_id
+#: model_terms:ir.ui.view,arch_db:sale_commission_achievement_target.view_commission_collection_report_list
+#: model_terms:ir.ui.view,arch_db:sale_commission_achievement_target.view_commission_collection_report_search
+msgid "Category"
+msgstr "Categoría"
+
+#. module: sale_commission_achievement_target
+#: model:ir.model.fields,field_description:sale_commission_achievement_target.field_sale_commission_plan_achievement__public_categ_id
+msgid "Categoría de eCommerce"
+msgstr ""
+
+#. module: sale_commission_achievement_target
+#: model_terms:ir.ui.view,arch_db:sale_commission_achievement_target.sale_commission_plan_view_form_inherit
+msgid "Categoría eCommerce"
+msgstr ""
+
+#. module: sale_commission_achievement_target
+#: model:ir.model.fields,help:sale_commission_achievement_target.field_sale_commission_plan_achievement__public_categ_id
+msgid "Categoría pública de eCommerce para filtrar productos"
+msgstr ""
+
+#. module: sale_commission_achievement_target
+#: model:ir.model.fields,field_description:sale_commission_achievement_target.field_sale_commission_collection_report__collected_amount
+#: model_terms:ir.ui.view,arch_db:sale_commission_achievement_target.view_commission_collection_report_list
+msgid "Collected amount"
+msgstr "Monto recaudado"
+
+#. module: sale_commission_achievement_target
+#: model:ir.model.fields,field_description:sale_commission_achievement_target.field_sale_commission_collection_report__category_collected_amount
+msgid "Collected amount by category"
+msgstr "Monto recaudado por categoría"
+
+#. module: sale_commission_achievement_target
+#: model:ir.model.fields,help:sale_commission_achievement_target.field_sale_commission_collection_report__collected_amount
+msgid "Collected amount in this reconciliation prorated by category"
+msgstr "Monto recaudado en esta conciliación prorrateado por categoría"
+
+#. module: sale_commission_achievement_target
+#: model_terms:ir.ui.view,arch_db:sale_commission_achievement_target.view_commission_collection_report_list
+msgid "Collection commissions"
+msgstr "Comisiones por recaudo"
+
+#. module: sale_commission_achievement_target
+#: model:ir.actions.act_window,name:sale_commission_achievement_target.action_commission_collection_report
+#: model_terms:ir.ui.view,arch_db:sale_commission_achievement_target.view_commission_collection_report_search
+msgid "Commission Collection Report"
+msgstr "Reporte de comisiones por recaudo"
+
+#. module: sale_commission_achievement_target
+#: model:ir.model,name:sale_commission_achievement_target.model_sale_commission_plan
+msgid "Commission Plan"
+msgstr "Plan de comisión"
+
+#. module: sale_commission_achievement_target
+#: model:ir.model,name:sale_commission_achievement_target.model_sale_commission_plan_achievement
+msgid "Commission Plan Achievement"
+msgstr "Logro del plan de comisión"
+
+#. module: sale_commission_achievement_target
+#: model:ir.model,name:sale_commission_achievement_target.model_sale_commission_plan_target
+msgid "Commission Plan Target"
+msgstr "Objetivo del plan de comisión"
+
+#. module: sale_commission_achievement_target
+#: model:ir.model,name:sale_commission_achievement_target.model_sale_commission_collection_report
+msgid "Commission Report Based on Collections"
+msgstr "Reporte de comisiones por recaudo"
+
+#. module: sale_commission_achievement_target
+#: model:ir.model.fields,help:sale_commission_achievement_target.field_sale_commission_collection_report__on_time_commission_amount
+msgid "Commission if the payment was on time"
+msgstr "Comisión si el pago fue a tiempo"
+
+#. module: sale_commission_achievement_target
+#: model:ir.model.fields,field_description:sale_commission_achievement_target.field_sale_commission_collection_report__plan_id
+msgid "Commission plan"
+msgstr "Plan de comisión"
+
+#. module: sale_commission_achievement_target
+#: model:ir.model.fields,help:sale_commission_achievement_target.field_sale_commission_collection_report__commission_rate
+msgid "Commission rate for achieving the target category"
+msgstr "Tasa de comisión para cumplir con la categoría objetivo"
+
+#. module: sale_commission_achievement_target
+#: model_terms:ir.ui.view,arch_db:sale_commission_achievement_target.view_commission_collection_report_form
+msgid "Commissions"
+msgstr "Comisiones"
+
+#. module: sale_commission_achievement_target
+#: model:ir.model.fields,field_description:sale_commission_achievement_target.field_sale_commission_collection_report__company_id
+msgid "Company"
+msgstr "Empresa"
+
+#. module: sale_commission_achievement_target
+#: model:ir.model.fields,field_description:sale_commission_achievement_target.field_sale_commission_collection_report__currency_id
+msgid "Currency"
+msgstr "Moneda"
+
+#. module: sale_commission_achievement_target
+#: model:ir.model.fields,field_description:sale_commission_achievement_target.field_sale_commission_collection_report__partner_id
+#: model_terms:ir.ui.view,arch_db:sale_commission_achievement_target.view_commission_collection_report_list
+#: model_terms:ir.ui.view,arch_db:sale_commission_achievement_target.view_commission_collection_report_search
+msgid "Customer"
+msgstr "Cliente"
+
+#. module: sale_commission_achievement_target
+#: model_terms:ir.ui.view,arch_db:sale_commission_achievement_target.view_commission_collection_report_form
+msgid "Dates and Control"
+msgstr "Fechas y control"
+
+#. module: sale_commission_achievement_target
+#: model_terms:ir.ui.view,arch_db:sale_commission_achievement_target.view_commission_collection_report_form
+msgid "Detail of Commission Collection Report"
+msgstr "Detalle del reporte de comisiones por recaudo"
+
+#. module: sale_commission_achievement_target
+#: model:ir.model.fields,field_description:sale_commission_achievement_target.field_account_move__display_name
+#: model:ir.model.fields,field_description:sale_commission_achievement_target.field_sale_commission_achievement_report__display_name
+#: model:ir.model.fields,field_description:sale_commission_achievement_target.field_sale_commission_collection_report__display_name
+#: model:ir.model.fields,field_description:sale_commission_achievement_target.field_sale_commission_plan__display_name
+#: model:ir.model.fields,field_description:sale_commission_achievement_target.field_sale_commission_plan_achievement__display_name
+#: model:ir.model.fields,field_description:sale_commission_achievement_target.field_sale_commission_plan_target__display_name
+msgid "Display Name"
+msgstr "Nombre para mostrar"
+
+#. module: sale_commission_achievement_target
+#: model:ir.model.fields,field_description:sale_commission_achievement_target.field_account_bank_statement_line__effective_due_date
+#: model:ir.model.fields,field_description:sale_commission_achievement_target.field_account_move__effective_due_date
+#: model:ir.model.fields,field_description:sale_commission_achievement_target.field_sale_commission_collection_report__effective_due_date
+msgid "Effective due date"
+msgstr "Fecha de vencimiento efectiva"
+
+#. module: sale_commission_achievement_target
+#: model:ir.model.fields,help:sale_commission_achievement_target.field_sale_commission_collection_report__effective_due_date
+msgid "Effective due date + grace days"
+msgstr "Fecha de vencimiento efectiva + días de gabela"
+
+#. module: sale_commission_achievement_target
+#: model:ir.model.fields,help:sale_commission_achievement_target.field_account_bank_statement_line__effective_due_date
+#: model:ir.model.fields,help:sale_commission_achievement_target.field_account_move__effective_due_date
+msgid ""
+"Effective due date + grace days configured in the system. It is used to "
+"calculate if a payment was made on time for commissions."
+msgstr ""
+"Fecha de vencimiento efectiva + días de gabela configurados en el sistema. "
+"Se utiliza para calcular si un pago fue a tiempo para las comisiones."
+
+#. module: sale_commission_achievement_target
+#: model_terms:ir.ui.view,arch_db:sale_commission_achievement_target.view_commission_collection_report_graph
+msgid "Graph of Commission Collection Report"
+msgstr "Gráfico del reporte de comisiones por recaudo"
+
+#. module: sale_commission_achievement_target
+#: model:ir.model.fields,field_description:sale_commission_achievement_target.field_account_move__id
+#: model:ir.model.fields,field_description:sale_commission_achievement_target.field_sale_commission_achievement_report__id
+#: model:ir.model.fields,field_description:sale_commission_achievement_target.field_sale_commission_collection_report__id
+#: model:ir.model.fields,field_description:sale_commission_achievement_target.field_sale_commission_plan__id
+#: model:ir.model.fields,field_description:sale_commission_achievement_target.field_sale_commission_plan_achievement__id
+#: model:ir.model.fields,field_description:sale_commission_achievement_target.field_sale_commission_plan_target__id
+msgid "ID"
+msgstr "ID"
+
+#. module: sale_commission_achievement_target
+#: model:ir.model.fields,help:sale_commission_achievement_target.field_sale_commission_collection_report__is_on_time
+msgid "Indicates if the payment was made before the effective due date"
+msgstr ""
+"Indica si el pago fue realizado antes de la fecha de vencimiento efectiva"
+
+#. module: sale_commission_achievement_target
+#: model:ir.model.fields,help:sale_commission_achievement_target.field_sale_commission_collection_report__promotion_requirement_met
+msgid "Indicates if the promotion requirement was met (mandatory)"
+msgstr "Indica si el requisito de promoción fue cumplido (obligatorio)"
+
+#. module: sale_commission_achievement_target
+#: model:ir.model.fields,help:sale_commission_achievement_target.field_sale_commission_collection_report__target_achieved
+msgid "Indicates if the target was achieved for this category"
+msgstr "Indica si el objetivo fue alcanzado para esta categoría"
+
+#. module: sale_commission_achievement_target
+#: model:ir.model.fields,field_description:sale_commission_achievement_target.field_sale_commission_collection_report__invoice_id
+#: model_terms:ir.ui.view,arch_db:sale_commission_achievement_target.view_commission_collection_report_list
+msgid "Invoice"
+msgstr "Factura"
+
+#. module: sale_commission_achievement_target
+#: model:ir.model,name:sale_commission_achievement_target.model_account_move
+msgid "Journal Entry"
+msgstr "Asiento contable"
+
+#. module: sale_commission_achievement_target
+#: model_terms:ir.ui.view,arch_db:sale_commission_achievement_target.view_commission_collection_report_search
+msgid "Late payments"
+msgstr "Pagos tardíos"
+
+#. module: sale_commission_achievement_target
+#: model:ir.model.fields,field_description:sale_commission_achievement_target.field_sale_commission_plan_achievement__currency_id
+msgid "Moneda"
+msgstr ""
+
+#. module: sale_commission_achievement_target
+#: model:ir.model.fields,field_description:sale_commission_achievement_target.field_sale_commission_plan_achievement__target_amount
+msgid "Monto Objetivo"
+msgstr ""
+
+#. module: sale_commission_achievement_target
+#: model:ir.model.fields,field_description:sale_commission_achievement_target.field_sale_commission_plan_achievement__actual_amount
+msgid "Monto Real Alcanzado"
+msgstr ""
+
+#. module: sale_commission_achievement_target
+#: model:ir.model.fields,help:sale_commission_achievement_target.field_sale_commission_plan_achievement__target_amount
+msgid ""
+"Monto que debe venderse en esta categoría para obtener la tasa de comisión "
+"especificada"
+msgstr ""
+
+#. module: sale_commission_achievement_target
+#: model:ir.model.fields,help:sale_commission_achievement_target.field_sale_commission_plan_achievement__actual_amount
+msgid ""
+"Monto real vendido/facturado en esta categoría según el tipo de logro "
+"seleccionado. Se recalcula en cada acceso para reflejar cambios en "
+"parámetros de configuración."
+msgstr ""
+
+#. module: sale_commission_achievement_target
+#: model_terms:ir.ui.view,arch_db:sale_commission_achievement_target.view_commission_collection_report_search
+msgid "No commission"
+msgstr "Sin comisión"
+
+#. module: sale_commission_achievement_target
+#: model_terms:ir.ui.view,arch_db:sale_commission_achievement_target.sale_commission_plan_view_form_inherit
+msgid "Obj. por Categorías"
+msgstr ""
+
+#. module: sale_commission_achievement_target
+#: model:ir.model.fields,field_description:sale_commission_achievement_target.field_sale_commission_plan_target__total_target_by_category
+msgid "Objetivo Total por Categorías"
+msgstr ""
+
+#. module: sale_commission_achievement_target
+#: model_terms:ir.ui.view,arch_db:sale_commission_achievement_target.view_commission_collection_report_list
+msgid "On-time"
+msgstr "A tiempo"
+
+#. module: sale_commission_achievement_target
+#: model:ir.model.fields,field_description:sale_commission_achievement_target.field_sale_commission_collection_report__on_time_commission_amount
+#: model_terms:ir.ui.view,arch_db:sale_commission_achievement_target.view_commission_collection_report_list
+msgid "On-time commission"
+msgstr "Comisión a tiempo"
+
+#. module: sale_commission_achievement_target
+#: model:ir.model.fields,field_description:sale_commission_achievement_target.field_sale_commission_collection_report__is_on_time
+msgid "On-time payment"
+msgstr "Pago a tiempo"
+
+#. module: sale_commission_achievement_target
+#: model_terms:ir.ui.view,arch_db:sale_commission_achievement_target.view_commission_collection_report_search
+msgid "On-time payments"
+msgstr "Pagos a tiempo"
+
+#. module: sale_commission_achievement_target
+#: model:ir.model.fields,field_description:sale_commission_achievement_target.field_sale_commission_collection_report__invoice_date_due
+msgid "Original due date"
+msgstr "Fecha de vencimiento original"
+
+#. module: sale_commission_achievement_target
+#: model:ir.model.fields,field_description:sale_commission_achievement_target.field_sale_commission_collection_report__partial_reconcile_id
+msgid "Partial reconciliation"
+msgstr "Conciliación parcial"
+
+#. module: sale_commission_achievement_target
+#: model:ir.model.fields,field_description:sale_commission_achievement_target.field_sale_commission_collection_report__payment_id
+msgid "Payment"
+msgstr "Pago"
+
+#. module: sale_commission_achievement_target
+#: model_terms:ir.ui.view,arch_db:sale_commission_achievement_target.view_commission_collection_report_form
+msgid "Payment Information"
+msgstr "Información de pago"
+
+#. module: sale_commission_achievement_target
+#: model:ir.model.fields,field_description:sale_commission_achievement_target.field_sale_commission_collection_report__payment_date
+#: model_terms:ir.ui.view,arch_db:sale_commission_achievement_target.view_commission_collection_report_list
+#: model_terms:ir.ui.view,arch_db:sale_commission_achievement_target.view_commission_collection_report_search
+msgid "Payment date"
+msgstr "Fecha de pago"
+
+#. module: sale_commission_achievement_target
+#: model_terms:ir.ui.view,arch_db:sale_commission_achievement_target.view_commission_collection_report_search
+msgid "Plan"
+msgstr ""
+
+#. module: sale_commission_achievement_target
+#: model_terms:ir.ui.view,arch_db:sale_commission_achievement_target.view_commission_collection_report_form
+msgid "Plan and Salesperson"
+msgstr "Plan y Asesor"
+
+#. module: sale_commission_achievement_target
+#: model:ir.model.fields,help:sale_commission_achievement_target.field_sale_commission_plan_achievement__achievement_percentage
+msgid "Porcentaje alcanzado del monto objetivo"
+msgstr ""
+
+#. module: sale_commission_achievement_target
+#: model:ir.model.fields,field_description:sale_commission_achievement_target.field_sale_commission_collection_report__promotion_requirement_met
+#: model_terms:ir.ui.view,arch_db:sale_commission_achievement_target.view_commission_collection_report_list
+#: model_terms:ir.ui.view,arch_db:sale_commission_achievement_target.view_commission_collection_report_search
+msgid "Promotion requirement met"
+msgstr "Requisito de promoción cumplido"
+
+#. module: sale_commission_achievement_target
+#: model_terms:ir.ui.view,arch_db:sale_commission_achievement_target.view_commission_collection_report_search
+msgid "Promotion requirement not met"
+msgstr "Requisito de promoción no cumplido"
+
+#. module: sale_commission_achievement_target
+#: model:ir.model,name:sale_commission_achievement_target.model_sale_commission_achievement_report
+msgid "Sales Achievement Report"
+msgstr "Informe de logros de ventas"
+
+#. module: sale_commission_achievement_target
+#: model:ir.model.fields,field_description:sale_commission_achievement_target.field_sale_commission_collection_report__user_id
+#: model_terms:ir.ui.view,arch_db:sale_commission_achievement_target.view_commission_collection_report_list
+msgid "Salesperson"
+msgstr "Asesor"
+
+#. module: sale_commission_achievement_target
+#: model:ir.model.fields,help:sale_commission_achievement_target.field_sale_commission_collection_report__total_commission
+msgid "Sum of on-time commission + target commission"
+msgstr "Suma de comisión a tiempo + comisión objetivo"
+
+#. module: sale_commission_achievement_target
+#: model:ir.model.fields,help:sale_commission_achievement_target.field_sale_commission_plan_target__total_target_by_category
+msgid ""
+"Suma de todos los montos objetivo configurados en los logros por categoría"
+msgstr ""
+
+#. module: sale_commission_achievement_target
+#: model:ir.model.fields,field_description:sale_commission_achievement_target.field_sale_commission_collection_report__target_achieved
+#: model_terms:ir.ui.view,arch_db:sale_commission_achievement_target.view_commission_collection_report_list
+#: model_terms:ir.ui.view,arch_db:sale_commission_achievement_target.view_commission_collection_report_search
+msgid "Target achieved"
+msgstr "Objetivo alcanzado"
+
+#. module: sale_commission_achievement_target
+#: model:ir.model.fields,field_description:sale_commission_achievement_target.field_sale_commission_collection_report__target_amount
+msgid "Target amount"
+msgstr "Monto objetivo"
+
+#. module: sale_commission_achievement_target
+#: model:ir.model.fields,help:sale_commission_achievement_target.field_sale_commission_collection_report__target_amount
+msgid "Target amount defined for this category in the plan"
+msgstr "Monto objetivo definido para esta categoría en el plan"
+
+#. module: sale_commission_achievement_target
+#: model:ir.model.fields,field_description:sale_commission_achievement_target.field_sale_commission_collection_report__target_commission_amount
+#: model_terms:ir.ui.view,arch_db:sale_commission_achievement_target.view_commission_collection_report_list
+msgid "Target commission"
+msgstr "Comisión objetivo"
+
+#. module: sale_commission_achievement_target
+#: model:ir.model.fields,field_description:sale_commission_achievement_target.field_sale_commission_collection_report__commission_rate
+msgid "Target commission rate"
+msgstr "Tasa de comisión objetivo"
+
+#. module: sale_commission_achievement_target
+#: model_terms:ir.ui.view,arch_db:sale_commission_achievement_target.view_commission_collection_report_search
+msgid "Target not achieved"
+msgstr "Objetivo no alcanzado"
+
+#. module: sale_commission_achievement_target
+#: model_terms:ir.ui.view,arch_db:sale_commission_achievement_target.view_commission_collection_report_search
+msgid "This Month"
+msgstr "Este mes"
+
+#. module: sale_commission_achievement_target
+#: model_terms:ir.actions.act_window,help:sale_commission_achievement_target.action_commission_collection_report
+msgid ""
+"This report shows the commissions calculated based on the payments received\n"
+"                (collections).\n"
+"                The commissions are calculated considering:\n"
+"                - Base commission for on-time payments\n"
+"                - Additional commissions for achieving target categories\n"
+"                - Validation of promotion category requirement"
+msgstr ""
+"Este reporte muestra las comisiones calculadas basadas en los pagos recibidos\n"
+"(recaudos).\n"
+"Las comisiones se calculan considerando:\n"
+"- Comisión base para pagos a tiempo\n"
+"- Comisiones adicionales para alcanzar categorías objetivo\n"
+"- Validación del requisito de categoría de promoción"
+
+#. module: sale_commission_achievement_target
+#: model_terms:ir.ui.view,arch_db:sale_commission_achievement_target.view_commission_collection_report_list
+msgid "Total collected amount"
+msgstr "Monto recaudado total"
+
+#. module: sale_commission_achievement_target
+#: model:ir.model.fields,help:sale_commission_achievement_target.field_sale_commission_collection_report__category_collected_amount
+msgid "Total collected amount in this category (to validate targets)"
+msgstr "Monto recaudado total en esta categoría (para validar objetivos)"
+
+#. module: sale_commission_achievement_target
+#: model:ir.model.fields,field_description:sale_commission_achievement_target.field_sale_commission_collection_report__total_commission
+#: model_terms:ir.ui.view,arch_db:sale_commission_achievement_target.view_commission_collection_report_list
+msgid "Total commission"
+msgstr "Comisión total"
+
+#. module: sale_commission_achievement_target
+#: model_terms:ir.ui.view,arch_db:sale_commission_achievement_target.view_commission_collection_report_list
+msgid "Total commissions"
+msgstr "Comisiones totales"
+
+#. module: sale_commission_achievement_target
+#: model_terms:ir.ui.view,arch_db:sale_commission_achievement_target.view_commission_collection_report_list
+msgid "Total on-time commission"
+msgstr "Comisión a tiempo total"
+
+#. module: sale_commission_achievement_target
+#: model_terms:ir.ui.view,arch_db:sale_commission_achievement_target.view_commission_collection_report_list
+msgid "Total target commission"
+msgstr "Comisión objetivo total"
+
+#. module: sale_commission_achievement_target
+#: model_terms:ir.actions.act_window,help:sale_commission_achievement_target.action_commission_collection_report
+msgid "Unfortunately, there are no commissions for you"
+msgstr "Lamentablemente, no hay comisiones para ti"
+
+#. module: sale_commission_achievement_target
+#: model_terms:ir.ui.view,arch_db:sale_commission_achievement_target.view_commission_collection_report_search
+msgid "With commission"
+msgstr "Con comisión"

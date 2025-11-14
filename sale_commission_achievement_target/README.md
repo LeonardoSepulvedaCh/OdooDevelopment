@@ -111,6 +111,62 @@ Dado que **debemos** usar SQL por diseño del módulo padre, implementamos:
 - Cálculo en tiempo real de montos alcanzados
 - Soporte para categorías obligatorias con porcentajes mínimos
 - Lógica de prioridad de categorías
+- **Cálculo jerárquico de categorías de eCommerce**: Incluye automáticamente todas las subcategorías
+
+### Cálculo Jerárquico de Categorías
+
+El módulo implementa un cálculo jerárquico inteligente de categorías de eCommerce:
+
+#### Funcionamiento
+
+Cuando se selecciona una categoría de producto, el sistema incluye automáticamente todas sus subcategorías en el cálculo del "Monto Alcanzado":
+
+- **Categoría Padre (OPTIMUS)**: Incluye TODAS las ventas de OPTIMUS y todas sus subcategorías
+  - OPTIMUS/BICICLETAS
+  - OPTIMUS/BICICLETAS/MTB/BICICLETA_1
+  - OPTIMUS/REPUESTOS/RINES
+  - etc.
+
+- **Subcategoría Intermedia (OPTIMUS/BICICLETAS)**: Incluye solo BICICLETAS y sus hijas
+  - OPTIMUS/BICICLETAS/MTB
+  - OPTIMUS/BICICLETAS/MTB/BICICLETA_1
+  - (excluye OPTIMUS/REPUESTOS)
+
+- **Subcategoría Específica (OPTIMUS/REPUESTOS/RINES)**: Incluye solo esa categoría
+  - OPTIMUS/REPUESTOS/RINES (sin subcategorías)
+
+#### Implementación Técnica
+
+La lógica de navegación jerárquica está **centralizada en el modelo `product.public.category`**, donde está disponible para toda la aplicación:
+
+```python
+# En product.public.category
+@api.model
+def get_category_with_children_ids(self, category_id):
+    """Obtiene una categoría y todas sus hijas recursivamente."""
+    if not category_id:
+        return []
+    categories = self.search([('id', 'child_of', category_id)])
+    return categories.ids
+
+# Uso desde cualquier modelo
+category_ids = self.env['product.public.category'].get_category_with_children_ids(category_id)
+```
+
+**Ventajas de esta arquitectura:**
+
+- ✅ **Centralización**: Lógica en un solo lugar, evitando duplicación
+- ✅ **Reutilización**: Disponible para cualquier módulo o personalización
+- ✅ **Mantenibilidad**: Cambios en un solo punto afectan toda la aplicación
+- ✅ **Estándar Odoo**: Usa el operador `child_of` optimizado internamente
+- ✅ **Rendimiento**: Consultas recursivas eficientes + caché del ORM
+- ✅ **Flexibilidad**: Fácil de extender o modificar según necesidades futuras
+
+Esto garantiza:
+- ✅ Rendimiento óptimo incluso con jerarquías profundas
+- ✅ Inclusión automática de nuevas subcategorías
+- ✅ Flexibilidad en la configuración de metas por nivel jerárquico
+- ✅ Código más limpio y mantenible siguiendo las mejores prácticas de Odoo
 
 ## Dependencias
 

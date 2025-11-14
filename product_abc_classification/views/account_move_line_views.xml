@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Vista BASE para Histórico de Clasificaciones (solo ABC) -->
+    <!-- El módulo de Rotación extenderá esta vista para agregar sus campos -->
+    <record id="view_account_move_line_classification_history_tree" model="ir.ui.view">
+        <field name="name">account.move.line.classification.history.tree</field>
+        <field name="model">account.move.line</field>
+        <field name="arch" type="xml">
+            <list string="Historial de Clasificaciones" create="false" delete="false" edit="false">
+                <field name="move_id"/>
+                <field name="date"/>
+                <field name="product_id"/>
+                
+                <!-- Clasificación ABC -->
+                <field name="product_cost_at_sale" string="Costo al Vender" widget="monetary" optional="show"/>
+                <field name="abc_classification_global_at_sale" string="ABC Global" widget="badge" 
+                       decoration-success="abc_classification_global_at_sale == 'aaa'"
+                       decoration-info="abc_classification_global_at_sale == 'aa'"
+                       decoration-primary="abc_classification_global_at_sale == 'a'"
+                       decoration-warning="abc_classification_global_at_sale == 'b'"
+                       decoration-muted="abc_classification_global_at_sale == 'c'"
+                       optional="show"/>
+                <field name="abc_classification_at_sale" string="ABC Bodega" widget="badge" 
+                       decoration-success="abc_classification_at_sale == 'aaa'"
+                       decoration-info="abc_classification_at_sale == 'aa'"
+                       decoration-primary="abc_classification_at_sale == 'a'"
+                       decoration-warning="abc_classification_at_sale == 'b'"
+                       decoration-muted="abc_classification_at_sale == 'c'"
+                       optional="show"/>
+                <field name="abc_sales_value_at_sale" string="Valor ABC" widget="monetary" optional="hide"/>
+                
+                <!-- Los campos de Rotación se agregarán aquí mediante herencia desde el módulo product_rotation_classification -->
+                <!-- Marcador para herencia: rotation_fields_placeholder -->
+                
+                <!-- Campos Comunes -->
+                <field name="abc_warehouse_id" string="Bodega (ABC)" optional="hide"/>
+                <field name="quantity" string="Cantidad"/>
+                <field name="price_subtotal" string="Subtotal" widget="monetary"/>
+                <field name="move_type" string="Tipo" optional="hide"/>
+            </list>
+        </field>
+    </record>
+    <!-- Acción UNIFICADA para Histórico de Clasificaciones -->
+    <!-- Muestra todas las facturas con productos, independientemente de si tienen clasificación ABC o Rotación -->
+    <record id="action_classification_history" model="ir.actions.act_window">
+        <field name="name">Historial de Clasificaciones</field>
+        <field name="res_model">account.move.line</field>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="view_account_move_line_classification_history_tree"/>
+        <field name="domain">[('move_id.move_type', 'in', ['out_invoice', 'out_refund']), 
+                             ('move_id.state', '=', 'posted'), 
+                             ('display_type', '=', 'product')]</field>
+        <field name="context">{'create': False, 'edit': False, 'delete': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Aún no hay historial de clasificaciones
+            </p>
+            <p>
+                Las clasificaciones ABC y por Rotación de facturas validadas aparecerán aquí.<br/>
+                Las clasificaciones mostradas son las que tenía el producto al momento de la venta.<br/>
+                <br/>
+                <strong>Filtros disponibles:</strong>
+                <ul>
+                    <li><em>Con Clasificación ABC:</em> Ver solo registros con clasificación ABC</li>
+                    <li><em>Con Clasificación Rotación:</em> Ver solo registros con clasificación por Rotación (si módulo instalado)</li>
+                    <li><em>Con Ambas Clasificaciones:</em> Ver solo registros con ambas clasificaciones (si ambos módulos instalados)</li>
+                </ul>
+            </p>
+        </field>
+    </record>
+    
+    <!-- Mantener la acción antigua para compatibilidad (apunta a la nueva) -->
+    <record id="action_abc_classification_history" model="ir.actions.act_window">
+        <field name="name">Historial ABC</field>
+        <field name="res_model">account.move.line</field>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="view_account_move_line_classification_history_tree"/>
+        <field name="domain">[('move_id.move_type', 'in', ['out_invoice', 'out_refund']), 
+                             ('move_id.state', '=', 'posted'), 
+                             ('display_type', '=', 'product'),
+                             ('abc_classification_at_sale', '!=', False)]</field>
+        <field name="context">{'create': False, 'edit': False, 'delete': False}</field>
+    </record>
+
+</odoo>

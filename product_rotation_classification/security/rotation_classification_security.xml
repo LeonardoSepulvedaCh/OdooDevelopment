@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Grupo de Usuarios de Clasificación por Rotación -->
+    <record id="group_rotation_user" model="res.groups">
+        <field name="name">Rotation Classification User</field>
+        <field name="comment">Can view rotation classification and history</field>
+    </record>
+
+    <!-- Grupo de Administradores de Clasificación por Rotación -->
+    <record id="group_rotation_manager" model="res.groups">
+        <field name="name">Rotation Classification Manager</field>
+        <field name="implied_ids" eval="[(4, ref('group_rotation_user'))]"/>
+        <field name="comment">Can configure rotation classification and execute calculations</field>
+    </record>
+
+
+</odoo>
+

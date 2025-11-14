@@ -1,0 +1,294 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* product_rotation_classification
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-10-14 17:00:00+0000\n"
+"PO-Revision-Date: 2025-10-14 17:00:00+0000\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: product_rotation_classification
+#: model:ir.model.fields,field_description:product_rotation_classification.field_product_template__rotation_classification_global
+msgid "Rotation Classification Global"
+msgstr "Rotación Global"
+
+#. module: product_rotation_classification
+#: model:ir.model.fields,field_description:product_rotation_classification.field_product_template__rotation_months_global
+msgid "Stock Duration Global (months)"
+msgstr "Duración Global (meses)"
+
+#. module: product_rotation_classification
+#: model:ir.model.fields,field_description:product_rotation_classification.field_product_template__rotation_stock_qty_global
+msgid "Stock Quantity Global"
+msgstr "Cantidad en Stock Global"
+
+#. module: product_rotation_classification
+#: model:ir.model.fields,field_description:product_rotation_classification.field_product_template__rotation_monthly_consumption_global
+msgid "Monthly Consumption Global"
+msgstr "Consumo Mensual Global"
+
+#. module: product_rotation_classification
+#: model:ir.model.fields,field_description:product_rotation_classification.field_product_template__rotation_selected_warehouse_id
+msgid "Selected Warehouse"
+msgstr "Bodega Seleccionada"
+
+#. module: product_rotation_classification
+#: model:ir.model.fields,field_description:product_rotation_classification.field_product_template__rotation_selected_warehouse_classification
+msgid "Rotation Warehouse"
+msgstr "Rotación Bodega"
+
+#. module: product_rotation_classification
+#: model:ir.model.fields,field_description:product_rotation_classification.field_product_template__rotation_selected_warehouse_months
+msgid "Stock Duration Warehouse (months)"
+msgstr "Duración Bodega (meses)"
+
+#. module: product_rotation_classification
+#: model:ir.model.fields,field_description:product_rotation_classification.field_product_template__rotation_warehouse_ids
+msgid "Rotation by Warehouse"
+msgstr "Rotación por Bodega"
+
+#. module: product_rotation_classification
+#: model:ir.model.fields,field_description:product_rotation_classification.field_account_move_line__rotation_classification_at_sale
+msgid "Rotation Classification at Sale"
+msgstr "Rotación al Momento de Venta"
+
+#. module: product_rotation_classification
+#: model:ir.model.fields,field_description:product_rotation_classification.field_account_move_line__rotation_months_at_sale
+msgid "Stock Duration at Sale (months)"
+msgstr "Meses de Stock al Momento de Venta"
+
+#. module: product_rotation_classification
+#: model:ir.model.fields,field_description:product_rotation_classification.field_account_move_line__rotation_warehouse_id
+msgid "Warehouse (Rotation)"
+msgstr "Bodega (Rotación)"
+
+#. module: product_rotation_classification
+#: model:ir.model.fields.selection,name:product_rotation_classification.selection__product_template__rotation_classification_global__HIGH
+#: model:ir.model.fields.selection,name:product_rotation_classification.selection__account_move_line__rotation_classification_at_sale__HIGH
+#: model:ir.model.fields.selection,name:product_rotation_classification.selection__product_rotation_warehouse__rotation_classification__HIGH
+msgid "HIGH"
+msgstr "ALTA"
+
+#. module: product_rotation_classification
+#: model:ir.model.fields.selection,name:product_rotation_classification.selection__product_template__rotation_classification_global__LOW
+#: model:ir.model.fields.selection,name:product_rotation_classification.selection__account_move_line__rotation_classification_at_sale__LOW
+#: model:ir.model.fields.selection,name:product_rotation_classification.selection__product_rotation_warehouse__rotation_classification__LOW
+msgid "LOW"
+msgstr "BAJA"
+
+#. module: product_rotation_classification
+#: model:ir.model.fields.selection,name:product_rotation_classification.selection__product_template__rotation_classification_global__BONE
+#: model:ir.model.fields.selection,name:product_rotation_classification.selection__account_move_line__rotation_classification_at_sale__BONE
+#: model:ir.model.fields.selection,name:product_rotation_classification.selection__product_rotation_warehouse__rotation_classification__BONE
+msgid "BONE"
+msgstr "HUESO"
+
+#. module: product_rotation_classification
+#: model:ir.model.fields.selection,name:product_rotation_classification.selection__product_template__rotation_classification_global__FEMUR
+#: model:ir.model.fields.selection,name:product_rotation_classification.selection__account_move_line__rotation_classification_at_sale__FEMUR
+#: model:ir.model.fields.selection,name:product_rotation_classification.selection__product_rotation_warehouse__rotation_classification__FEMUR
+msgid "FEMUR"
+msgstr "FEMUR"
+
+#. module: product_rotation_classification
+#: model:ir.model.fields.selection,name:product_rotation_classification.selection__product_template__rotation_classification_global__DEPLETED
+#: model:ir.model.fields.selection,name:product_rotation_classification.selection__account_move_line__rotation_classification_at_sale__DEPLETED
+#: model:ir.model.fields.selection,name:product_rotation_classification.selection__product_rotation_warehouse__rotation_classification__DEPLETED
+msgid "DEPLETED"
+msgstr "AGOTADO"
+
+#. module: product_rotation_classification
+#: model:ir.model.fields.selection,name:product_rotation_classification.selection__product_template__rotation_classification_global__INFINITE
+#: model:ir.model.fields.selection,name:product_rotation_classification.selection__account_move_line__rotation_classification_at_sale__INFINITE
+#: model:ir.model.fields.selection,name:product_rotation_classification.selection__product_rotation_warehouse__rotation_classification__INFINITE
+msgid "INFINITE"
+msgstr "INFINITO"
+
+#. module: product_rotation_classification
+#: model:ir.model.fields,field_description:product_rotation_classification.field_rotation_classification_config__threshold_high
+msgid "High Rotation Threshold (months)"
+msgstr "Umbral Rotación Alta (meses)"
+
+#. module: product_rotation_classification
+#: model:ir.model.fields,field_description:product_rotation_classification.field_rotation_classification_config__threshold_low
+msgid "Low Rotation Threshold (months)"
+msgstr "Umbral Rotación Baja (meses)"
+
+#. module: product_rotation_classification
+#: model:ir.model.fields,field_description:product_rotation_classification.field_rotation_classification_config__threshold_bone
+msgid "Bone Rotation Threshold (months)"
+msgstr "Umbral Rotación Hueso (meses)"
+
+#. module: product_rotation_classification
+#: model:ir.model.fields,field_description:product_rotation_classification.field_rotation_classification_config__analysis_period_months
+msgid "Analysis Period (months)"
+msgstr "Período de Análisis (meses)"
+
+#. module: product_rotation_classification
+#: model:ir.model.fields,field_description:product_rotation_classification.field_rotation_classification_config__include_zero_stock
+msgid "Include Products without Stock"
+msgstr "Incluir Productos sin Stock"
+
+#. module: product_rotation_classification
+#: model:ir.model.fields,field_description:product_rotation_classification.field_rotation_classification_config__include_no_consumption
+msgid "Include Products without Consumption"
+msgstr "Incluir Productos sin Consumo"
+
+#. module: product_rotation_classification
+#: model:ir.model.fields,field_description:product_rotation_classification.field_rotation_classification_config__last_calculation
+msgid "Last Calculation"
+msgstr "Último Cálculo"
+
+#. module: product_rotation_classification
+#: model:ir.model.fields,field_description:product_rotation_classification.field_rotation_classification_config__last_calculation_products
+msgid "Products Calculated"
+msgstr "Productos Calculados"
+
+#. module: product_rotation_classification
+#: model:ir.model.fields,field_description:product_rotation_classification.field_rotation_classification_config__last_calculation_duration
+msgid "Calculation Duration (seconds)"
+msgstr "Duración del Cálculo (segundos)"
+
+#. module: product_rotation_classification
+#: model:ir.ui.view,arch_db:product_rotation_classification.view_rotation_classification_config_form
+msgid "Calculate Rotation Now"
+msgstr "Calcular Rotación Ahora"
+
+#. module: product_rotation_classification
+#: model:ir.actions.act_window,name:product_rotation_classification.action_rotation_classification_config
+#: model:ir.ui.menu,name:product_rotation_classification.menu_rotation_classification_config
+msgid "Rotation Configuration"
+msgstr "Configuración de Rotación"
+
+#. module: product_rotation_classification
+#: model:ir.actions.act_window,name:product_rotation_classification.action_product_rotation_warehouse
+#: model:ir.ui.menu,name:product_rotation_classification.menu_rotation_by_warehouse
+msgid "Rotation by Warehouse"
+msgstr "Rotación por Bodega"
+
+#. module: product_rotation_classification
+#: model:ir.actions.act_window,name:product_rotation_classification.action_rotation_classification_history
+#: model:ir.ui.menu,name:product_rotation_classification.menu_rotation_classification_history
+msgid "Rotation Classification History"
+msgstr "Historial de Rotación"
+
+#. module: product_rotation_classification
+#: code:addons/product_rotation_classification/models/product_template.py:0
+#, python-format
+msgid "pandas and numpy libraries are required for rotation calculation"
+msgstr "Se requieren las librerías pandas y numpy para el cálculo de rotación"
+
+#. module: product_rotation_classification
+#: code:addons/product_rotation_classification/models/product_template.py:0
+#, python-format
+msgid "Rotation Classification Completed"
+msgstr "Clasificación por Rotación Completada"
+
+#. module: product_rotation_classification
+#: code:addons/product_rotation_classification/models/product_template.py:0
+#, python-format
+msgid "%d products classified in %.2f seconds"
+msgstr "%d productos clasificados en %.2f segundos"
+
+#. module: product_rotation_classification
+#: code:addons/product_rotation_classification/models/rotation_classification_config.py:0
+#, python-format
+msgid "High rotation threshold must be greater than 0"
+msgstr "El umbral de rotación alta debe ser mayor que 0"
+
+#. module: product_rotation_classification
+#: code:addons/product_rotation_classification/models/rotation_classification_config.py:0
+#, python-format
+msgid "Low rotation threshold must be greater than high threshold"
+msgstr "El umbral de rotación baja debe ser mayor que el umbral de rotación alta"
+
+#. module: product_rotation_classification
+#: code:addons/product_rotation_classification/models/rotation_classification_config.py:0
+#, python-format
+msgid "Bone rotation threshold must be greater than low threshold"
+msgstr "El umbral de rotación hueso debe ser mayor que el umbral de rotación baja"
+
+#. module: product_rotation_classification
+#: code:addons/product_rotation_classification/models/rotation_classification_config.py:0
+#, python-format
+msgid "Analysis period must be at least 1 month"
+msgstr "El período de análisis debe ser al menos de 1 mes"
+
+#. module: product_rotation_classification
+#: code:addons/product_rotation_classification/models/rotation_classification_config.py:0
+#, python-format
+msgid "Analysis period cannot exceed 60 months"
+msgstr "El período de análisis no puede exceder 60 meses"
+
+#. module: product_rotation_classification
+#: model:ir.model,name:product_rotation_classification.model_product_template
+msgid "Product Template"
+msgstr "Plantilla de Producto"
+
+#. module: product_rotation_classification
+#: model:ir.model,name:product_rotation_classification.model_product_rotation_warehouse
+msgid "Product Rotation Classification per Warehouse"
+msgstr "Clasificación por Rotación de Producto por Bodega"
+
+#. module: product_rotation_classification
+#: model:ir.model,name:product_rotation_classification.model_account_move_line
+msgid "Journal Item"
+msgstr "Línea de Factura"
+
+#. module: product_rotation_classification
+#: model:ir.model,name:product_rotation_classification.model_account_move
+msgid "Journal Entry"
+msgstr "Asiento Contable"
+
+#. module: product_rotation_classification
+#: model:ir.model,name:product_rotation_classification.model_rotation_classification_config
+msgid "Rotation Classification Configuration"
+msgstr "Configuración de Clasificación por Rotación"
+
+#. module: product_rotation_classification
+#: model:ir.model.fields,help:product_rotation_classification.field_product_template__rotation_classification_global
+msgid "Global classification considering all warehouses"
+msgstr "Clasificación global considerando todas las bodegas"
+
+#. module: product_rotation_classification
+#: model:ir.model.fields,help:product_rotation_classification.field_product_template__rotation_months_global
+msgid "Estimated global stock duration in months"
+msgstr "Duración estimada del stock global en meses"
+
+#. module: product_rotation_classification
+#: model:ir.model.fields,help:product_rotation_classification.field_product_template__rotation_selected_warehouse_id
+msgid "Select a warehouse to view its specific rotation"
+msgstr "Seleccione una bodega para ver su rotación específica"
+
+#. module: product_rotation_classification
+#: model:ir.model.fields,help:product_rotation_classification.field_product_template__rotation_selected_warehouse_classification
+msgid "Rotation of the selected warehouse"
+msgstr "Rotación de la bodega seleccionada"
+
+#. module: product_rotation_classification
+#: model:ir.model.fields,help:product_rotation_classification.field_product_template__rotation_selected_warehouse_months
+msgid "Duration in months for the selected warehouse"
+msgstr "Duración en meses para la bodega seleccionada"
+
+#. module: product_rotation_classification
+#: model:ir.model.fields,help:product_rotation_classification.field_account_move_line__rotation_classification_at_sale
+msgid "Rotation classification the product had at the time of invoice validation"
+msgstr "Clasificación por rotación que tenía el producto al momento de validar la factura"
+
+#. module: product_rotation_classification
+#: model:ir.model.fields,help:product_rotation_classification.field_account_move_line__rotation_months_at_sale
+msgid "Estimated stock duration in months at the time of sale"
+msgstr "Duración estimada del stock en meses al momento de la venta"
+
+#. module: product_rotation_classification
+#: model:ir.model.fields,help:product_rotation_classification.field_account_move_line__rotation_warehouse_id
+msgid "Warehouse associated with this line for rotation classification"
+msgstr "Bodega asociada a esta línea para clasificación por rotación"
+

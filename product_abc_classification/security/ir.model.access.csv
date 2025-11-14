@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_abc_config_user,abc.classification.config.user,model_abc_classification_config,product_abc_classification.group_abc_user,1,0,0,0
+access_abc_config_manager,abc.classification.config.manager,model_abc_classification_config,product_abc_classification.group_abc_manager,1,1,1,1
+access_abc_warehouse_all_users,product.abc.warehouse.all.users,model_product_abc_warehouse,base.group_user,1,0,0,0
+access_abc_warehouse_user,product.abc.warehouse.user,model_product_abc_warehouse,product_abc_classification.group_abc_user,1,0,0,0
+access_abc_warehouse_manager,product.abc.warehouse.manager,model_product_abc_warehouse,product_abc_classification.group_abc_manager,1,1,1,1

@@ -95,6 +95,26 @@ class SaleCommissionPlanAchievementEnhanced(models.Model):
             )
             return None
 
+    def _get_category_hierarchy_ids(self, category_id):
+        """
+        Obtiene todos los IDs de categorías (incluida la categoría seleccionada y todas sus hijas recursivamente).
+        
+        Este método es un wrapper que delega la lógica al modelo product.public.category,
+        donde está centralizada para ser reutilizable en toda la aplicación.
+        
+        Args:
+            category_id: ID de la categoría raíz desde donde comenzar la búsqueda jerárquica
+            
+        Returns:
+            list: Lista de IDs de categorías (incluye la categoría raíz y todas sus descendientes)
+            
+        Ejemplo:
+            Si la jerarquía es OPTIMUS → BICICLETAS → MTB → BICICLETA_1
+            y se pasa el ID de BICICLETAS, retornará los IDs de:
+            [BICICLETAS, MTB, BICICLETA_1]
+        """
+        return self.env['product.public.category'].get_category_with_children_ids(category_id)
+    
     # Calcular el monto real vendido/facturado según el tipo de achievement
     def _compute_actual_amount_sql(self, achievement, priority_category_id):
 
@@ -113,24 +133,34 @@ class SaleCommissionPlanAchievementEnhanced(models.Model):
         
         cr = self.env.cr
         
+        # Obtener todas las categorías hijas de la categoría de logro (jerárquico)
+        achievement_category_ids = []
+        if achievement.public_categ_id:
+            achievement_category_ids = self._get_category_hierarchy_ids(achievement.public_categ_id.id)
+        
+        # Obtener todas las categorías hijas de la categoría prioritaria (jerárquico)
+        priority_category_ids = []
+        if priority_category_id:
+            priority_category_ids = self._get_category_hierarchy_ids(priority_category_id)
+        
         # Construir condición de prioridad de forma segura
         # Si este achievement NO es la categoría prioritaria, excluir productos que estén en la categoría prioritaria
         priority_condition = ""
         priority_params = []
-        if priority_category_id and achievement.public_categ_id:
+        if priority_category_ids and achievement.public_categ_id:
             if achievement.public_categ_id.id != priority_category_id:
-                # Solo incluir productos que NO estén en la categoría prioritaria
+                # Solo incluir productos que NO estén en la categoría prioritaria ni en sus hijas
                 priority_condition = """
                     AND NOT EXISTS (
                         SELECT 1 FROM product_public_category_product_template_rel ppcrel_priority
                         WHERE ppcrel_priority.product_template_id = pt.id
-                          AND ppcrel_priority.product_public_category_id = %s
+                          AND ppcrel_priority.product_public_category_id = ANY(%s)
                     )
                 """
-                priority_params = [priority_category_id]
+                priority_params = [priority_category_ids]
         
         if achievement.type in ['amount_sold', 'qty_sold']:
-            # Query para ventas - usar CTE para mejor performance
+            # Query para ventas - usar CTE para mejor performance con jerarquía de categorías
             query = """
                 WITH plan_user_dates AS (
                     SELECT 
@@ -161,14 +191,14 @@ class SaleCommissionPlanAchievementEnhanced(models.Model):
                   AND COALESCE(sol.is_downpayment, false) = false
                   AND (%s IS NULL OR sol.product_id = %s)
                   AND (
-                    %s IS NULL OR 
+                    %s = 0 OR 
                     EXISTS (
                         SELECT 1 FROM product_public_category_product_template_rel ppcrel
                         WHERE ppcrel.product_template_id = pt.id
-                          AND ppcrel.product_public_category_id = %s
+                          AND ppcrel.product_public_category_id = ANY(%s)
                     )
                   )
-                  AND (%s IS NULL OR %s IS NOT NULL OR pt.categ_id = %s)
+                  AND (%s IS NULL OR %s != 0 OR pt.categ_id = %s)
                   {priority_cond}
             """.format(priority_cond=priority_condition)
             
@@ -181,10 +211,10 @@ class SaleCommissionPlanAchievementEnhanced(models.Model):
                 plan.company_id.id,
                 achievement.product_id.id or None,
                 achievement.product_id.id or None,
-                achievement.public_categ_id.id or None,
-                achievement.public_categ_id.id or None,
+                len(achievement_category_ids),  # Usa longitud para saber si hay categorías
+                achievement_category_ids or [0],  # Array de IDs (incluye categoría padre e hijas)
                 achievement.product_categ_id.id or None,
-                achievement.public_categ_id.id or None,
+                len(achievement_category_ids),  # Usa longitud para lógica condicional
                 achievement.product_categ_id.id or None,
             ]
             
@@ -196,7 +226,7 @@ class SaleCommissionPlanAchievementEnhanced(models.Model):
             return result[0] if result else 0.0
             
         elif achievement.type in ['amount_invoiced', 'qty_invoiced']:
-            # Query para facturas - usar CTE para mejor performance
+            # Query para facturas - usar CTE para mejor performance con jerarquía de categorías
             query = """
                 WITH plan_user_dates AS (
                     SELECT 
@@ -236,14 +266,14 @@ class SaleCommissionPlanAchievementEnhanced(models.Model):
                   AND aml.display_type = 'product'
                   AND (%s IS NULL OR aml.product_id = %s)
                   AND (
-                    %s IS NULL OR 
+                    %s = 0 OR 
                     EXISTS (
                         SELECT 1 FROM product_public_category_product_template_rel ppcrel
                         WHERE ppcrel.product_template_id = pt.id
-                          AND ppcrel.product_public_category_id = %s
+                          AND ppcrel.product_public_category_id = ANY(%s)
                     )
                   )
-                  AND (%s IS NULL OR %s IS NOT NULL OR pt.categ_id = %s)
+                  AND (%s IS NULL OR %s != 0 OR pt.categ_id = %s)
                   {priority_cond}
             """.format(priority_cond=priority_condition)
             
@@ -256,10 +286,10 @@ class SaleCommissionPlanAchievementEnhanced(models.Model):
                 plan.company_id.id,
                 achievement.product_id.id or None,
                 achievement.product_id.id or None,
-                achievement.public_categ_id.id or None,
-                achievement.public_categ_id.id or None,
+                len(achievement_category_ids),  # Usa longitud para saber si hay categorías
+                achievement_category_ids or [0],  # Array de IDs (incluye categoría padre e hijas)
                 achievement.product_categ_id.id or None,
-                achievement.public_categ_id.id or None,
+                len(achievement_category_ids),  # Usa longitud para lógica condicional
                 achievement.product_categ_id.id or None,
             ]
             

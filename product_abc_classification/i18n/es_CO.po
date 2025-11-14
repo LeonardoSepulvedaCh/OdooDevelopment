@@ -1,0 +1,363 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* product_abc_classification
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-10-14 22:00:00+0000\n"
+"PO-Revision-Date: 2025-10-14 22:00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: es_CO\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: product_abc_classification
+#: model:ir.model,name:product_abc_classification.model_abc_classification_config
+msgid "ABC Classification Configuration"
+msgstr "Configuración de Clasificación ABC"
+
+#. module: product_abc_classification
+#: model:ir.model,name:product_abc_classification.model_product_abc_warehouse
+msgid "Product ABC Classification per Warehouse"
+msgstr "Clasificación ABC de Producto por Bodega"
+
+#. module: product_abc_classification
+msgid "ABC Classification"
+msgstr "Clasificación ABC"
+
+#. module: product_abc_classification
+msgid "ABC Classification (Global)"
+msgstr "Clasificación ABC (Global)"
+
+#. module: product_abc_classification
+msgid "ABC Primary Warehouse"
+msgstr "ABC Bodega Principal"
+
+#. module: product_abc_classification
+msgid "ABC Global"
+msgstr "ABC Global"
+
+#. module: product_abc_classification
+msgid "ABC Primary"
+msgstr "ABC Principal"
+
+#. module: product_abc_classification
+msgid "ABC Configuration"
+msgstr "Configuración ABC"
+
+#. module: product_abc_classification
+msgid "ABC History"
+msgstr "Historial ABC"
+
+#. module: product_abc_classification
+msgid "ABC by Warehouse"
+msgstr "ABC por Bodega"
+
+#. module: product_abc_classification
+msgid "ABC Sales Value"
+msgstr "Valor de Ventas ABC"
+
+#. module: product_abc_classification
+msgid "ABC Sales Value (Global)"
+msgstr "Valor de Ventas ABC (Global)"
+
+#. module: product_abc_classification
+msgid "Sales Value (Global)"
+msgstr "Valor de Ventas (Global)"
+
+#. module: product_abc_classification
+msgid "Last ABC Classification"
+msgstr "Última Clasificación ABC"
+
+#. module: product_abc_classification
+msgid "Name"
+msgstr "Nombre"
+
+#. module: product_abc_classification
+msgid "Active"
+msgstr "Activo"
+
+#. module: product_abc_classification
+msgid "Only one configuration can be active"
+msgstr "Solo puede haber una configuración activa"
+
+#. module: product_abc_classification
+msgid "AAA Threshold (%)"
+msgstr "Umbral AAA (%)"
+
+#. module: product_abc_classification
+msgid "AA Threshold (%)"
+msgstr "Umbral AA (%)"
+
+#. module: product_abc_classification
+msgid "A Threshold (%)"
+msgstr "Umbral A (%)"
+
+#. module: product_abc_classification
+msgid "B Threshold (%)"
+msgstr "Umbral B (%)"
+
+#. module: product_abc_classification
+msgid "Analysis Period (months)"
+msgstr "Período de Análisis (meses)"
+
+#. module: product_abc_classification
+msgid "Include Products without Sales"
+msgstr "Incluir Productos sin Ventas"
+
+#. module: product_abc_classification
+msgid "Last Execution"
+msgstr "Última Ejecución"
+
+#. module: product_abc_classification
+msgid "Products Calculated"
+msgstr "Productos Calculados"
+
+#. module: product_abc_classification
+msgid "Calculation Time (sec)"
+msgstr "Tiempo de Cálculo (seg)"
+
+#. module: product_abc_classification
+msgid "Calculate ABC Now"
+msgstr "Calcular ABC Ahora"
+
+#. module: product_abc_classification
+msgid "History"
+msgstr "Historial"
+
+#. module: product_abc_classification
+msgid "ABC Thresholds (Cumulative %)"
+msgstr "Umbrales ABC (% Acumulado)"
+
+#. module: product_abc_classification
+msgid "Create ABC Classification Configuration"
+msgstr "Crear Configuración de Clasificación ABC"
+
+#. module: product_abc_classification
+msgid "Configure thresholds and parameters for ABC classification calculation."
+msgstr "Configure umbrales y parámetros para el cálculo de clasificación ABC."
+
+#. module: product_abc_classification
+msgid "Product"
+msgstr "Producto"
+
+#. module: product_abc_classification
+msgid "Warehouse"
+msgstr "Bodega"
+
+#. module: product_abc_classification
+msgid "Classification"
+msgstr "Clasificación"
+
+#. module: product_abc_classification
+msgid "Sales Value"
+msgstr "Valor de Ventas"
+
+#. module: product_abc_classification
+msgid "Cumulative %"
+msgstr "% Acumulado"
+
+#. module: product_abc_classification
+msgid "Rank"
+msgstr "Ranking"
+
+#. module: product_abc_classification
+msgid "Last Calculation"
+msgstr "Último Cálculo"
+
+#. module: product_abc_classification
+msgid "ABC Classification by Warehouse"
+msgstr "Clasificación ABC por Bodega"
+
+#. module: product_abc_classification
+msgid "ABC by Warehouse"
+msgstr "ABC por Bodega"
+
+#. module: product_abc_classification
+msgid "Search ABC by Warehouse"
+msgstr "Buscar ABC por Bodega"
+
+#. module: product_abc_classification
+msgid "No ABC Classifications by Warehouse yet"
+msgstr "Aún no hay clasificaciones ABC por Bodega"
+
+#. module: product_abc_classification
+msgid "ABC classifications will appear here after running the calculation."
+msgstr "Las clasificaciones ABC aparecerán aquí después de ejecutar el cálculo."
+
+#. module: product_abc_classification
+msgid "AAA"
+msgstr "AAA"
+
+#. module: product_abc_classification
+msgid "AA"
+msgstr "AA"
+
+#. module: product_abc_classification
+msgid "A"
+msgstr "A"
+
+#. module: product_abc_classification
+msgid "B"
+msgstr "B"
+
+#. module: product_abc_classification
+msgid "C"
+msgstr "C"
+
+#. module: product_abc_classification
+msgid "AAA (Global)"
+msgstr "AAA (Global)"
+
+#. module: product_abc_classification
+msgid "AA (Global)"
+msgstr "AA (Global)"
+
+#. module: product_abc_classification
+msgid "A (Global)"
+msgstr "A (Global)"
+
+#. module: product_abc_classification
+msgid "B (Global)"
+msgstr "B (Global)"
+
+#. module: product_abc_classification
+msgid "C (Global)"
+msgstr "C (Global)"
+
+#. module: product_abc_classification
+msgid "With ABC Classification"
+msgstr "Con Clasificación ABC"
+
+#. module: product_abc_classification
+msgid "Without ABC Classification"
+msgstr "Sin Clasificación ABC"
+
+#. module: product_abc_classification
+msgid "ABC at Sale"
+msgstr "ABC al Vender"
+
+#. module: product_abc_classification
+msgid "ABC Sales Value at Sale"
+msgstr "Valor de Ventas ABC al Vender"
+
+#. module: product_abc_classification
+msgid "ABC Warehouse"
+msgstr "Bodega ABC"
+
+#. module: product_abc_classification
+msgid "ABC Classification History"
+msgstr "Historial de Clasificación ABC"
+
+#. module: product_abc_classification
+msgid "No ABC History yet"
+msgstr "Aún no hay Historial ABC"
+
+#. module: product_abc_classification
+msgid "ABC classifications from validated invoices will appear here. The ABC shown is the classification the product had at the time of sale."
+msgstr "Las clasificaciones ABC de facturas validadas aparecerán aquí. El ABC mostrado es la clasificación que tenía el producto al momento de la venta."
+
+#. module: product_abc_classification
+msgid "Search ABC History"
+msgstr "Buscar Historial ABC"
+
+#. module: product_abc_classification
+msgid "Invoices Only"
+msgstr "Solo Facturas"
+
+#. module: product_abc_classification
+msgid "Credit Notes Only"
+msgstr "Solo Notas de Crédito"
+
+#. module: product_abc_classification
+msgid "AAA at Sale"
+msgstr "AAA al Vender"
+
+#. module: product_abc_classification
+msgid "AA at Sale"
+msgstr "AA al Vender"
+
+#. module: product_abc_classification
+msgid "A at Sale"
+msgstr "A al Vender"
+
+#. module: product_abc_classification
+msgid "B at Sale"
+msgstr "B al Vender"
+
+#. module: product_abc_classification
+msgid "C at Sale"
+msgstr "C al Vender"
+
+#. module: product_abc_classification
+msgid "Invoice Date"
+msgstr "Fecha de Factura"
+
+#. module: product_abc_classification
+msgid "Clasificación ABC Completada"
+msgstr "Clasificación ABC Completada"
+
+#. module: product_abc_classification
+msgid "Se clasificaron %d productos en %d bodegas en %.2f segundos."
+msgstr "Se clasificaron %d productos en %d bodegas en %.2f segundos."
+
+#. module: product_abc_classification
+msgid "Sin productos"
+msgstr "Sin productos"
+
+#. module: product_abc_classification
+msgid "No hay productos almacenables para clasificar"
+msgstr "No hay productos almacenables para clasificar"
+
+#. module: product_abc_classification
+msgid "Las librerías pandas y numpy no están instaladas.\\nInstale con: pip install pandas numpy"
+msgstr "Las librerías pandas y numpy no están instaladas.\\nInstale con: pip install pandas numpy"
+
+#. module: product_abc_classification
+msgid "ABC Classification User"
+msgstr "Usuario de Clasificación ABC"
+
+#. module: product_abc_classification
+msgid "ABC Classification Manager"
+msgstr "Gerente de Clasificación ABC"
+
+#. module: product_abc_classification
+msgid "Thresholds must be in ascending order:\\n0 < AAA < AA < A < B <= 100\\nCurrent values: AAA=%.1f, AA=%.1f, A=%.1f, B=%.1f"
+msgstr "Los umbrales deben estar en orden ascendente:\\n0 < AAA < AA < A < B <= 100\\nValores actuales: AAA=%.1f, AA=%.1f, A=%.1f, B=%.1f"
+
+#. module: product_abc_classification
+msgid "The analysis period must be at least 1 month"
+msgstr "El período de análisis debe ser de al menos 1 mes"
+
+#. module: product_abc_classification
+msgid "Only one configuration can be active. Deactivate the configuration \"%s\" first."
+msgstr "Solo puede haber una configuración activa. Desactive primero la configuración \"%s\"."
+
+#. module: product_abc_classification
+msgid "ABC Global (All Warehouses)"
+msgstr "ABC Global (Todas las Bodegas)"
+
+#. module: product_abc_classification
+msgid "Sales Value (Global)"
+msgstr "Valor de Ventas (Global)"
+
+#. module: product_abc_classification
+msgid "Select Warehouse"
+msgstr "Seleccionar Bodega"
+
+#. module: product_abc_classification
+msgid "Select a warehouse..."
+msgstr "Seleccione una bodega..."
+
+#. module: product_abc_classification
+msgid "ABC (Selected Warehouse)"
+msgstr "ABC (Bodega Seleccionada)"
+
+#. module: product_abc_classification
+msgid "Sales Value (Warehouse)"
+msgstr "Valor de Ventas (Bodega)"

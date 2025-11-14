@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Extensión de la vista de formulario de producto -->
+    <record id="view_product_template_rotation_form" model="ir.ui.view">
+        <field name="name">product.template.rotation.form</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="stock.view_template_property_form"/>
+        <field name="arch" type="xml">
+            
+            <!-- Agregar campos de rotación después de group_lots_and_weight -->
+            <xpath expr="//group[@name='group_lots_and_weight']" position="after">
+                <group string="Clasificación por Rotación" name="rotation_classification">
+                    <!-- Rotación Global -->
+                    <group>
+                        <field name="rotation_classification_global" string="Rotación Global" widget="badge" 
+                               decoration-success="rotation_classification_global == 'HIGH'"
+                               decoration-info="rotation_classification_global == 'LOW'"
+                               decoration-warning="rotation_classification_global == 'BONE'"
+                               decoration-danger="rotation_classification_global == 'FEMUR'"
+                               decoration-muted="rotation_classification_global in ['DEPLETED', 'INFINITE']"/>
+                        <field name="rotation_months_global" string="Duración Global (meses)"/>
+                    </group>
+                    <group/>
+                    
+                    <!-- Selector de Bodega y Rotación -->
+                    <group colspan="2" col="4">
+                        <field name="rotation_selected_warehouse_id" string="Bodega" placeholder="Seleccione una bodega..." colspan="2"/>
+                        <field name="rotation_selected_warehouse_classification" string="Rotación Bodega" widget="badge" 
+                               decoration-success="rotation_selected_warehouse_classification == 'HIGH'"
+                               decoration-info="rotation_selected_warehouse_classification == 'LOW'"
+                               decoration-warning="rotation_selected_warehouse_classification == 'BONE'"
+                               decoration-danger="rotation_selected_warehouse_classification == 'FEMUR'"
+                               decoration-muted="rotation_selected_warehouse_classification in ['DEPLETED', 'INFINITE']"
+                               invisible="not rotation_selected_warehouse_id"
+                               colspan="2"/>
+                        <field name="rotation_selected_warehouse_months" string="Duración Bodega (meses)"
+                               invisible="not rotation_selected_warehouse_id"
+                               colspan="2"/>
+                    </group>
+                    
+                    <!-- Campos adicionales solo para managers -->
+                    <group>
+                        <field name="rotation_stock_qty_global" groups="product_rotation_classification.group_rotation_manager"/>
+                        <field name="rotation_monthly_consumption_global" groups="product_rotation_classification.group_rotation_manager"/>
+                        <field name="rotation_last_calculation" groups="product_rotation_classification.group_rotation_manager"/>
+                    </group>
+                    <group/>
+                </group>
+                
+                <!-- Campos invisibles para mantener compatibilidad -->
+                <field name="rotation_classification" invisible="1"/>
+                <field name="rotation_months" invisible="1"/>
+                <field name="rotation_stock_qty" invisible="1"/>
+                <field name="rotation_monthly_consumption" invisible="1"/>
+                <field name="rotation_warehouse_ids" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Extensión de la vista de lista de producto -->
+    <record id="view_product_template_rotation_tree" model="ir.ui.view">
+        <field name="name">product.template.rotation.list</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='list_price']" position="after">
+                <field name="rotation_classification_global" optional="hide" string="Rotación"/>
+                <field name="rotation_months_global" optional="hide" string="Meses"/>
+                <field name="rotation_stock_qty_global" optional="hide" groups="product_rotation_classification.group_rotation_manager"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Extensión de la vista de búsqueda de producto -->
+    <record id="view_product_template_rotation_search" model="ir.ui.view">
+        <field name="name">product.template.rotation.search</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_search_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <separator/>
+                <filter string="ALTA" name="filter_rotation_high" 
+                        domain="[('rotation_classification_global', '=', 'HIGH')]"/>
+                <filter string="BAJA" name="filter_rotation_low" 
+                        domain="[('rotation_classification_global', '=', 'LOW')]"/>
+                <filter string="HUESO" name="filter_rotation_bone" 
+                        domain="[('rotation_classification_global', '=', 'BONE')]"/>
+                <filter string="FEMUR" name="filter_rotation_femur" 
+                        domain="[('rotation_classification_global', '=', 'FEMUR')]"/>
+                <filter string="AGOTADO" name="filter_rotation_depleted" 
+                        domain="[('rotation_classification_global', '=', 'DEPLETED')]"/>
+                <filter string="INFINITO" name="filter_rotation_infinite" 
+                        domain="[('rotation_classification_global', '=', 'INFINITE')]"/>
+                
+                <separator/>
+                <filter string="ALTA + BAJA" name="filter_rotation_high_low" 
+                        domain="[('rotation_classification_global', 'in', ['HIGH', 'LOW'])]"/>
+                <filter string="HUESO + FEMUR" name="filter_rotation_bone_femur" 
+                        domain="[('rotation_classification_global', 'in', ['BONE', 'FEMUR'])]"/>
+                
+                <group>
+                    <filter string="Clasificación por Rotación" name="group_rotation_classification" 
+                            context="{'group_by': 'rotation_classification_global'}"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

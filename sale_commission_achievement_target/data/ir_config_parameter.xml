@@ -20,6 +20,17 @@
             <field name="value">50</field>
         </record>
         
+        <!-- Parámetro para configurar los días de gabela (grace period) para pagos a tiempo -->
+        <record id="commission_collection_grace_days" model="ir.config_parameter">
+            <field name="key">sale_commission_achievement_target.collection_grace_days</field>
+            <field name="value">7</field>
+        </record>
+        
+        <!-- Parámetro para configurar la tasa de comisión por pago a tiempo (0.7% = 0.007) -->
+        <record id="commission_on_time_rate" model="ir.config_parameter">
+            <field name="key">sale_commission_achievement_target.on_time_commission_rate</field>
+            <field name="value">0.007</field>
+        </record>
+        
     </data>
 </odoo>
-

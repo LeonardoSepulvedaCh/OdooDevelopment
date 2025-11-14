@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Heredar vista de formulario de factura para agregar columnas ABC -->
+    <record id="view_move_form_inherit_abc" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.abc</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <!-- Agregar columnas ABC al final de las líneas de factura -->
+            <xpath expr="//field[@name='invoice_line_ids']/list" position="inside">
+                <!-- Costo del Producto al Vender -->
+                <field name="product_cost_at_sale" 
+                       string="Costo al Vender" 
+                       optional="hide"
+                       widget="monetary"
+                       help="Costo estándar del producto al momento de validar la factura"/>
+                
+                <!-- ABC Global al Vender -->
+                <field name="abc_classification_global_at_sale" 
+                       string="ABC Global" 
+                       optional="hide"
+                       widget="badge"
+                       decoration-success="abc_classification_global_at_sale == 'aaa'"
+                       decoration-info="abc_classification_global_at_sale == 'aa'"
+                       decoration-warning="abc_classification_global_at_sale == 'a'"
+                       decoration-muted="abc_classification_global_at_sale in ['b', 'c']"/>
+                
+                <!-- ABC de Bodega al Vender -->
+                <field name="abc_classification_at_sale" 
+                       string="ABC Bodega" 
+                       optional="hide"
+                       widget="badge"
+                       decoration-success="abc_classification_at_sale == 'aaa'"
+                       decoration-info="abc_classification_at_sale == 'aa'"
+                       decoration-warning="abc_classification_at_sale == 'a'"
+                       decoration-muted="abc_classification_at_sale in ['b', 'c']"/>
+                
+                <!-- Bodega asociada -->
+                <field name="abc_warehouse_id" 
+                       string="Bodega ABC" 
+                       optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
+
