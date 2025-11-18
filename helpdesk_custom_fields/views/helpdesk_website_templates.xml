@@ -4,7 +4,7 @@
     <template id="team_warranty_info" name="Helpdesk Team: Warranty Info" inherit_id="website_helpdesk.team">
         
         <!-- Reemplazar el contenido del formulario para equipos de garantías sin autenticación -->
-        <xpath expr="//div[@class='col-md-8 ps-4']//div[@t-if='team.use_website_helpdesk_form']" position="replace">
+        <xpath expr="//div[hasclass('col-md-8', 'ps-4')]//div[@t-if='team.use_website_helpdesk_form']" position="replace">
             <div t-if="team.use_website_helpdesk_form">
                 
                 <!-- Si es equipo de garantías y usuario no autenticado, mostrar advertencia -->
@@ -183,4 +183,3 @@
         </div>
     </template>
 </odoo>
-

@@ -109,6 +109,13 @@ class HelpdeskTicket(models.Model):
         help='Fecha y hora en que el ticket fue cerrado/finalizado'
     )
     
+    resolution_time_seconds = fields.Integer(
+        string='Tiempo de resolución (segundos)',
+        compute='_compute_resolution_time',
+        store=True,
+        help='Tiempo total en segundos desde la creación hasta la finalización del ticket'
+    )
+    
     resolution_time_hours = fields.Float(
         string='Tiempo de resolución (horas)',
         compute='_compute_resolution_time',
@@ -121,6 +128,13 @@ class HelpdeskTicket(models.Model):
         compute='_compute_resolution_time',
         store=True,
         help='Tiempo transcurrido desde la creación hasta la finalización del ticket en días'
+    )
+    
+    resolution_time_working_seconds = fields.Integer(
+        string='Tiempo de resolución laboral (segundos)',
+        compute='_compute_resolution_time',
+        store=True,
+        help='Tiempo en segundos considerando solo horas laborales desde la creación hasta la finalización'
     )
 
     # Mapeo de series a códigos de secuencia
