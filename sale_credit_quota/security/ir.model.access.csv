@@ -1,7 +1,7 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_sale_credit_quota_application_user,sale.credit.quota.application.user,model_sale_credit_quota_application,base.group_user,1,1,1,1
-access_sale_credit_quota_application_manager,sale.credit.quota.application.manager,model_sale_credit_quota_application,base.group_system,1,1,1,1
-access_sale_credit_codeudor_user,sale.credit.codeudor.user,model_sale_credit_codeudor,base.group_user,1,1,1,1
-access_sale_credit_codeudor_manager,sale.credit.codeudor.manager,model_sale_credit_codeudor,base.group_system,1,1,1,1
-access_sale_credit_quota_document_wizard_user,sale.credit.quota.document.wizard.user,model_sale_credit_quota_document_wizard,base.group_user,1,1,1,1
-access_sale_credit_quota_document_wizard_manager,sale.credit.quota.document.wizard.manager,model_sale_credit_quota_document_wizard,base.group_system,1,1,1,1
+access_sale_credit_quota_application_user,sale.credit.quota.application.user,model_sale_credit_quota_application,group_sale_credit_quota_user,1,0,0,0
+access_sale_credit_quota_application_manager,sale.credit.quota.application.manager,model_sale_credit_quota_application,group_sale_credit_quota_manager,1,1,1,1
+access_sale_credit_codeudor_user,sale.credit.codeudor.user,model_sale_credit_codeudor,group_sale_credit_quota_user,1,0,0,0
+access_sale_credit_codeudor_manager,sale.credit.codeudor.manager,model_sale_credit_codeudor,group_sale_credit_quota_manager,1,1,1,1
+access_sale_credit_quota_document_wizard_user,sale.credit.quota.document.wizard.user,model_sale_credit_quota_document_wizard,group_sale_credit_quota_user,1,0,0,0
+access_sale_credit_quota_document_wizard_manager,sale.credit.quota.document.wizard.manager,model_sale_credit_quota_document_wizard,group_sale_credit_quota_manager,1,1,1,1

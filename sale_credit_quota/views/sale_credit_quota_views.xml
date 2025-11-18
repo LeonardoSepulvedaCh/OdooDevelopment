@@ -8,27 +8,31 @@
                 <form string="Solicitud de Cupo">
                     <header>
                         <field name="state" widget="statusbar" statusbar_visible="draft,approved,finished,rejected"/>
-                        <button string="Aprobar" 
-                                name="action_approve" 
+                        <button string="Enviar a Aprobación" 
+                                name="action_send_to_approval" 
                                 type="object" 
                                 class="btn btn-primary"
-                                invisible="state != 'draft'"
-                                confirm="¿Está seguro de que desea aprobar esta solicitud?"/>
+                                invisible="state != 'draft' or approval_request_id"
+                                confirm="¿Está seguro de que desea enviar esta solicitud a aprobación? Se validarán todos los requisitos mínimos."/>
                         <button string="Finalizar" 
                                 name="action_finish" 
                                 type="object" 
                                 class="btn btn-warning"
                                 invisible="state != 'approved'"
                                 confirm="¿Está seguro de que desea finalizar esta solicitud? Los cupos del cliente se restablecerán a 0."/>
-                        <button string="Rechazar" 
-                                name="action_reject" 
-                                type="object" 
-                                class="btn btn-secondary"
-                                invisible="state != 'draft'"
-                                confirm="¿Está seguro de que desea rechazar esta solicitud?"/>
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
+                            <button name="action_view_approval_request" 
+                                    type="object" 
+                                    class="oe_stat_button" 
+                                    icon="fa-check-square-o"
+                                    invisible="not approval_request_id">
+                                <div class="o_stat_info">
+                                    <span class="o_stat_text">Solicitud de</span>
+                                    <span class="o_stat_text">Aprobación</span>
+                                </div>
+                            </button>
                             <button name="action_view_customer_children" 
                                     type="object" 
                                     class="oe_stat_button" 
@@ -45,8 +49,9 @@
                             </button>
                         </div>
                         
-                        <!-- Campo invisible para evaluación de condiciones -->
+                        <!-- Campos invisibles para evaluación de condiciones -->
                         <field name="arrears_amount_debt" invisible="1"/>
+                        <field name="approval_request_id" invisible="1"/>
                         
                         <!-- Alerta de deuda en mora -->
                         <div class="p-3 mb-3 border border-danger rounded" style="background-color:rgba(203, 34, 48, 0.26);" invisible="arrears_amount_debt == 0">
@@ -97,6 +102,7 @@
                                 <field name="application_date" readonly="state in ['approved', 'rejected', 'finished']"/>
                                 <field name="rejected_date" invisible="state != 'rejected'" readonly="1"/>
                                 <field name="user_id" options="{'no_create': True}" readonly="state in ['approved', 'rejected', 'finished']"/>
+                                <field name="approval_request_id" invisible="not approval_request_id" readonly="1"/>
                             </group>
                         </group>
 
@@ -263,7 +269,7 @@
                                         <field name="property_payment_term_id" readonly="state in ['approved', 'rejected', 'finished']"/>
                                     </group>
                                     <group string="Quien aprueba">
-                                        <field name="approved_by" readonly="state in ['approved', 'rejected', 'finished']"/>
+                                        <field name="approved_by" readonly="1"/>
                                         <field name="approved_date" readonly="1"/>
                                     </group>
                                 </group>

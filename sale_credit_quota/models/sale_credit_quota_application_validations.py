@@ -76,3 +76,21 @@ class SaleCreditQuotaApplication(models.Model):
                           'Debe finalizar la solicitud existente antes de aprobar una nueva.') % 
                         (record.customer_id.name, existing_names)
                     )
+    
+    @api.constrains('approval_request_id')
+    def _check_unique_approval_request(self):
+        """Valida que cada solicitud de aprobación esté asociada a una única solicitud de cupo"""
+        for record in self:
+            if record.approval_request_id:
+                # Buscar otras solicitudes de cupo con la misma solicitud de aprobación
+                duplicate = self.search([
+                    ('approval_request_id', '=', record.approval_request_id.id),
+                    ('id', '!=', record.id),
+                ], limit=1)
+                
+                if duplicate:
+                    raise ValidationError(
+                        _('La solicitud de aprobación "%s" ya está asociada a otra solicitud de cupo: %s.\n\n'
+                          'Una solicitud de aprobación no puede estar vinculada a múltiples solicitudes de cupo.') % 
+                        (record.approval_request_id.name, duplicate.name)
+                    )

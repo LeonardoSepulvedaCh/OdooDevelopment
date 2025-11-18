@@ -59,7 +59,7 @@ class SaleCreditQuotaApplication(models.Model):
     application_date = fields.Date(string='Fecha de Solicitud', required=True, default=fields.Date.context_today, index=True, copy=False)
     approved_date = fields.Date(string='Fecha de Aprobación', readonly=True, copy=False, tracking=1)
     rejected_date = fields.Date(string='Fecha de Rechazo', readonly=True, copy=False)
-    approved_by = fields.Many2one('res.users', string='Aprobado por', copy=False, tracking=1, domain=[('is_credit_quota_approver', '=', True)])
+    approved_by = fields.Many2one('res.users', string='Aprobado por', copy=False, tracking=1)
 
     final_normal_credit_quota = fields.Float(string='Cupo Normal Final', digits=(16, 2), default=0.0)
     final_golden_credit_quota = fields.Float(string='Cupo Dorado Final', digits=(16, 2), default=0.0)
@@ -132,6 +132,9 @@ class SaleCreditQuotaApplication(models.Model):
     approved_observations = fields.Text(string='Observaciones Finales')
     audit_observations = fields.Text(string='Observaciones sobre la Auditoría')
 
+    # Campo de integración con la app de Aprobaciones
+    approval_request_id = fields.Many2one('approval.request', string='Solicitud de Aprobación', readonly=True, copy=False, tracking=1, ondelete='cascade')
+
     # Onchange methods - para traer los datos del cliente
     @api.onchange('customer_id')
     def _onchange_customer_id(self):
@@ -178,7 +181,15 @@ class SaleCreditQuotaApplication(models.Model):
         return f"SC-{year_month}-{sequence}"
 
     def unlink(self):
+        # Guardar las solicitudes de aprobación asociadas antes de eliminar
+        approval_requests_to_delete = self.env['approval.request']
+        
         for record in self:
+            # Si tiene una solicitud de aprobación asociada, marcarla para eliminar
+            if record.approval_request_id:
+                approval_requests_to_delete |= record.approval_request_id
+            
+            # Si la solicitud estaba aprobada, restablecer cupos del cliente
             if record.state == 'approved' and record.customer_id:
                 record.customer_id.write({
                     'normal_credit_quota': 0.0,
@@ -192,4 +203,11 @@ class SaleCreditQuotaApplication(models.Model):
                     message_type='notification'
                 )
         
-        return super(SaleCreditQuotaApplication, self).unlink()
+        # Eliminar las solicitudes de cupo primero
+        res = super(SaleCreditQuotaApplication, self).unlink()
+        
+        # Luego eliminar las solicitudes de aprobación asociadas
+        if approval_requests_to_delete:
+            approval_requests_to_delete.unlink()
+        
+        return res

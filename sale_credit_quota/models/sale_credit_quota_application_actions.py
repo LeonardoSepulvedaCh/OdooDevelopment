@@ -113,21 +113,160 @@ class SaleCreditQuotaApplication(models.Model):
             },
         }
 
-    def action_approve(self):
+    def action_send_to_approval(self):
+        """Envía la solicitud de cupo a la app de Aprobaciones"""
         self.ensure_one()
         
         if self.state != 'draft':
-            raise ValidationError(_('Solo se pueden aprobar solicitudes en estado borrador.'))
+            raise ValidationError(_('Solo se pueden enviar a aprobación las solicitudes en estado borrador.'))
         
+        if self.approval_request_id:
+            raise ValidationError(_('Esta solicitud ya tiene una solicitud de aprobación asociada.'))
+        
+        # Validar que el cliente no tenga otra solicitud aprobada activa
+        if self.customer_id:
+            existing_approved = self.search([
+                ('customer_id', '=', self.customer_id.id),
+                ('state', '=', 'approved'),
+                ('id', '!=', self.id),
+            ], limit=1)
+            
+            if existing_approved:
+                raise ValidationError(
+                    _('No se puede enviar a aprobación.\n\n'
+                      'El cliente "%s" ya tiene una solicitud aprobada activa: %s\n\n'
+                      'Un cliente solo puede tener una solicitud de cupo de crédito aprobada a la vez. '
+                      'Debe finalizar la solicitud existente (código: %s, fecha de fin: %s) antes de aprobar una nueva.') % 
+                    (self.customer_id.name, 
+                     existing_approved.name,
+                     existing_approved.name,
+                     existing_approved.credit_quota_end_date or 'No definida')
+                )
+        
+        # Validar requisitos mínimos antes de enviar
         self._validate_required_fields_for_approval()
+        
+        # Obtener la categoría de aprobación
+        approval_category = self.env.ref('sale_credit_quota.approval_category_credit_quota', raise_if_not_found=False)
+        if not approval_category:
+            raise ValidationError(_('No se encontró la categoría de aprobación para solicitudes de cupo de crédito.'))
+        
+        # Preparar los valores para la solicitud de aprobación
+        approval_vals = {
+            'name': f'Solicitud de Cupo - {self.name}',
+            'category_id': approval_category.id,
+            'request_owner_id': self.user_id.id or self.env.user.id,
+            'partner_id': self.customer_id.id,
+            'reference': self.name,
+            'amount': self.final_normal_credit_quota,
+            'reason': self._get_approval_reason_html(),
+            'date_confirmed': False,
+        }
+        
+        # Agregar fechas del periodo (fecha inicio y fin del cupo)
+        if self.credit_quota_start_date:
+            # Convertir date a datetime (inicio del día)
+            approval_vals['date_start'] = fields.Datetime.to_datetime(self.credit_quota_start_date)
+        
+        if self.credit_quota_end_date:
+            # Convertir date a datetime (final del día)
+            approval_vals['date_end'] = fields.Datetime.to_datetime(self.credit_quota_end_date).replace(hour=23, minute=59, second=59)
+        
+        # Crear la solicitud de aprobación
+        approval_request = self.env['approval.request'].create(approval_vals)
+        
+        # Vincular bidireccionalmente
+        self.write({'approval_request_id': approval_request.id})
+        approval_request.write({'credit_quota_application_id': self.id})
+        
+        # Enviar automáticamente la solicitud (confirmar)
+        approval_request.action_confirm()
+        
+        # Mensaje en la solicitud de cupo
+        self.message_post(
+            body=_('Solicitud enviada a aprobación: %s') % approval_request.name,
+            message_type='notification'
+        )
+        
+        # Retornar acción para abrir la solicitud de aprobación
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'approval.request',
+            'res_id': approval_request.id,
+            'view_mode': 'form',
+            'target': 'current',
+        }
+    
+    def _get_approval_reason_html(self):
+        """Genera el HTML con la información de la solicitud para la app de Aprobaciones"""
+        self.ensure_one()
+        
+        reason = f"""
+        <div>
+            <h3>Información de la Solicitud</h3>
+            <ul>
+                <li><strong>Cliente:</strong> {self.customer_id.name or ''}</li>
+                <li><strong>NIT/Cédula:</strong> {self.customer_vat or ''}</li>
+                <li><strong>Asunto:</strong> {dict(self._fields['subject'].selection).get(self.subject, '')}</li>
+                <li><strong>Sucursal:</strong> {dict(self._fields['branch_office'].selection).get(self.branch_office, '')}</li>
+                <li><strong>Asesor:</strong> {self.user_id.name or ''}</li>
+            </ul>
+            
+            <h3>Cupos Propuestos</h3>
+            <ul>
+                <li><strong>Cupo Normal:</strong> ${self.final_normal_credit_quota:,.2f}</li>
+                <li><strong>Cupo Dorado:</strong> ${self.final_golden_credit_quota:,.2f}</li>
+                <li><strong>Plazo de Pago:</strong> {self.property_payment_term_id.name if self.property_payment_term_id else 'N/A'}</li>
+                <li><strong>Vigencia:</strong> {self.credit_quota_start_date or 'N/A'} hasta {self.credit_quota_end_date or 'N/A'}</li>
+            </ul>
+            
+            <h3>Información del Negocio</h3>
+            <ul>
+                <li><strong>Nombre:</strong> {self.business_name or ''}</li>
+                <li><strong>Ciudad:</strong> {self.business_city or ''}</li>
+                <li><strong>Años de Actividad:</strong> {self.business_years_of_activity or 0}</li>
+            </ul>
+            
+            <h3>Análisis del Asesor</h3>
+            <p><strong>Lo Bueno:</strong><br/>{self.good_points or ''}</p>
+            <p><strong>Lo Malo:</strong><br/>{self.bad_points or ''}</p>
+            <p><strong>Novedades:</strong><br/>{self.new_points or ''}</p>
+        </div>
+        """
+        
+        return reason
+    
+    def action_view_approval_request(self):
+        """Abre la solicitud de aprobación relacionada"""
+        self.ensure_one()
+        
+        if not self.approval_request_id:
+            raise ValidationError(_('Esta solicitud no tiene una solicitud de aprobación asociada.'))
+        
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'approval.request',
+            'res_id': self.approval_request_id.id,
+            'view_mode': 'form',
+            'target': 'current',
+        }
+    
+    def _approval_approved(self):
+        """Método llamado cuando la solicitud de aprobación es aprobada"""
+        self.ensure_one()
         
         values = {
             'state': 'approved',
             'approved_date': fields.Date.context_today(self),
         }
         
-        if not self.approved_by:
-            values['approved_by'] = self.env.user.id
+        # Obtener el usuario que aprobó (último aprobador)
+        if self.approval_request_id and self.approval_request_id.approver_ids:
+            approved_by_users = self.approval_request_id.approver_ids.filtered(
+                lambda a: a.status == 'approved'
+            ).mapped('user_id')
+            if approved_by_users:
+                values['approved_by'] = approved_by_users[-1].id
         
         self.write(values)
         
@@ -150,10 +289,10 @@ class SaleCreditQuotaApplication(models.Model):
                 message_type='notification'
             )
         
-        approver_name = self.approved_by.name if self.approved_by else self.env.user.name
+        approver_name = self.approved_by.name if self.approved_by else 'Sistema'
         
         self.message_post(
-            body=_('Solicitud aprobada por %s el %s') % (approver_name, fields.Date.context_today(self)),
+            body=_('Solicitud aprobada por %s el %s (vía App de Aprobaciones)') % (approver_name, fields.Date.context_today(self)),
             message_type='notification'
         )
         
@@ -166,6 +305,31 @@ class SaleCreditQuotaApplication(models.Model):
                 self.name, str(e)
             )
         
+        return True
+    
+    def _approval_refused(self):
+        """Método llamado cuando la solicitud de aprobación es rechazada"""
+        self.ensure_one()
+        
+        self.write({
+            'state': 'rejected',
+            'rejected_date': fields.Date.context_today(self),
+        })
+        
+        self.message_post(
+            body=_('Solicitud rechazada el %s (vía App de Aprobaciones)') % fields.Date.context_today(self),
+            message_type='notification'
+        )
+        
+        # Enviar notificación al canal de discusiones
+        try:
+            self._send_rejection_notification()
+        except Exception as e:
+            _logger.warning(
+                'No se pudo enviar la notificación al canal para la solicitud rechazada %s: %s', 
+                self.name, str(e)
+            )
+
         return True
 
     def action_finish(self):
@@ -182,6 +346,13 @@ class SaleCreditQuotaApplication(models.Model):
         self.write({
             'state': 'finished',
         })
+        
+        if self.approval_request_id and self.approval_request_id.request_status not in ('cancel', 'refused'):
+            self.approval_request_id.action_cancel()
+            self.approval_request_id.message_post(
+                body=_('Solicitud de aprobación cancelada automáticamente porque la solicitud de cupo %s fue finalizada.') % self.name,
+                message_type='notification'
+            )
         
         if self.customer_id:
             self.customer_id.write({
@@ -336,29 +507,3 @@ class SaleCreditQuotaApplication(models.Model):
             if required_tag not in document_tags:
                 missing_fields.append(f'{partner_label} - Falta documento con etiqueta "{required_tag}"')
 
-    def action_reject(self):
-        self.ensure_one()
-        
-        if self.state != 'draft':
-            raise ValidationError(_('Solo se pueden rechazar solicitudes en estado borrador.'))
-        
-        self.write({
-            'state': 'rejected',
-            'rejected_date': fields.Date.context_today(self),
-        })
-        
-        self.message_post(
-            body=_('Solicitud rechazada por %s el %s') % (self.env.user.name, fields.Date.context_today(self)),
-            message_type='notification'
-        )
-        
-        # Enviar notificación al canal de discusiones
-        try:
-            self._send_rejection_notification()
-        except Exception as e:
-            _logger.warning(
-                'No se pudo enviar la notificación al canal para la solicitud rechazada %s: %s', 
-                self.name, str(e)
-            )
-
-        return True
