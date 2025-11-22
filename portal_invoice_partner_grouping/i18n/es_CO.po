@@ -1,0 +1,187 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* portal_invoice_partner_grouping
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-11-08 16:08+0000\n"
+"PO-Revision-Date: 2025-11-08 16:08+0000\n"
+"Last-Translator: Rutavity\n"
+"Language-Team: Spanish (Colombia)\n"
+"Language: es_CO\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: portal_invoice_partner_grouping
+#: model_terms:ir.ui.view,arch_db:portal_invoice_partner_grouping.portal_my_invoices_grouped
+msgid "<em class=\"text-dark\">Sin Contacto</em>"
+msgstr "<em class=\"text-dark\">Sin Contacto</em>"
+
+#. module: portal_invoice_partner_grouping
+#: model_terms:ir.ui.view,arch_db:portal_invoice_partner_grouping.invoice_status_badge
+msgid "<i class=\"fa fa-check-circle\" aria-label=\"Paid\" role=\"img\"/>"
+msgstr "<i class=\"fa fa-check-circle\" aria-label=\"Pagada\" role=\"img\"/>"
+
+#. module: portal_invoice_partner_grouping
+#: model_terms:ir.ui.view,arch_db:portal_invoice_partner_grouping.invoice_status_badge
+msgid "<i class=\"fa fa-clock-o\" aria-label=\"Waiting for Payment\" role=\"img\"/>"
+msgstr "<i class=\"fa fa-clock-o\" aria-label=\"Esperando Pago\" role=\"img\"/>"
+
+#. module: portal_invoice_partner_grouping
+#: model_terms:ir.ui.view,arch_db:portal_invoice_partner_grouping.invoice_card_mobile
+msgid ""
+"<i class=\"fa fa-download me-1\" aria-hidden=\"true\"/>\n"
+"                        PDF"
+msgstr ""
+"<i class=\"fa fa-download me-1\" aria-hidden=\"true\"/>\n"
+"                        PDF"
+
+#. module: portal_invoice_partner_grouping
+#: model_terms:ir.ui.view,arch_db:portal_invoice_partner_grouping.invoice_status_badge
+msgid "<i class=\"fa fa-exclamation-circle\" aria-label=\"Overdue\" role=\"img\"/>"
+msgstr "<i class=\"fa fa-exclamation-circle\" aria-label=\"Vencida\" role=\"img\"/>"
+
+#. module: portal_invoice_partner_grouping
+#: model_terms:ir.ui.view,arch_db:portal_invoice_partner_grouping.invoice_card_mobile
+msgid "<small class=\"text-muted d-block mb-1\">Amount Due</small>"
+msgstr "<small class=\"text-muted d-block mb-1\">Saldo Pendiente</small>"
+
+#. module: portal_invoice_partner_grouping
+#: model_terms:ir.ui.view,arch_db:portal_invoice_partner_grouping.invoice_card_mobile
+msgid "<small class=\"text-muted d-block\">Days Overdue</small>"
+msgstr "<small class=\"text-muted d-block\">Días Vencidos</small>"
+
+#. module: portal_invoice_partner_grouping
+#: model_terms:ir.ui.view,arch_db:portal_invoice_partner_grouping.invoice_card_mobile
+msgid "<small class=\"text-muted d-block\">Due Date</small>"
+msgstr "<small class=\"text-muted d-block\">Fecha de Vencimiento</small>"
+
+#. module: portal_invoice_partner_grouping
+#: model_terms:ir.ui.view,arch_db:portal_invoice_partner_grouping.invoice_card_mobile
+msgid ""
+"<small class=\"text-primary\">\n"
+"                                    <i class=\"fa fa-eye me-1\" aria-hidden=\"true\"/>\n"
+"                                    View Invoice\n"
+"                                </small>"
+msgstr ""
+"<small class=\"text-primary\">\n"
+"                                    <i class=\"fa fa-eye me-1\" aria-hidden=\"true\"/>\n"
+"                                    Ver Factura\n"
+"                                </small>"
+
+#. module: portal_invoice_partner_grouping
+#: model_terms:ir.ui.view,arch_db:portal_invoice_partner_grouping.portal_my_invoices_grouped
+msgid "<span class=\"text-muted small\">Total to pay</span>"
+msgstr "<span class=\"text-muted small\">Total a pagar</span>"
+
+
+#. module: portal_invoice_partner_grouping
+#: model_terms:ir.ui.view,arch_db:portal_invoice_partner_grouping.invoice_status_badge
+msgid ""
+"<span class=\"text-warning fs-5 o_invoice_status_icon\" title=\"Cancelled\">\n"
+"                <i class=\"fa fa-ban\" aria-label=\"Cancelled\" role=\"img\"/>\n"
+"            </span>"
+msgstr ""
+"<span class=\"text-warning fs-5 o_invoice_status_icon\" title=\"Cancelada\">\n"
+"                <i class=\"fa fa-ban\" aria-label=\"Cancelada\" role=\"img\"/>\n"
+"            </span>"
+
+#. module: portal_invoice_partner_grouping
+#: model_terms:ir.ui.view,arch_db:portal_invoice_partner_grouping.portal_my_invoices_grouped
+msgid ""
+"<span>Go to payment</span>\n"
+"                                    <i class=\"fa fa-arrow-circle-right\"/>"
+msgstr ""
+"<span>Ir a pagar</span>\n"
+"                                    <i class=\"fa fa-arrow-circle-right\"/>"
+
+#. module: portal_invoice_partner_grouping
+#: model_terms:ir.ui.view,arch_db:portal_invoice_partner_grouping.invoice_card_mobile
+msgid ""
+"<span>Pay</span>\n"
+"                            <i class=\"fa fa-arrow-circle-right ms-1\" aria-hidden=\"true\"/>"
+msgstr ""
+"<span>Pagar</span>\n"
+"                            <i class=\"fa fa-arrow-circle-right ms-1\" aria-hidden=\"true\"/>"
+
+#. module: portal_invoice_partner_grouping
+#: model_terms:ir.ui.view,arch_db:portal_invoice_partner_grouping.portal_my_invoices_grouped
+msgid "Actions"
+msgstr "Acciones"
+
+#. module: portal_invoice_partner_grouping
+#: model_terms:ir.ui.view,arch_db:portal_invoice_partner_grouping.portal_my_invoices_grouped
+msgid "Amount Due"
+msgstr "Saldo Pendiente"
+
+#. module: portal_invoice_partner_grouping
+#. odoo-python
+#: code:addons/portal_invoice_partner_grouping/controllers/portal.py:0
+msgid "Credit Notes"
+msgstr "Notas de Crédito"
+
+#. module: portal_invoice_partner_grouping
+#: model_terms:ir.ui.view,arch_db:portal_invoice_partner_grouping.invoice_card_mobile
+msgid "Download PDF"
+msgstr "Descargar PDF"
+
+#. module: portal_invoice_partner_grouping
+#: model_terms:ir.ui.view,arch_db:portal_invoice_partner_grouping.invoice_card_mobile
+#: model_terms:ir.ui.view,arch_db:portal_invoice_partner_grouping.portal_my_invoices_grouped
+msgid "Draft Invoice"
+msgstr "Factura Borrador"
+
+#. module: portal_invoice_partner_grouping
+#: model_terms:ir.ui.view,arch_db:portal_invoice_partner_grouping.portal_my_invoices_grouped
+msgid "Due Date"
+msgstr "Fecha de Vencimiento"
+
+#. module: portal_invoice_partner_grouping
+#: model_terms:ir.ui.view,arch_db:portal_invoice_partner_grouping.portal_my_invoices_grouped
+msgid "Invoice #"
+msgstr "Factura N°"
+
+#. module: portal_invoice_partner_grouping
+#: model_terms:ir.ui.view,arch_db:portal_invoice_partner_grouping.portal_my_invoices_grouped
+msgid "Invoice Date"
+msgstr "Fecha de Factura"
+
+#. module: portal_invoice_partner_grouping
+#: model_terms:ir.ui.view,arch_db:portal_invoice_partner_grouping.invoice_status_badge
+msgid "Overdue - Waiting for Payment"
+msgstr "Vencida - Esperando Pago"
+
+#. module: portal_invoice_partner_grouping
+#: model_terms:ir.ui.view,arch_db:portal_invoice_partner_grouping.invoice_status_badge
+msgid "Paid"
+msgstr "Pagada"
+
+#. module: portal_invoice_partner_grouping
+#. odoo-python
+#: code:addons/portal_invoice_partner_grouping/controllers/portal.py:0
+msgid "Pending Invoices"
+msgstr "Facturas Pendientes"
+
+#. module: portal_invoice_partner_grouping
+#: model_terms:ir.ui.view,arch_db:portal_invoice_partner_grouping.portal_my_invoices_grouped
+msgid "Select All"
+msgstr "Seleccionar Todo"
+
+#. module: portal_invoice_partner_grouping
+#: model_terms:ir.ui.view,arch_db:portal_invoice_partner_grouping.portal_my_invoices_grouped
+msgid "Select all invoices on this page"
+msgstr "Seleccionar todas las facturas de esta página"
+
+#. module: portal_invoice_partner_grouping
+#: model_terms:ir.ui.view,arch_db:portal_invoice_partner_grouping.portal_my_invoices_grouped
+msgid "Status"
+msgstr "Estado"
+
+#. module: portal_invoice_partner_grouping
+#: model_terms:ir.ui.view,arch_db:portal_invoice_partner_grouping.invoice_status_badge
+msgid "Waiting for Payment"
+msgstr "Esperando Pago"

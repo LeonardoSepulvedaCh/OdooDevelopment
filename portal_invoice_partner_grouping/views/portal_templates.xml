@@ -1,0 +1,511 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- 
+        Template de agrupación de facturas por partner
+        
+        ESTRATEGIA DE HERENCIA:
+        1. Heredamos del template original account.portal_my_invoices
+        2. SOLO reemplazamos la tabla interna, NO headers, filtros, paginador
+        3. Incluimos fallback para renderizar tabla original si agrupación falla
+        4. Mantenemos toda la funcionalidad nativa intacta
+    -->
+    
+    <template id="portal_my_invoices_grouped" 
+              name="My Invoices Grouped by Partner" 
+              inherit_id="account.portal_my_invoices">
+        
+        <!-- Agregar checkbox maestro y barra de resumen ANTES de la tabla -->
+        <xpath expr="//t[@t-if='not invoices']" position="before">
+            <div t-if="invoices" class="o_invoice_bulk_controls">
+                <!-- Master checkbox para seleccionar todo -->
+                <div class="mb-3 card border-0 shadow-sm">
+                    <div class="card-body py-2 px-3 bg-light">
+                        <div class="form-check d-flex align-items-center mb-0">
+                            <input type="checkbox" 
+                                   id="master_select_all" 
+                                   class="form-check-input me-2" 
+                                   style="cursor: pointer;"/>
+                            <label class="form-check-label fw-bold text-primary mb-0" 
+                                   for="master_select_all" 
+                                   style="cursor: pointer;">
+                                Select all invoices on this page
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Bulk payment summary (hidden by default, shown when invoices selected) -->
+                <div id="bulk_payment_summary" class="d-none rounded-3 mb-3">
+                    <div class="alert alert-light border-0 mb-0">
+                        <div class="d-flex justify-content-between align-items-center gap-3">
+                            <!-- Left side: Total amount -->
+                            <div class="text-center">
+                                <span class="text-muted small">Total to pay</span>
+                                <div class="fw-bold fs-5">
+                                    <span id="bulk_total_amount" class="text-nowrap"></span>
+                                </div>
+                            </div>
+                            
+                            <!-- Right side: Action button -->
+                            <div>
+                                <button type="button" id="proceed_bulk_payment_btn"
+                                    class="btn btn-primary d-flex align-items-center gap-2">
+                                    <span>Go to payment</span>
+                                    <i class="fa fa-arrow-circle-right"/>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+        
+        <!-- 
+            Reemplazo quirúrgico: SOLO la tabla de facturas
+            NO tocamos: portal_searchbar, portal_table header, pager
+        -->
+        <xpath expr="//t[@t-if='invoices']" position="replace">
+            <t t-if="invoices">
+                <!-- Fallback: Si no hay agrupación, mostrar tabla original -->
+                <t t-if="not invoices_grouped_by_partner or not has_multiple_partners">
+                    <!-- DESKTOP: Vista de tabla -->
+                    <div class="d-none d-md-block">
+                        <t t-call="portal.portal_table">
+                            <thead>
+                            <tr class="active">
+                                <th class="bulk-selection-header" style="width: 50px;">
+                                    <input type="checkbox" id="select_all_invoices" class="form-check-input" title="Select All"/>
+                                </th>
+                                <th name="invoice_number">Invoice #</th>
+                                <th name="invoice_date" class='d-none d-md-table-cell'>Invoice Date</th>
+                                <th name="due_date" class='d-none d-md-table-cell'>Due Date</th>
+                                <th name="amount_due" class="text-end pe-3">Amount Due</th>
+                                <th name="status">Status</th>
+                                <th name="actions" class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="invoices" t-as="invoice_data">
+                                <t t-set="invoice" t-value="invoice_data['invoice']"/>
+                                <tr>
+                                    <td class="bulk-selection-cell">
+                                        <input t-if="invoice._has_to_be_paid()"
+                                            type="checkbox" 
+                                            name="invoice_checkbox"
+                                            t-att-value="invoice.id"
+                                            t-att-data-amount="invoice.amount_residual"
+                                            t-att-data-currency-id="invoice.currency_id.id"
+                                            t-att-data-currency-symbol="invoice.currency_id.symbol"
+                                            class="form-check-input invoice-checkbox"/>
+                                    </td>
+                                    <td>
+                                        <a t-att-href="invoice.get_portal_url()" t-att-title="invoice.name">
+                                            <t t-out="invoice.name" t-if="invoice.name != '/'"/>
+                                            <em t-else="">Draft Invoice</em>
+                                        </a>
+                                    </td>
+                                    <td class='d-none d-md-table-cell'>
+                                        <span t-field="invoice.invoice_date"/>
+                                    </td>
+                                    <!-- Fecha de Vencimiento -->
+                                    <td class='d-none d-md-table-cell'
+                                        t-att-class="'text-danger' if invoice.invoice_date_due and invoice.invoice_date_due &lt; datetime.date.today() and invoice.payment_state in ['not_paid', 'partial'] else ''">
+                                        <span t-field="invoice.invoice_date_due"/>
+                                    </td>
+                                    <td name="invoice_amount" class="text-end pe-3">
+                                        <!-- Calcular valores de descuento por pronto pago -->
+                                        <t t-set="payment_values" t-value="invoice_data.get('payment_values') or invoice._get_invoice_next_payment_values()"/>
+                                        <t t-set="has_epd" t-value="payment_values.get('installment_state') == 'epd' and payment_values.get('epd_discount_amount_currency')"/>
+                                        <t t-set="amount_normal" t-value="-invoice.amount_residual if invoice.move_type == 'out_refund' else invoice.amount_residual"/>
+                                        
+                                        <!-- Con descuento por pronto pago -->
+                                        <t t-if="has_epd">
+                                            <div class="o_epd_pricing">
+                                                <!-- Precio original tachado -->
+                                                <span class="text-decoration-line-through text-muted me-2" 
+                                                      t-out="amount_normal"
+                                                      t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/>
+                                                <!-- Precio con descuento (destacado) -->
+                                                <span class="text-success fw-bold"
+                                                      t-out="payment_values.get('amount_due')"
+                                                      t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/>
+                                            </div>
+                                        </t>
+                                        <!-- Sin descuento -->
+                                        <t t-else="">
+                                            <span t-out="amount_normal" 
+                                                  t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/>
+                                        </t>
+                                    </td>
+                                    <td name="invoice_status">
+                                        <t t-call="portal_invoice_partner_grouping.invoice_status_badge"/>
+                                    </td>
+                                    <td name="invoice_actions" class="text-center">
+                                        <t t-call="portal_invoice_partner_grouping.invoice_action_button"/>
+                                    </td>
+                                </tr>
+                            </t>
+                            </tbody>
+                        </t>
+                    </div>
+                    
+                    <!-- MOBILE: Vista de tarjetas -->
+                    <div class="d-md-none o_portal_invoice_cards">
+                        <t t-foreach="invoices" t-as="invoice_data">
+                            <t t-set="invoice" t-value="invoice_data['invoice']"/>
+                            <t t-call="portal_invoice_partner_grouping.invoice_card_mobile"/>
+                        </t>
+                    </div>
+                </t>
+                
+                <!-- Vista agrupada por partner -->
+                <t t-else="">
+                    <!-- Iteramos sobre cada grupo de partner -->
+                    <t t-foreach="invoices_grouped_by_partner.items()" t-as="partner_group">
+                        <t t-set="partner_id" t-value="partner_group[0]"/>
+                        <t t-set="group_data" t-value="partner_group[1]"/>
+                        <t t-set="partner" t-value="group_data['partner']"/>
+                        <t t-set="partner_invoices" t-value="group_data['invoices']"/>
+                        
+                        <!-- Header del grupo de partner -->
+                        <div class="o_portal_invoice_partner_group mb-4">
+                            <div class="o_partner_group_header card mb-2">
+                                <div class="card-header bg-light d-md-flex justify-content-md-between align-items-md-center flex-wrap py-3">
+                                    <div class="d-inline-flex d-md-flex align-items-center">
+                                        <i class="fa fa-building-o me-2 text-dark" aria-hidden="true"/>
+                                        <h5 class="mb-0">
+                                            <t t-if="partner">
+                                                <div class="d-flex flex-column">
+                                                    <span t-field="partner.name" class="text-dark"/>
+                                                        
+                                                    <t t-if="partner.email">
+                                                        <span class="text-muted small fw-normal fst-italic" t-field="partner.email"/>
+                                                    </t>
+                                                </div>
+                                            </t>
+                                            <t t-else="">
+                                                <em class="text-dark">Sin Contacto</em>
+                                            </t>
+                                        </h5>
+                                    </div>
+                                    <div class="d-flex justify-content-end align-items-md-center mt-2 mt-md-0" t-if="group_data['total_due'] > 0">
+                                        <span class="fs-5 fw-bold text-dark">
+                                            <span t-out="group_data['total_due']" 
+                                                  t-options='{"widget": "monetary", "display_currency": partner_invoices[0]["invoice"].currency_id if partner_invoices else None}'/>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- DESKTOP: Tabla de facturas del partner -->
+                            <div class="d-none d-md-block">
+                                <t t-call="portal.portal_table">
+                                <thead>
+                                    <tr class="active">
+                                        <th class="bulk-selection-header" style="width: 50px;">
+                                            <input type="checkbox" t-att-id="'select_all_partner_' + str(partner_id)" class="form-check-input select-all-partner" t-att-data-partner-id="partner_id" title="Select All"/>
+                                        </th>
+                                        <th name="invoice_number">Invoice #</th>
+                                        <th name="invoice_date" class='d-none d-md-table-cell'>Invoice Date</th>
+                                        <th name="due_date" class='d-none d-md-table-cell'>Due Date</th>
+                                        <th name="amount_due" class="text-end pe-3">Amount Due</th>
+                                        <th name="status">Status</th>
+                                        <th name="actions" class="text-center">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="partner_invoices" t-as="invoice_data">
+                                        <t t-set="invoice" t-value="invoice_data['invoice']"/>
+                                        <tr>
+                                            <td class="bulk-selection-cell">
+                                                <input t-if="invoice._has_to_be_paid()"
+                                                    type="checkbox" 
+                                                    name="invoice_checkbox"
+                                                    t-att-value="invoice.id"
+                                                    t-att-data-amount="invoice.amount_residual"
+                                                    t-att-data-currency-id="invoice.currency_id.id"
+                                                    t-att-data-currency-symbol="invoice.currency_id.symbol"
+                                                    t-att-data-partner-id="partner_id"
+                                                    class="form-check-input invoice-checkbox"/>
+                                            </td>
+                                            <td>
+                                                <a t-att-href="invoice.get_portal_url()" t-att-title="invoice.name">
+                                                    <t t-out="invoice.name" t-if="invoice.name != '/'"/>
+                                                    <em t-else="">Draft Invoice</em>
+                                                </a>
+                                            </td>
+                                            <td class='d-none d-md-table-cell'>
+                                                <span t-field="invoice.invoice_date"/>
+                                            </td>
+                                            <!-- Fecha de Vencimiento -->
+                                            <td class='d-none d-md-table-cell'
+                                                t-att-class="'text-danger' if invoice.invoice_date_due and invoice.invoice_date_due &lt; datetime.date.today() and invoice.payment_state in ['not_paid', 'partial'] else ''">
+                                                <span t-field="invoice.invoice_date_due"/>
+                                            </td>
+                                            <td name="invoice_amount" class="text-end pe-3">
+                                                <!-- Calcular valores de descuento por pronto pago -->
+                                                <t t-set="payment_values" t-value="invoice_data.get('payment_values') or invoice._get_invoice_next_payment_values()"/>
+                                                <t t-set="has_epd" t-value="payment_values.get('installment_state') == 'epd' and payment_values.get('epd_discount_amount_currency')"/>
+                                                <t t-set="amount_normal" t-value="-invoice.amount_residual if invoice.move_type == 'out_refund' else invoice.amount_residual"/>
+                                                
+                                                <!-- Con descuento por pronto pago -->
+                                                <t t-if="has_epd">
+                                                    <div class="o_epd_pricing">
+                                                        <!-- Precio original tachado -->
+                                                        <span class="text-decoration-line-through text-muted me-2" 
+                                                              t-out="amount_normal"
+                                                              t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/>
+                                                        <!-- Precio con descuento (destacado) -->
+                                                        <span class="text-success fw-bold"
+                                                              t-out="payment_values.get('amount_due')"
+                                                              t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/>
+                                                    </div>
+                                                </t>
+                                                <!-- Sin descuento -->
+                                                <t t-else="">
+                                                    <span t-out="amount_normal" 
+                                                          t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/>
+                                                </t>
+                                            </td>
+                                            <td name="invoice_status">
+                                                <t t-call="portal_invoice_partner_grouping.invoice_status_badge"/>
+                                            </td>
+                                            <td name="invoice_actions" class="text-center">
+                                                <t t-call="portal_invoice_partner_grouping.invoice_action_button"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    </tbody>
+                                </t>
+                            </div>
+                            
+                            <!-- MOBILE: Vista de tarjetas del partner -->
+                            <div class="d-md-none o_portal_invoice_cards mt-3 px-0">
+                                <t t-foreach="partner_invoices" t-as="invoice_data">
+                                    <t t-set="invoice" t-value="invoice_data['invoice']"/>
+                                    <t t-set="partner_id_attr" t-value="partner_id"/>
+                                    <t t-call="portal_invoice_partner_grouping.invoice_card_mobile"/>
+                                </t>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </xpath>
+    </template>
+    
+    <!-- 
+        Template reutilizable para iconos de estado de factura
+        Solo iconos con tooltips
+        
+        COLORES:
+        - Verde (success): Pagada → fa-check-circle
+        - Azul (info): Esperando pago (no vencida) → fa-clock-o
+        - Rojo (danger): Esperando pago (VENCIDA) → fa-exclamation-circle
+        - Amarillo (warning): Cancelada → fa-ban
+    -->
+    <template id="invoice_status_badge" name="Invoice Status Badge">
+        <t t-if="invoice.state == 'posted'" name="invoice_status_posted">
+            <!-- PAGADA → Verde -->
+            <span t-if="invoice.currency_id.is_zero(invoice.amount_residual)"
+                  class="text-success fs-5 o_invoice_status_icon"
+                  title="Paid">
+                <i class="fa fa-check-circle" aria-label="Paid" role="img"/>
+            </span>
+            
+            <!-- ESPERANDO PAGO → Rojo si está vencida, Azul si no -->
+            <t t-else="">
+                <!-- Verificar si está vencida -->
+                <t t-set="is_overdue" t-value="invoice.invoice_date_due and invoice.invoice_date_due &lt; datetime.date.today()"/>
+                
+                <!-- VENCIDA → Rojo -->
+                <span t-if="is_overdue"
+                      class="text-danger fs-5 o_invoice_status_icon" 
+                      title="Overdue - Waiting for Payment"
+                      name="invoice_status_overdue">
+                    <i class="fa fa-exclamation-circle" aria-label="Overdue" role="img"/>
+                </span>
+                
+                <!-- NO VENCIDA → Azul -->
+                <span t-else=""
+                      class="text-info fs-5 o_invoice_status_icon" 
+                      title="Waiting for Payment"
+                      name="invoice_status_waiting">
+                    <i class="fa fa-clock-o" aria-label="Waiting for Payment" role="img"/>
+                </span>
+            </t>
+        </t>
+        
+        <!-- CANCELADA → Amarillo (por si acaso) -->
+        <t t-elif="invoice.state == 'cancel'">
+            <span class="text-warning fs-5 o_invoice_status_icon"
+                  title="Cancelled">
+                <i class="fa fa-ban" aria-label="Cancelled" role="img"/>
+            </span>
+        </t>
+    </template>
+    
+    <!-- 
+        Template de tarjeta mobile para facturas
+        Diseño card responsivo que reemplaza la tabla en mobile
+    -->
+    <template id="invoice_card_mobile" name="Invoice Card Mobile">
+        <t t-set="payment_values" t-value="invoice_data.get('payment_values') or invoice._get_invoice_next_payment_values()"/>
+        <t t-set="has_epd" t-value="payment_values.get('installment_state') == 'epd' and payment_values.get('epd_discount_amount_currency')"/>
+        <t t-set="amount_normal" t-value="-invoice.amount_residual if invoice.move_type == 'out_refund' else invoice.amount_residual"/>
+        <t t-set="is_overdue" t-value="invoice.invoice_date_due and invoice.invoice_date_due &lt; datetime.date.today()"/>
+        
+        <div class="card mb-3 o_invoice_card_mobile shadow-sm">
+            <div class="card-body p-2">
+                <!-- Fila 1: Checkbox + Número de factura (label) + Ver factura + Estado -->
+                <div class="d-flex justify-content-between align-items-start">
+                    <div class="d-flex align-items-start flex-grow-1">
+                        <!-- Checkbox + Label (número de factura) -->
+                        <div class="form-check d-flex align-items-start flex-grow-1 me-2">
+                            <input t-if="invoice._has_to_be_paid()"
+                                type="checkbox" 
+                                name="invoice_checkbox"
+                                t-att-id="'invoice_checkbox_' + str(invoice.id)"
+                                t-att-value="invoice.id"
+                                t-att-data-amount="invoice.amount_residual"
+                                t-att-data-currency-id="invoice.currency_id.id"
+                                t-att-data-currency-symbol="invoice.currency_id.symbol"
+                                t-att-data-partner-id="partner_id_attr or ''"
+                                class="form-check-input invoice-checkbox me-2"
+                                style="margin-top: 2px;"/>
+                            
+                            <!-- Label del checkbox (número de factura) -->
+                            <label t-if="invoice._has_to_be_paid()"
+                                   t-att-for="'invoice_checkbox_' + str(invoice.id)"
+                                   class="form-check-label fw-bold text-dark flex-grow-1 tex-primary"
+                                   style="cursor: pointer;">
+                                <t t-out="invoice.name" t-if="invoice.name != '/'"/>
+                                <em t-else="">Draft Invoice</em>
+                            </label>
+                            
+                            <!-- Si no se puede pagar, mostrar solo el texto -->
+                            <span t-if="not invoice._has_to_be_paid()"
+                                  class="fw-bold text-dark">
+                                <t t-out="invoice.name" t-if="invoice.name != '/'"/>
+                                <em t-else="">Draft Invoice</em>
+                            </span>
+                        </div>
+                        
+                        <!-- Link "Ver factura" -->
+                        <div class="text-nowrap">
+                            <a t-att-href="invoice.get_portal_url()" 
+                               class="btn btn-link btn-sm p-0 text-decoration-none"
+                               t-att-title="'View Invoice ' + invoice.name">
+                                <small class="text-primary">
+                                    <i class="fa fa-eye me-1" aria-hidden="true"/>
+                                    View Invoice
+                                </small>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Estado -->
+                    <div class="ms-2">
+                        <t t-call="portal_invoice_partner_grouping.invoice_status_badge"/>
+                    </div>
+                </div>
+                
+                <!-- Fila 2: Fecha de vencimiento -->
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <div>
+                        <small class="text-muted d-block">Due Date</small>
+                        <span class="fw-bold" t-att-class="'text-danger' if is_overdue else ''">
+                            <span t-field="invoice.invoice_date_due"/>
+                        </span>
+                    </div>
+                    
+                </div>
+                
+                <!-- Fila 3: Saldo pendiente + Días vencidos -->
+                <div t-att-class="'d-flex justify-content-between' if is_overdue and invoice.payment_state in ['not_paid', 'partial'] else 'justify-content-end'">
+                    <!-- Días vencidos (solo si está vencida) -->
+                    <div t-if="is_overdue and invoice.payment_state in ['not_paid', 'partial']" class="cal-5 text-center">
+                        <small class="text-muted d-block">Days Overdue</small>
+                        <t t-set="days_overdue" t-value="(datetime.date.today() - invoice.invoice_date_due).days"/>
+                        <span class="fs-5 text-danger fw-bold" t-out="days_overdue"/>
+                    </div>
+                    <div class="text-end">
+                        <small class="text-muted d-block mb-1">Amount Due</small>
+                        <div>
+                            <!-- Con descuento por pronto pago -->
+                            <t t-if="has_epd">
+                                <div class="o_epd_pricing">
+                                    <!-- Precio original tachado -->
+                                    <span class="text-decoration-line-through text-muted me-2 fs-6" 
+                                        t-out="amount_normal"
+                                        t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/>
+                                    <!-- Precio con descuento (destacado) -->
+                                    <span class="text-success fw-bold fs-5"
+                                        t-out="payment_values.get('amount_due')"
+                                        t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/>
+                                </div>
+                            </t>
+                            <!-- Sin descuento -->
+                            <t t-else="">
+                                <span class="fw-bold fs-4" 
+                                    t-out="amount_normal" 
+                                    t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Fila 4: Botones de acción -->
+                <div class="d-flex gap-2">
+                    <!-- Botón Descargar PDF -->
+                    <a t-att-href="'/my/invoices/%s?report_type=pdf&amp;download=true' % invoice.id" 
+                       class="btn btn-outline-primary btn-sm flex-fill col-4"
+                       title="Download PDF">
+                        <i class="fa fa-download me-1" aria-hidden="true"/>
+                        PDF
+                    </a>
+                    
+                    <!-- Botón Pagar (solo si está pendiente) -->
+                    <t t-if="invoice.state == 'posted' and invoice.payment_state in ('not_paid', 'partial') and invoice.move_type in ('out_invoice', 'out_receipt')">
+                        <a t-attf-href="/my/invoices/overdue?invoice_ids={{invoice.id}}"
+                           class="btn btn-primary btn-sm flex-fill py-1 col-8"
+                           t-att-title="'Pay ' + invoice.name">
+                            <span>Pay</span>
+                            <i class="fa fa-arrow-circle-right ms-1" aria-hidden="true"/>
+                        </a>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </template>
+    
+    <!-- 
+        Template para botón de pago en cada línea de factura
+        Solo se muestra si la factura está pendiente de pago
+        
+        INTEGRACIÓN: Usa la ruta de payment_rutavity para pagos
+    -->
+    <template id="invoice_action_button" name="Invoice Action Button">
+        <!-- Mostrar botón de pago SOLO para facturas pendientes -->
+        <!-- EXCLUYE notas de crédito (out_refund) porque son devoluciones, no cobros -->
+        <!-- Condiciones:
+             1. La factura está publicada (posted)
+             2. Tiene saldo pendiente (not_paid o partial)
+             3. Es una factura de cliente (out_invoice o out_receipt) - NO refunds
+        -->
+        <t t-if="invoice.state == 'posted' and invoice.payment_state in ('not_paid', 'partial') and invoice.move_type in ('out_invoice', 'out_receipt')">
+            <a t-attf-href="/my/invoices/overdue?invoice_ids={{invoice.id}}" 
+               class="btn btn-primary btn-sm py-1 o_invoice_pay_button"
+               t-att-title="'Pagar ' + invoice.name">
+                <span class="d-none d-sm-inline">Pagar</span>
+                <i class="fa fa-arrow-circle-right me-1" aria-hidden="true"/>
+            </a>
+        </t>
+        <!-- Si no requiere pago, celda vacía (el hipervínculo en Invoice # ya permite ver detalles) -->
+        <t t-else="">
+            <span class="text-muted">-</span>
+        </t>
+    </template>
+
+</odoo>
+
