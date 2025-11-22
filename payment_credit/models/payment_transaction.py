@@ -56,12 +56,8 @@ class PaymentTransaction(models.Model):
         if self.provider_code != 'rutavity' or self.payment_method_code != 'credit':
             return super()._apply_updates(payment_data)
 
-        _logger.info("Processing credit payment for transaction %s: set as pending.", self.reference)
-        # Set the transaction as pending
-        self._set_pending()
         # Confirm the related sale order
         self._action_confirm_order()
-        _logger.info("Related sale order confirmed for transaction %s.", self.reference)
 
     def _action_confirm_order(self):
         """
