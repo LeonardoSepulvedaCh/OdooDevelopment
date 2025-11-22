@@ -1,12 +1,13 @@
 {
     "name": "Helpdesk - Campos Personalizados",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "category": "Rutavity/Helpdesk",
     "summary": "Campos Personalizados para el módulo de Helpdesk adaptados al flujo de trabajo de Rutavity",
     "description": """Campos Personalizados para el módulo de Helpdesk:
     - Código del cliente (Card_Code)
     - Motivo
     - Tipo de cliente
+    - Grupos de seguridad para usuarios y gestores
     """,
     "author": "@LeonardoSepulvedaCh",
     "depends": [
@@ -21,6 +22,8 @@
         "hr",
     ],
     "data": [
+        "security/helpdesk_custom_fields_security.xml",
+        "security/ir.model.access.csv",
         "data/ir_config_parameter.xml",
         "data/helpdesk_sequences.xml",
         "data/helpdesk_tags.xml",
@@ -29,7 +32,6 @@
         "report/helpdesk_warranty_report_action.xml",
         "views/helpdesk_ticket_views.xml",
         "views/helpdesk_team_views.xml",
-        "views/res_users_views.xml",
         "views/helpdesk_website_templates.xml",
     ],
     "assets": {

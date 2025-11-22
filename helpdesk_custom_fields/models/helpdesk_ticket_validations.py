@@ -28,8 +28,8 @@ class HelpdeskTicket(models.Model):
     def _check_user_can_move_ticket(self):
         """
         Validación de permisos para mover tickets entre etapas:
-        - Usuarios sin permisos: solo pueden mover de "Nuevo" a "Pendiente de Revisión"
-        - Usuarios con permisos: pueden mover a cualquier etapa
+        - Usuarios básicos: solo pueden mover de "Nuevo" a "Pendiente de Revisión"
+        - Gestores: pueden mover a cualquier etapa
         """
         for ticket in self:
             if not ticket.stage_id:
@@ -37,10 +37,10 @@ class HelpdeskTicket(models.Model):
                 
             current_user = self.env.user
             
-            # Verificar si el usuario tiene permisos para finalizar tickets
-            has_permission = hasattr(current_user, 'can_close_tickets') and current_user.can_close_tickets
+            # Verificar si el usuario es gestor (tiene permisos completos)
+            has_permission = current_user.has_group('helpdesk_custom_fields.group_helpdesk_custom_manager')
             
-            # Si el usuario tiene permisos, puede mover a cualquier etapa
+            # Si el usuario es gestor, puede mover a cualquier etapa
             if has_permission:
                 continue
             

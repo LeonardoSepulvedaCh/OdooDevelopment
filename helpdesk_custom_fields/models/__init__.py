@@ -7,4 +7,3 @@ from . import helpdesk_ticket_notifications
 from . import helpdesk_ticket_dispatch
 from . import helpdesk_ticket_stock
 from . import helpdesk_team
-from . import res_users

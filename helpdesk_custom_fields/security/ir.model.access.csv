@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_helpdesk_ticket_user,helpdesk.ticket.user,helpdesk.model_helpdesk_ticket,group_helpdesk_custom_user,1,1,1,0
+access_helpdesk_ticket_manager,helpdesk.ticket.manager,helpdesk.model_helpdesk_ticket,group_helpdesk_custom_manager,1,1,1,1
+
