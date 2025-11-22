@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Vista de formulario: Añadir smart button y campos de vencimiento extendido -->
+    <record id="view_move_form_extended_due_date" model="ir.ui.view">
+        <field name="name">account.move.form.extended.due.date</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            
+            <!-- Añadir smart button para ver prórrogas -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_extensions" 
+                        type="object" 
+                        class="oe_stat_button" 
+                        icon="fa-calendar-plus-o"
+                        invisible="move_type not in ('out_invoice', 'out_refund') or state != 'posted'"
+                        groups="account_invoice_due_date_extension.group_invoice_extension_user">
+                    <field name="extension_count" widget="statinfo" string="Prórrogas"/>
+                </button>
+            </xpath>
+            
+            <!-- Añadir campo de fecha extendida (solo lectura, se gestiona desde prórrogas) -->
+            <xpath expr="//div[@name='due_date']" position="after">
+                <field name="extended_due_date" 
+                       invisible="move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund') or not extended_due_date"
+                       readonly="1"/>
+            </xpath>
+
+            <!-- Añadir información adicional en el notebook -->
+            <xpath expr="//page[@name='other_info']" position="inside">
+                <group name="extended_due_date_info" string="Información de Vencimiento Extendido" 
+                       invisible="move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')">
+                    <field name="effective_due_date" readonly="1"/>
+                    <field name="is_overdue" readonly="1" widget="boolean_toggle"/>
+                    <field name="extension_count" readonly="1"/>
+                </group>
+            </xpath>
+
+        </field>
+    </record>
+
+    <!-- Vista de árbol de facturas: Añadir columnas de vencimiento extendido -->
+    <record id="view_invoice_tree_extended_due_date" model="ir.ui.view">
+        <field name="name">account.invoice.tree.extended.due.date</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree"/>
+        <field name="arch" type="xml">
+            
+            <!-- Añadir columna de fecha de vencimiento extendida -->
+            <xpath expr="//field[@name='invoice_date_due']" position="after">
+                <field name="extended_due_date" optional="hide"/>
+                <field name="effective_due_date" optional="show" widget="remaining_days"/>
+                <field name="is_overdue" optional="hide" widget="boolean_toggle"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <!-- Filtros de búsqueda de facturas: Añadir filtros por vencimiento extendido -->
+    <record id="view_account_invoice_filter_extended_due_date" model="ir.ui.view">
+        <field name="name">account.invoice.search.extended.due.date</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+        <field name="arch" type="xml">
+            
+            <!-- Añadir filtros -->
+            <xpath expr="//filter[@name='late']" position="after">
+                <separator/>
+                <filter string="Con Prórroga" 
+                        name="with_extension" 
+                        domain="[('extended_due_date', '!=', False)]"
+                        help="Facturas con fecha de vencimiento extendida"/>
+                <filter string="Vencidas (Efectivo)" 
+                        name="overdue_effective" 
+                        domain="[('is_overdue', '=', True)]"
+                        help="Facturas vencidas según fecha efectiva"/>
+            </xpath>
+
+            <!-- Añadir agrupación por vencimiento extendido -->
+            <xpath expr="//filter[@name='invoicedate']" position="after">
+                <filter string="Fecha Vencimiento Efectiva" 
+                        name="group_by_effective_due_date" 
+                        context="{'group_by': 'effective_due_date'}"/>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>
+

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Categoría de Aprobación para Prórrogas de Factura -->
+        <record id="approval_category_invoice_extension" model="approval.category">
+            <field name="name">Prórroga de Facturas de Venta</field>
+            <field name="description">Aprobación de prórrogas en fechas de vencimiento de facturas de venta</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="sequence">20</field>
+            <field name="active">True</field>
+            
+            <!-- Configuración de campos -->
+            <field name="has_date">required</field>
+            <field name="has_period">no</field>
+            <field name="has_quantity">no</field>
+            <field name="has_amount">required</field>
+            <field name="has_reference">required</field>
+            <field name="has_partner">required</field>
+            <field name="has_payment_method">no</field>
+            <field name="has_location">no</field>
+            <field name="has_product">no</field>
+            <field name="requirer_document">optional</field>
+            
+            <!-- Configuración de aprobadores -->
+            <field name="approval_minimum">1</field>
+            <field name="approver_sequence">False</field>
+            <field name="manager_approval"></field>
+            
+            <!-- Secuencia automática -->
+            <field name="automated_sequence">False</field>
+        </record>
+    </data>
+</odoo>
+

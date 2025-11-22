@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_account_invoice_due_date_extension_user,account.invoice.due.date.extension.user,model_account_invoice_due_date_extension,group_invoice_extension_user,1,0,0,0
+access_account_invoice_due_date_extension_approver,account.invoice.due.date.extension.approver,model_account_invoice_due_date_extension,group_invoice_extension_approver,1,1,1,1
+access_account_invoice_due_date_extension_manager,account.invoice.due.date.extension.manager,model_account_invoice_due_date_extension,group_invoice_extension_manager,1,1,1,1
+access_account_invoice_due_date_extension_portal,account.invoice.due.date.extension.portal,model_account_invoice_due_date_extension,base.group_portal,1,0,0,0
+

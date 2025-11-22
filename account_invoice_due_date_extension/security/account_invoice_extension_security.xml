@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        
+        <!-- Categoría de módulo -->
+        <record id="module_category_invoice_extension" model="ir.module.category">
+            <field name="name">Prórrogas de Facturas</field>
+            <field name="description">Gestión de prórrogas en fechas de vencimiento de facturas</field>
+            <field name="sequence">20</field>
+        </record>
+
+        <!-- Privilegio para el módulo -->
+        <record id="res_groups_privilege_invoice_extension" model="res.groups.privilege">
+            <field name="name">Prórrogas de Facturas</field>
+            <field name="category_id" ref="module_category_invoice_extension"/>
+            <field name="description">Acceso a las funcionalidades de gestión de prórrogas</field>
+        </record>
+
+        <!-- Grupo: Usuario (Solo Lectura) -->
+        <record id="group_invoice_extension_user" model="res.groups">
+            <field name="name">Usuario: Solo Lectura</field>
+            <field name="privilege_id" ref="res_groups_privilege_invoice_extension"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="comment">El usuario solo puede visualizar prórrogas. No puede crear, editar ni eliminar.</field>
+        </record>
+
+        <!-- Grupo: Gestor (Crear y Enviar) -->
+        <record id="group_invoice_extension_approver" model="res.groups">
+            <field name="name">Gestor: Crear y Enviar Prórrogas</field>
+            <field name="privilege_id" ref="res_groups_privilege_invoice_extension"/>
+            <field name="implied_ids" eval="[(4, ref('group_invoice_extension_user'))]"/>
+            <field name="comment">El gestor puede crear prórrogas y enviarlas a aprobación. No puede eliminar prórrogas aprobadas.</field>
+        </record>
+
+        <!-- Grupo: Administrador (Control Total) -->
+        <record id="group_invoice_extension_manager" model="res.groups">
+            <field name="name">Administrador: Control Total</field>
+            <field name="privilege_id" ref="res_groups_privilege_invoice_extension"/>
+            <field name="implied_ids" eval="[(4, ref('group_invoice_extension_approver'))]"/>
+            <field name="comment">El administrador tiene acceso completo a todas las funciones de prórrogas: crear, editar, eliminar.</field>
+        </record>
+
+        <!-- Regla de registro: Usuarios básicos solo pueden leer -->
+        <record id="invoice_extension_user_rule" model="ir.rule">
+            <field name="name">Prórroga: Usuario solo lectura</field>
+            <field name="model_id" ref="model_account_invoice_due_date_extension"/>
+            <field name="groups" eval="[(4, ref('group_invoice_extension_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+
+        <!-- Regla de registro: Gestores pueden crear y editar borradores -->
+        <record id="invoice_extension_approver_rule" model="ir.rule">
+            <field name="name">Prórroga: Gestor puede crear y editar</field>
+            <field name="model_id" ref="model_account_invoice_due_date_extension"/>
+            <field name="groups" eval="[(4, ref('group_invoice_extension_approver'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="domain_force">[('state', 'in', ['draft', 'rejected', 'cancelled'])]</field>
+        </record>
+
+        <!-- Regla de registro: Administradores tienen acceso completo -->
+        <record id="invoice_extension_manager_rule" model="ir.rule">
+            <field name="name">Prórroga: Administrador acceso completo</field>
+            <field name="model_id" ref="model_account_invoice_due_date_extension"/>
+            <field name="groups" eval="[(4, ref('group_invoice_extension_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+
+        <!-- Regla de registro: Usuarios del portal pueden leer prórrogas de sus propias facturas -->
+        <record id="invoice_extension_portal_rule" model="ir.rule">
+            <field name="name">Prórroga: Portal - Solo sus facturas</field>
+            <field name="model_id" ref="model_account_invoice_due_date_extension"/>
+            <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="domain_force">[('invoice_id.partner_id', '=', user.partner_id.id)]</field>
+        </record>
+
+    </data>
+</odoo>
+
