@@ -1,14 +1,18 @@
-# -*- coding: utf-8 -*-
 """
 Template de correo electrónico para el pacto de reposición.
 Separado en un archivo independiente para mejor mantenibilidad.
+
 """
 
+import html
+
+
 # Generar el HTML del correo electrónico para la carta de liquidación.
-def get_email_template_html(ticket, logo_url, valor_formateado, porcentaje_aprobacion):
-    nombre_cliente = ticket.partner_id.name if ticket.partner_id else 'cliente'
-    ticket_name = ticket.name
-    descripcion_producto = ticket.pacto_descripcion_bicicleta or 'Bicicleta'
+def get_email_template_html(ticket, valor_formateado, porcentaje_aprobacion, header_url, footer_url):
+
+    nombre_cliente = html.escape(ticket.partner_id.name if ticket.partner_id else 'cliente')
+    ticket_name = html.escape(ticket.name)
+    descripcion_producto = html.escape(ticket.pacto_descripcion_bicicleta or 'Bicicleta')
     
     return f"""
 <!DOCTYPE html>
@@ -34,16 +38,17 @@ def get_email_template_html(ticket, logo_url, valor_formateado, porcentaje_aprob
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }}
         .header {{
-            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-            padding: 30px 20px;
+            padding: 0;
             text-align: center;
         }}
         .header img {{
-            max-width: 280px;
+            max-width: 100%;
+            width: 100%;
             height: auto;
+            display: block;
         }}
         .content {{
-            padding: 40px 30px;
+            padding: 35px 30px;
         }}
         .greeting {{
             font-size: 18px;
@@ -78,6 +83,10 @@ def get_email_template_html(ticket, logo_url, valor_formateado, porcentaje_aprob
             border-radius: 6px;
             margin: 25px 0;
         }}
+        .content-contact {{
+            text-align: center;
+            margin-top: 10px;
+        }}
         .contact-section h3 {{
             color: #0056b3;
             margin-top: 0;
@@ -85,16 +94,7 @@ def get_email_template_html(ticket, logo_url, valor_formateado, porcentaje_aprob
             font-size: 16px;
         }}
         .contact-item {{
-            display: flex;
-            align-items: center;
-            margin: 10px 0;
             color: #333;
-        }}
-        .contact-item svg {{
-            width: 20px;
-            height: 20px;
-            margin-right: 10px;
-            fill: #0056b3;
         }}
         .contact-item a {{
             color: #0056b3;
@@ -105,48 +105,24 @@ def get_email_template_html(ticket, logo_url, valor_formateado, porcentaje_aprob
             text-decoration: underline;
         }}
         .footer {{
-            background-color: #2c3e50;
-            color: #ffffff;
-            padding: 30px;
+            padding: 0;
             text-align: center;
         }}
-        .footer-company {{
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 10px;
+        .footer img {{
+            max-width: 100%;
+            width: 100%;
+            height: auto;
+            display: block;
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
         }}
-        .footer-department {{
-            font-size: 14px;
-            color: #bdc3c7;
-            margin-bottom: 20px;
-        }}
-        .social-links {{
-            margin: 20px 0;
-        }}
-        .social-links a {{
-            display: inline-block;
-            margin: 0 10px;
-            text-decoration: none;
-        }}
-        .social-icon {{
-            width: 32px;
-            height: 32px;
-            background-color: #ffffff;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.3s ease;
-        }}
-        .social-icon:hover {{
-            transform: scale(1.1);
-        }}
-        .footer-note {{
-            font-size: 12px;
-            color: #95a5a6;
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #34495e;
+        .disclaimer {{
+            background-color: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            font-size: 11px;
+            color: #6c757d;
+            line-height: 1.5;
         }}
         @media only screen and (max-width: 600px) {{
             .content {{
@@ -160,9 +136,9 @@ def get_email_template_html(ticket, logo_url, valor_formateado, porcentaje_aprob
 </head>
 <body>
     <div class="email-container">
-        <!-- Header con logo -->
+        <!-- Header -->
         <div class="header">
-            <img src="{logo_url}" alt="Bicicletas Milán" />
+            <img src="{header_url}" alt="Header Bicicletas Milán" />
         </div>
         
         <!-- Contenido principal -->
@@ -179,7 +155,6 @@ def get_email_template_html(ticket, logo_url, valor_formateado, porcentaje_aprob
             
             <!-- Información destacada -->
             <div class="info-box">
-                <h3>Resumen de la Liquidación</h3>
                 <p style="margin: 10px 0;">
                     <strong>Producto:</strong> {descripcion_producto}<br/>
                     <strong>Porcentaje autorizado:</strong> {porcentaje_aprobacion}% del precio de compra
@@ -204,40 +179,38 @@ def get_email_template_html(ticket, logo_url, valor_formateado, porcentaje_aprob
             
             <!-- Sección de contacto -->
             <div class="contact-section">
-                <h3>¿Necesita ayuda?</h3>
-                <p style="margin-bottom: 15px;">
+                <h3 style="text-align: center; font-size: 18px; font-weight: 600;">¿Necesita ayuda?</h3>
+                <p style="margin-bottom: 15px; text-align: center;">
                     Nuestro equipo está disponible para atenderle:
                 </p>
-                <div class="contact-item">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 00-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/>
-                    </svg>
-                    <span><strong>Celular:</strong> <a href="tel:+573102424848">310 2424848</a></span>
-                </div>
-                <div class="contact-item">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-                    </svg>
-                    <span><strong>Email:</strong> <a href="mailto:servicioalcliente@bicicletasmilan.com">servicioalcliente@bicicletasmilan.com</a></span>
+                <div class="content-contact" style="text-align: center; margin-top: 10px;">
+                    <div class="contact-item" style="display: inline-block; margin: 0 15px;">
+                        <span><strong>Celular:</strong> <a href="tel:+573102424848">+57 310 2424848</a></span>
+                    </div>
+                    <div class="contact-item" style="display: inline-block; margin: 0 15px;">
+                        <span><strong>Email:</strong> <a href="mailto:servicioalcliente@bicicletasmilan.com">servicioalcliente@bicicletasmilan.com</a></span>
+                    </div>
                 </div>
             </div>
-            
-            <p style="margin-top: 30px; color: #7f8c8d; font-size: 14px;">
-                Este correo ha sido generado automáticamente. Si tiene alguna pregunta sobre su liquidación, 
-                no dude en contactarnos.
-            </p>
         </div>
         
         <!-- Footer -->
         <div class="footer">
-            <div class="footer-company">INDUSTRIAS BICICLETAS MILÁN S.A.S</div>
-            <div class="footer-department">Departamento de Garantías</div>
-            
-            <div class="footer-note">
-                © 2025 INDUSTRIAS BICICLETAS MILÁN S.A.S. Todos los derechos reservados.<br/>
-                Este correo electrónico y cualquier archivo transmitido con él son confidenciales y están destinados 
-                únicamente para el uso del individuo o entidad a la que están dirigidos.
-            </div>
+            <img src="{footer_url}" alt="Footer Bicicletas Milán" />
+        </div>
+        
+        <!-- Disclaimer -->
+        <div class="disclaimer">
+            <p style="margin: 0 0 10px 0; font-size: 12px; color: #495057;">
+                <strong>Este correo ha sido generado automáticamente.</strong><br/>
+                Si tiene alguna pregunta sobre su liquidación, no dude en contactarnos.
+            </p>
+            <p style="margin: 10px 0 0 0; font-size: 11px; color: #6c757d;">
+                Este mensaje es confidencial y está dirigido exclusivamente al destinatario indicado. 
+                Si usted no es el destinatario, le informamos que cualquier divulgación, copia, distribución o 
+                uso de este mensaje está prohibido. Si ha recibido este mensaje por error, por favor notifíquenos 
+                inmediatamente y elimínelo de su sistema.
+            </p>
         </div>
     </div>
 </body>

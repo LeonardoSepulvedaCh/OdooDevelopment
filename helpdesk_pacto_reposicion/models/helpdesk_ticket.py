@@ -34,11 +34,12 @@ class HelpdeskTicket(models.Model):
     # Determinar si el ticket está en una etapa crítica. (NO en "Nuevo", "Pendiente de Revisión", "Rechazado")
     @api.depends('stage_id')
     def _compute_is_pacto_stage_critical(self):
-        IrConfigParam = self.env['ir.config_parameter'].sudo()
+        # sudo() necesario: Lectura de configuración global del sistema en campo computado. - Esto garantiza que el cálculo funcione para todos los usuarios independientemente de sus permisos, evitando errores de acceso en campos que se recalculan automáticamente.
+        ir_config_param = self.env['ir.config_parameter'].sudo()
         
-        stage_new_name = IrConfigParam.get_param('helpdesk_custom_fields.stage_new_name', 'Nuevo')
-        stage_pending_review_name = IrConfigParam.get_param('helpdesk_custom_fields.stage_pending_review_name', 'Pendiente de Revisión')
-        stage_rejected_name = IrConfigParam.get_param('helpdesk_custom_fields.stage_rejected_name', 'Rechazado')
+        stage_new_name = ir_config_param.get_param('helpdesk_custom_fields.stage_new_name', 'Nuevo')
+        stage_pending_review_name = ir_config_param.get_param('helpdesk_custom_fields.stage_pending_review_name', 'Pendiente de Revisión')
+        stage_rejected_name = ir_config_param.get_param('helpdesk_custom_fields.stage_rejected_name', 'Rechazado')
         
         non_critical_stages = [stage_new_name, stage_pending_review_name, stage_rejected_name]
         
@@ -48,57 +49,88 @@ class HelpdeskTicket(models.Model):
     # Validar que el liquidador esté completo antes de permitir cambios de etapa en tickets de Pacto de Reposición.
     def write(self, vals): 
         if 'stage_id' in vals:
-            IrConfigParam = self.env['ir.config_parameter'].sudo()
-            
-            stage_dispatch_name = IrConfigParam.get_param('helpdesk_custom_fields.stage_dispatch_name', 'Por Realizar (Despacho)')
-            stage_waiting_payment_name = IrConfigParam.get_param('helpdesk_pacto_reposicion.stage_waiting_payment_name', 'En espera de pago')
-            stage_closed_name = IrConfigParam.get_param('helpdesk_custom_fields.stage_closed_name', 'Resuelto')
-            
-            new_stage = self.env['helpdesk.stage'].browse(vals['stage_id'])
-            
-            for ticket in self:
-                if new_stage.name == stage_waiting_payment_name and not ticket.is_pacto_reposicion:
-                    raise ValidationError(_(
-                        'La etapa "%s" es exclusiva para tickets de Pacto de Reposición.\n\n'
-                        'Los tickets de garantía normales no pueden utilizar esta etapa porque implica '
-                        'el envío automático del email de liquidación del pacto.\n\n'
-                        'Si este ticket debe ser procesado como Pacto de Reposición, por favor active '
-                        'la opción "¿Es Pacto de Reposición?" en el ticket.'
-                    ) % new_stage.name)
-                
-                if ticket.is_pacto_reposicion:
-                    if new_stage.name in [stage_dispatch_name, stage_waiting_payment_name, stage_closed_name]:
-                        if not ticket._check_datos_completos_liquidador():
-                            raise ValidationError(_(
-                                'No se puede cambiar el ticket a la etapa "%s" porque el registro del liquidador no está completo.\n\n'
-                                'El liquidador debe tener todos sus campos diligenciados antes de realizar este cambio de etapa.\n\n'
-                                'Por favor, complete el liquidador accediendo al botón "Liquidador Pacto de Reposición".'
-                            ) % new_stage.name)
+            self._validate_stage_change_before_write(vals)
         
         result = super(HelpdeskTicket, self).write(vals)
         
         if 'stage_id' in vals:
-            IrConfigParam = self.env['ir.config_parameter'].sudo()
-            stage_waiting_payment_name = IrConfigParam.get_param('helpdesk_pacto_reposicion.stage_waiting_payment_name', 'En espera de pago')
-            
-            for ticket in self:
-                if ticket.is_pacto_reposicion and ticket.stage_id.name == stage_waiting_payment_name:
-                    if ticket.pacto_beneficio_aplica and ticket._check_datos_completos_liquidador():
-                        try:
-                            ticket._send_pacto_email_auto()
-                        except Exception as e:
-                            _logger.warning(
-                                f'No se pudo enviar automáticamente el email del pacto para el ticket {ticket.name}. '
-                                f'Error: {str(e)}'
-                            )
-                            ticket.message_post(
-                                body=f'Advertencia: No se pudo enviar automáticamente el email del pacto. Error: {str(e)}',
-                                subject='Advertencia: Email no enviado',
-                                message_type='notification',
-                                subtype_xmlid='mail.mt_note',
-                            )
+            self._process_stage_change_after_write()
         
         return result
+
+    def _validate_stage_change_before_write(self, vals):
+        ir_config_param = self.env['ir.config_parameter'].sudo()
+        stage_names = self._get_stage_names(ir_config_param)
+        new_stage = self.env['helpdesk.stage'].browse(vals['stage_id'])
+        
+        for ticket in self:
+            ticket._validate_waiting_payment_stage(new_stage, stage_names['waiting_payment'])
+            ticket._validate_pacto_stage_requirements(new_stage, stage_names)
+
+    def _get_stage_names(self, ir_config_param):
+        return {
+            'dispatch': ir_config_param.get_param('helpdesk_custom_fields.stage_dispatch_name', 'Por Realizar (Despacho)'),
+            'waiting_payment': ir_config_param.get_param('helpdesk_pacto_reposicion.stage_waiting_payment_name', 'En espera de pago'),
+            'closed': ir_config_param.get_param('helpdesk_custom_fields.stage_closed_name', 'Resuelto'),
+        }
+
+    def _validate_waiting_payment_stage(self, new_stage, waiting_payment_name):
+        if new_stage.name == waiting_payment_name and not self.is_pacto_reposicion:
+            raise ValidationError(_(
+                'La etapa "%s" es exclusiva para tickets de Pacto de Reposición.\n\n'
+                'Los tickets de garantía normales no pueden utilizar esta etapa porque implica '
+                'el envío automático del email de liquidación del pacto.\n\n'
+                'Si este ticket debe ser procesado como Pacto de Reposición, por favor active '
+                'la opción "¿Es Pacto de Reposición?" en el ticket.'
+            ) % new_stage.name)
+
+    def _validate_pacto_stage_requirements(self, new_stage, stage_names):
+        if not self.is_pacto_reposicion:
+            return
+        
+        critical_stages = [stage_names['dispatch'], stage_names['waiting_payment'], stage_names['closed']]
+        if new_stage.name in critical_stages and not self._check_datos_completos_liquidador():
+            raise ValidationError(_(
+                'No se puede cambiar el ticket a la etapa "%s" porque el registro del liquidador no está completo.\n\n'
+                'El liquidador debe tener todos sus campos diligenciados antes de realizar este cambio de etapa.\n\n'
+                'Por favor, complete el liquidador accediendo al botón "Liquidador Pacto de Reposición".'
+            ) % new_stage.name)
+
+    def _process_stage_change_after_write(self):
+        ir_config_param = self.env['ir.config_parameter'].sudo()
+        stage_waiting_payment_name = ir_config_param.get_param('helpdesk_pacto_reposicion.stage_waiting_payment_name', 'En espera de pago')
+        
+        for ticket in self:
+            ticket._try_send_pacto_email_if_applicable(stage_waiting_payment_name)
+
+    def _try_send_pacto_email_if_applicable(self, waiting_payment_name):
+        if not self._should_send_pacto_email(waiting_payment_name):
+            return
+        
+        try:
+            self._send_pacto_email_auto()
+        except Exception as e:
+            self._log_email_send_failure(e)
+
+    def _should_send_pacto_email(self, waiting_payment_name):
+        return (
+            self.is_pacto_reposicion and 
+            self.stage_id.name == waiting_payment_name and
+            self.pacto_beneficio_aplica and 
+            self._check_datos_completos_liquidador()
+        )
+
+    def _log_email_send_failure(self, error):
+        _logger.warning(
+            f'No se pudo enviar automáticamente el email del pacto para el ticket {self.name}. '
+            f'Error: {str(error)}'
+        )
+        self.message_post(
+            body=f'Advertencia: No se pudo enviar automáticamente el email del pacto. Error: {str(error)}',
+            subject='Advertencia: Email no enviado',
+            message_type='notification',
+            subtype_xmlid='mail.mt_note',
+        )
 
     # Enviar automáticamente el email del pacto de reposición cuando se cambia a "En espera de pago".
     def _send_pacto_email_auto(self):
@@ -112,7 +144,7 @@ class HelpdeskTicket(models.Model):
         if not self.partner_id.email:
             raise UserError(_('El cliente no tiene un correo electrónico configurado.'))
         
-        pdf_content, pdf_format = self.env['ir.actions.report']._render_qweb_pdf(
+        pdf_content, _pdf_format = self.env['ir.actions.report']._render_qweb_pdf(
             'helpdesk_pacto_reposicion.action_report_pacto_carta',
             res_ids=self.ids
         )
@@ -130,16 +162,40 @@ class HelpdeskTicket(models.Model):
         })
         
         valor_consignar = self._get_valor_a_consignar()
+        # Formato colombiano: separador de miles con punto (ej: 1.234.567)  - Este formato está hardcoded ya que el módulo está diseñado exclusivamente para Colombia
         valor_formateado = '{:,.0f}'.format(valor_consignar).replace(',', '.')
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        logo_url = f"{base_url}/helpdesk_pacto_reposicion/static/src/img/logo_milan.png"
+        
+        # sudo() necesario: Lectura de URLs de imágenes (configuración global pública). - Las URLs son recursos públicos sin implicaciones de seguridad, y deben estar disponibles para todos los usuarios que puedan enviar emails de liquidación.
+        ir_config_param = self.env['ir.config_parameter'].sudo()
+        header_url = ir_config_param.get_param('helpdesk_pacto_reposicion.email_header_image_url')
+        footer_url = ir_config_param.get_param('helpdesk_pacto_reposicion.email_footer_image_url')
+        
+        # Validar que las URLs de imágenes estén configuradas
+        if not header_url:
+            raise UserError(_(
+                'No se ha configurado la URL de la imagen de encabezado para los correos electrónicos.\n\n'
+                'Por favor, configure el parámetro del sistema:\n'
+                'helpdesk_pacto_reposicion.email_header_image_url\n\n'
+                'Vaya a: Configuración > Técnico > Parámetros > Parámetros del Sistema'
+            ))
+        
+        if not footer_url:
+            raise UserError(_(
+                'No se ha configurado la URL de la imagen de pie de página para los correos electrónicos.\n\n'
+                'Por favor, configure el parámetro del sistema:\n'
+                'helpdesk_pacto_reposicion.email_footer_image_url\n\n'
+                'Vaya a: Configuración > Técnico > Parámetros > Parámetros del Sistema'
+            ))
+        
+        # Formato colombiano: porcentaje sin decimales (ej: 85%)
         porcentaje_aprobacion = f'{self.pacto_porcentaje_aprobacion:.0f}'
         
         cuerpo_email = get_email_template_html(
             self,
-            logo_url,
             valor_formateado,
-            porcentaje_aprobacion
+            porcentaje_aprobacion,
+            header_url,
+            footer_url
         )
         
         mail_values = {
@@ -216,14 +272,14 @@ class HelpdeskTicket(models.Model):
         
         sale_order = self.env['sale.order'].create(sale_order_vals)
         
-        SaleOrderLine = self.env['sale.order.line']
+        sale_order_line = self.env['sale.order.line']
         for product in self.product_ids:
             line_vals = {
                 'order_id': sale_order.id,
                 'product_id': product.id,
                 'product_uom_qty': 1,
             }
-            SaleOrderLine.create(line_vals)
+            sale_order_line.create(line_vals)
         
         self.write({
             'sale_order_id': sale_order.id

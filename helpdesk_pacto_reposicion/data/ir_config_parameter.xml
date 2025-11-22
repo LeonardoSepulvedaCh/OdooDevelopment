@@ -7,6 +7,18 @@
             <field name="key">helpdesk_pacto_reposicion.stage_waiting_payment_name</field>
             <field name="value">En espera de pago</field>
         </record>
+
+        <!-- URL de la imagen del header del correo electrónico -->
+        <record id="email_header_image_url" model="ir.config_parameter">
+            <field name="key">helpdesk_pacto_reposicion.email_header_image_url</field>
+            <field name="value">https://rutavity.com/media/wysiwyg/Email/header.jpg</field>
+        </record>
+
+        <!-- URL de la imagen del footer del correo electrónico -->
+        <record id="email_footer_image_url" model="ir.config_parameter">
+            <field name="key">helpdesk_pacto_reposicion.email_footer_image_url</field>
+            <field name="value">https://rutavity.com/media/wysiwyg/Email/footer.jpg</field>
+        </record>
         
     </data>
 </odoo>

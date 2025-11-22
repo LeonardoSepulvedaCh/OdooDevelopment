@@ -85,7 +85,7 @@ class HelpdeskPactoWizardActions(models.TransientModel):
         valores = self._get_datos_wizard_to_ticket()
         self.ticket_id.write(valores)
         
-        pdf_content, pdf_format = self.env['ir.actions.report']._render_qweb_pdf(
+        pdf_content, _pdf_format = self.env['ir.actions.report']._render_qweb_pdf(
             'helpdesk_pacto_reposicion.action_report_pacto_carta',
             res_ids=self.ticket_id.ids
         )
@@ -104,17 +104,41 @@ class HelpdeskPactoWizardActions(models.TransientModel):
         
         # Preparar variables para el template
         valor_consignar = self._get_valor_a_consignar()
+        # Formato colombiano: separador de miles con punto (ej: 1.234.567) - Este formato está hardcoded ya que el módulo está diseñado exclusivamente para Colombia
         valor_formateado = '{:,.0f}'.format(valor_consignar).replace(',', '.')
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        logo_url = f"{base_url}/helpdesk_pacto_reposicion/static/src/img/logo_milan.png"
+        
+        # sudo() necesario: Lectura de URLs de imágenes (configuración global pública). - Las URLs son recursos públicos sin implicaciones de seguridad, y deben estar disponibles para todos los usuarios que puedan enviar emails de liquidación.
+        ir_config_param = self.env['ir.config_parameter'].sudo()
+        header_url = ir_config_param.get_param('helpdesk_pacto_reposicion.email_header_image_url')
+        footer_url = ir_config_param.get_param('helpdesk_pacto_reposicion.email_footer_image_url')
+        
+        # Validar que las URLs de imágenes estén configuradas
+        if not header_url:
+            raise ValidationError(_(
+                'No se ha configurado la URL de la imagen de encabezado para los correos electrónicos.\n\n'
+                'Por favor, configure el parámetro del sistema:\n'
+                'helpdesk_pacto_reposicion.email_header_image_url\n\n'
+                'Vaya a: Configuración > Técnico > Parámetros > Parámetros del Sistema'
+            ))
+        
+        if not footer_url:
+            raise ValidationError(_(
+                'No se ha configurado la URL de la imagen de pie de página para los correos electrónicos.\n\n'
+                'Por favor, configure el parámetro del sistema:\n'
+                'helpdesk_pacto_reposicion.email_footer_image_url\n\n'
+                'Vaya a: Configuración > Técnico > Parámetros > Parámetros del Sistema'
+            ))
+        
+        # Formato colombiano: porcentaje sin decimales (ej: 85%)
         porcentaje_aprobacion = f'{self.pacto_porcentaje_aprobacion:.0f}'
         
         # Generar el HTML del correo
         cuerpo_email = get_email_template_html(
             self.ticket_id,
-            logo_url,
             valor_formateado,
-            porcentaje_aprobacion
+            porcentaje_aprobacion,
+            header_url,
+            footer_url
         )
         
         # Crear y enviar el correo
