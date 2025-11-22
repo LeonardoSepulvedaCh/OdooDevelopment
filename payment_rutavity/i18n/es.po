@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-11 00:35+0000\n"
-"PO-Revision-Date: 2025-10-11 00:35+0000\n"
+"POT-Creation-Date: 2025-11-05 18:59+0000\n"
+"PO-Revision-Date: 2025-11-05 18:59+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -26,6 +26,11 @@ msgid "0.00"
 msgstr ""
 
 #. module: payment_rutavity
+#: model_terms:ir.ui.view,arch_db:payment_rutavity.portal_invoice_search_page
+msgid "100120039, 100120040, 100120041"
+msgstr ""
+
+#. module: payment_rutavity
 #: model_terms:ir.ui.view,arch_db:payment_rutavity.pse_payment_form
 msgid ""
 "<i class=\"fa fa-address-card text-primary me-2\"/>\n"
@@ -33,6 +38,24 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-address-card text-primary me-2\"/>\n"
 "                        <span>Documento de identidad *</span>"
+
+#. module: payment_rutavity
+#: model_terms:ir.ui.view,arch_db:payment_rutavity.portal_selected_invoices_payment_page
+msgid ""
+"<i class=\"fa fa-clock-o me-1\"/>\n"
+"                                                    <span>Quick select</span>"
+msgstr ""
+"<i class=\"fa fa-clock-o me-1\"/>\n"
+"                                                    <span>Selección rápida</span>"
+
+#. module: payment_rutavity
+#: model_terms:ir.ui.view,arch_db:payment_rutavity.portal_invoice_search_page
+msgid ""
+"<i class=\"fa fa-credit-card\"/>\n"
+"                                    <span>Proceed to Payment</span>"
+msgstr ""
+"<i class=\"fa fa-credit-card\"/>\n"
+"                                    <span>Ir a pagar</span>"
 
 #. module: payment_rutavity
 #: model_terms:ir.ui.view,arch_db:payment_rutavity.pse_payment_form
@@ -44,6 +67,15 @@ msgstr ""
 "                        <span>Correo electrónico *</span>"
 
 #. module: payment_rutavity
+#: model_terms:ir.ui.view,arch_db:payment_rutavity.portal_invoice_search_page
+msgid ""
+"<i class=\"fa fa-file-text-o me-1\"/>\n"
+"                                        Invoice Numbers <span class=\"text-danger\">*</span>"
+msgstr ""
+"<i class=\"fa fa-file-text-o me-1\"/>\n"
+"                                        Números de factura <span class=\"text-danger\">*</span>"
+
+#. module: payment_rutavity
 #: model_terms:ir.ui.view,arch_db:payment_rutavity.pse_payment_form
 msgid ""
 "<i class=\"fa fa-id-card text-primary me-2\"/>\n"
@@ -51,6 +83,24 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-id-card text-primary me-2\"/>\n"
 "                        <span>Número de documento *</span>"
+
+#. module: payment_rutavity
+#: model_terms:ir.ui.view,arch_db:payment_rutavity.portal_invoice_search_page
+msgid ""
+"<i class=\"fa fa-info-circle me-1\"/>\n"
+"                                    How it works"
+msgstr ""
+"<i class=\"fa fa-info-circle me-1\"/>\n"
+"                                    Cómo funciona"
+
+#. module: payment_rutavity
+#: model_terms:ir.ui.view,arch_db:payment_rutavity.portal_invoice_search_page
+msgid ""
+"<i class=\"fa fa-list-alt me-2\"/>\n"
+"                                        Invoices Found"
+msgstr ""
+"<i class=\"fa fa-list-alt me-2\"/>\n"
+"                                        Facturas encontradas"
 
 #. module: payment_rutavity
 #: model_terms:ir.ui.view,arch_db:payment_rutavity.pse_payment_form
@@ -74,6 +124,20 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-phone text-primary me-2\"/>\n"
 "                        <span>Teléfono *</span>"
+
+#. module: payment_rutavity
+#: model_terms:ir.ui.view,arch_db:payment_rutavity.portal_payment_confirm
+msgid "<i class=\"fa fa-refresh me-2\"/>Refresh"
+msgstr "<i class=\"fa fa-refresh me-2\"/>Refrescar"
+
+#. module: payment_rutavity
+#: model_terms:ir.ui.view,arch_db:payment_rutavity.portal_invoice_search_page
+msgid ""
+"<i class=\"fa fa-search\"/>\n"
+"                                    <span>Search</span>"
+msgstr ""
+"<i class=\"fa fa-search\"/>\n"
+"                                    <span>Buscar</span>"
 
 #. module: payment_rutavity
 #: model_terms:ir.ui.view,arch_db:payment_rutavity.pse_payment_form
@@ -122,14 +186,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_rutavity.portal_selected_invoices_payment_page
 msgid ""
 "<small class=\"text-danger d-none invalid-amount-msg mt-1 d-block\">\n"
-"                                                    <i class=\"fa fa-exclamation-triangle me-1\"/>\n"
-"                                                    Amount must be between 0.01 and <span class=\"max-amount-display\"/>\n"
-"                                                </small>"
+"                                                <i class=\"fa fa-exclamation-triangle me-1\"/>\n"
+"                                                Amount must be between 0.01 and <span class=\"max-amount-display\"/>\n"
+"                                            </small>"
 msgstr ""
 "<small class=\"text-danger d-none invalid-amount-msg mt-1 d-block\">\n"
-"                                                    <i class=\"fa fa-exclamation-triangle me-1\"/>\n"
-"                                                    El monto debe estar entre 0.01 y <span class=\"max-amount-display\"/>\n"
-"                                                </small>"
+"                                                <i class=\"fa fa-exclamation-triangle me-1\"/>\n"
+"                                                El monto debe estar entre 0.01 y <span class=\"max-amount-display\"/>\n"
+"                                            </small>"
 
 #. module: payment_rutavity
 #: model_terms:ir.ui.view,arch_db:payment_rutavity.portal_selected_invoices_payment_page
@@ -147,9 +211,24 @@ msgid "<small class=\"text-muted d-block\">Invoice</small>"
 msgstr "<small class=\"text-muted d-block\">Factura</small>"
 
 #. module: payment_rutavity
+#: model_terms:ir.ui.view,arch_db:payment_rutavity.portal_selected_invoices_payment_page
+msgid "<span class=\"option-text\">Installment</span>"
+msgstr "<span class=\"option-text\">Cuota</span>"
+
+#. module: payment_rutavity
+#: model_terms:ir.ui.view,arch_db:payment_rutavity.portal_selected_invoices_payment_page
+msgid "<span class=\"option-text\">Total</span>"
+msgstr ""
+
+#. module: payment_rutavity
 #: model_terms:ir.ui.view,arch_db:payment_rutavity.portal_my_invoices_bulk_payment
 msgid "<span class=\"text-muted small\">Total to pay</span>"
 msgstr "<span class=\"text-muted small\">Total a pagar</span>"
+
+#. module: payment_rutavity
+#: model_terms:ir.ui.view,arch_db:payment_rutavity.portal_invoice_search_page
+msgid "<span class=\"visually-hidden\">Loading...</span>"
+msgstr "<span class=\"visually-hidden\">Cargando...</span>"
 
 #. module: payment_rutavity
 #: model_terms:ir.ui.view,arch_db:payment_rutavity.portal_my_invoices_bulk_payment
@@ -166,12 +245,53 @@ msgid "Abandoned"
 msgstr "Abandonado"
 
 #. module: payment_rutavity
+#. odoo-python
+#: code:addons/payment_rutavity/controllers/portal.py:0
+msgid "Access denied. You don't have permission to view these invoices."
+msgstr "Acceso denegado. No tiene permiso para ver estas facturas."
+
+#. module: payment_rutavity
+#. odoo-python
+#: code:addons/payment_rutavity/models/payment_transaction.py:0
+msgid ""
+"Added early payment discount write-off lines for invoice %(invoice)s. "
+"Discount amount: %(discount)s, Lines: %(lines)s"
+msgstr ""
+"Se han agregado líneas de descuento por pago anticipado para la factura "
+"%(invoice)s. Monto del descuento: %(discount)s, Líneas: %(lines)s"
+
+#. module: payment_rutavity
+#. odoo-python
+#: code:addons/payment_rutavity/controllers/portal.py:0
+msgid "All invoices found are already paid or cancelled"
+msgstr "Todas las facturas encontradas ya están pagadas o canceladas"
+
+#. module: payment_rutavity
+#: model_terms:ir.ui.view,arch_db:payment_rutavity.portal_invoice_search_page
+msgid "Amount Due"
+msgstr "Monto pendiente"
+
+#. module: payment_rutavity
+#. odoo-python
+#: code:addons/payment_rutavity/controllers/portal.py:0
+msgid "An error occurred while searching invoices: %s"
+msgstr "Ocurrió un error al buscar facturas: %s"
+
+#. module: payment_rutavity
+#: model:ir.model.fields,field_description:payment_rutavity.field_res_partner__anonymized_name
+#: model:ir.model.fields,field_description:payment_rutavity.field_res_users__anonymized_name
+msgid "Anonymized Name"
+msgstr "Nombre anonimizado"
+
+#. module: payment_rutavity
 #: model:ir.model.fields.selection,name:payment_rutavity.selection__payment_transaction__gateway_status__1
 msgid "Approved"
 msgstr "Aprobado"
 
 #. module: payment_rutavity
 #: model_terms:ir.ui.view,arch_db:payment_rutavity.payment_transaction_form_rutavity
+#: model_terms:ir.ui.view,arch_db:payment_rutavity.portal_payment_confirm
+#: model_terms:ir.ui.view,arch_db:payment_rutavity.website_sale_confirmation_rutavity
 msgid "Bank"
 msgstr "Banco"
 
@@ -191,6 +311,12 @@ msgid "Code"
 msgstr "Código"
 
 #. module: payment_rutavity
+#. odoo-javascript
+#: code:addons/payment_rutavity/static/src/interactions/invoice_search.js:0
+msgid "Connection error. Please try again."
+msgstr "Error de conexión. Por favor, intente nuevamente."
+
+#. module: payment_rutavity
 #: model:ir.model,name:payment_rutavity.model_res_partner
 msgid "Contact"
 msgstr "Contacto"
@@ -207,17 +333,33 @@ msgid "Currency mismatch for invoice %s"
 msgstr "Moneda incorrecta para la factura %s"
 
 #. module: payment_rutavity
+#. odoo-python
+#: code:addons/payment_rutavity/controllers/portal.py:0
+msgid "Customer Invoices"
+msgstr "Facturas de clientes"
+
+#. module: payment_rutavity
 #. odoo-javascript
 #: code:addons/payment_rutavity/static/src/interactions/payment_form.js:0
 msgid "Datos del formulario no encontrados"
 msgstr ""
 
 #. module: payment_rutavity
-#: model:ir.model.fields,help:payment_rutavity.field_payment_transaction__invoice_amounts_detail
+#: model_terms:ir.ui.view,arch_db:payment_rutavity.portal_payment_confirm
+#: model_terms:ir.ui.view,arch_db:payment_rutavity.website_sale_confirmation_rutavity
+msgid "Description"
+msgstr "Descripción"
+
+#. module: payment_rutavity
+#: model:ir.model.fields,help:payment_rutavity.field_payment_transaction__documents_data
 msgid ""
-"Detailed breakdown of custom amounts to pay for each invoice. Format: "
-"[{'type': 'invoice', 'id': int, 'amount': float, 'currency_id': int}, ...]"
+"Detailed breakdown of custom amounts to pay for each document.\n"
+"             Example: {\"type\":\"multiple_invoices\",\"data\":[{\"id\":1,\"amount\":1000,\"currency_id\":8},{\"id\":2,\"amount\":2000,\"currency_id\":8}]}\n"
+"             "
 msgstr ""
+"Desglose detallado de los importes personalizados a pagar por cada documento.\n"
+"             Ejemplo: {\"type\":\"multiple_invoices\",\"data\":[{\"id\":1,\"amount\":1000,\"currency_id\":8},{\"id\":2,\"amount\":2000,\"currency_id\":8}]}\n"
+"             "
 
 #. module: payment_rutavity
 #: model:ir.model.fields,field_description:payment_rutavity.field_payment_gateway__display_name
@@ -227,6 +369,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_rutavity.field_res_partner__display_name
 msgid "Display Name"
 msgstr "Nombre mostrado"
+
+#. module: payment_rutavity
+#: model:ir.model.fields,field_description:payment_rutavity.field_payment_transaction__documents_data
+#: model_terms:ir.ui.view,arch_db:payment_rutavity.payment_transaction_form_rutavity
+msgid "Documents Data"
+msgstr "Datos de documentos"
 
 #. module: payment_rutavity
 #: model:ir.model.fields.selection,name:payment_rutavity.selection__payment_transaction__gateway_status__0
@@ -242,6 +390,16 @@ msgstr "Ingrese el número de documento de identidad"
 #: model_terms:ir.ui.view,arch_db:payment_rutavity.pse_payment_form
 msgid "Enter your first names"
 msgstr "Ingrese sus nombres"
+
+#. module: payment_rutavity
+#: model_terms:ir.ui.view,arch_db:payment_rutavity.portal_invoice_search_page
+msgid "Enter your invoice numbers (separate with commas)"
+msgstr "Ingrese sus números de factura (separados por comas)"
+
+#. module: payment_rutavity
+#: model_terms:ir.ui.view,arch_db:payment_rutavity.portal_invoice_search_page
+msgid "Enter your invoice numbers to search and pay"
+msgstr "Ingrese sus números de factura para buscar y pagar"
 
 #. module: payment_rutavity
 #: model_terms:ir.ui.view,arch_db:payment_rutavity.pse_payment_form
@@ -281,8 +439,25 @@ msgstr ""
 #. module: payment_rutavity
 #. odoo-python
 #: code:addons/payment_rutavity/models/payment_transaction.py:0
+msgid ""
+"Error parsing documents_data: %(error)s. Using standard payment behavior."
+msgstr ""
+"Error al analizar documents_data: %(error)s. Usando comportamiento de pago "
+"estándar."
+
+#. module: payment_rutavity
+#. odoo-python
+#: code:addons/payment_rutavity/models/payment_transaction.py:0
 msgid "Error processing then transaction %(ref)s: %(error)s"
 msgstr "Error al procesar la transacción %(ref)s: %(error)s"
+
+#. module: payment_rutavity
+#. odoo-python
+#: code:addons/payment_rutavity/models/payment_transaction.py:0
+msgid ""
+"Error reconciling payment %(payment)s with invoice %(invoice)s: %(error)s"
+msgstr ""
+"Error al reconciliar pago %(payment)s con factura %(invoice)s: %(error)s"
 
 #. module: payment_rutavity
 #: model:ir.model.fields.selection,name:payment_rutavity.selection__payment_transaction__gateway_status__9
@@ -355,6 +530,11 @@ msgid "Gateway response data from the payment gateway."
 msgstr "Datos de respuesta de la pasarela de pagos."
 
 #. module: payment_rutavity
+#: model_terms:ir.ui.view,arch_db:payment_rutavity.portal_payment_confirm
+msgid "Go to my Account <i class=\"oi oi-arrow-right ms-2\"/>"
+msgstr "Ir a mi cuenta <i class=\"oi oi-arrow-right ms-2\"/>"
+
+#. module: payment_rutavity
 #: model:ir.model.fields.selection,name:payment_rutavity.selection__payment_transaction__gateway_status__7
 msgid "Held"
 msgstr "Retenido"
@@ -401,14 +581,21 @@ msgid "Invalid transaction type"
 msgstr "Tipo de transacción inválido"
 
 #. module: payment_rutavity
-#: model:ir.model.fields,field_description:payment_rutavity.field_payment_transaction__invoice_amounts_detail
-msgid "Invoice Amounts Detail"
-msgstr "Detalle de montos de facturas"
+#: model_terms:ir.ui.view,arch_db:payment_rutavity.portal_invoice_search_page
+msgid "Invoice Number"
+msgstr "Número de factura"
 
 #. module: payment_rutavity
-#: model_terms:ir.ui.view,arch_db:payment_rutavity.payment_transaction_form_rutavity
-msgid "Invoice Payment Details"
-msgstr "Detalles de pago de facturas"
+#. odoo-python
+#: code:addons/payment_rutavity/models/payment_transaction.py:0
+msgid "Invoice must be posted before reconciliation"
+msgstr "La factura debe ser publicada antes de reconciliar"
+
+#. module: payment_rutavity
+#. odoo-python
+#: code:addons/payment_rutavity/controllers/portal.py:0
+msgid "Maximum %(max)s invoices per search. Please split your request."
+msgstr "Máximo %(max)s facturas por búsqueda. Por favor, divida su solicitud."
 
 #. module: payment_rutavity
 #: model_terms:ir.ui.view,arch_db:payment_rutavity.payment_transaction_form_rutavity
@@ -422,6 +609,30 @@ msgid "Missing payment amount for invoice %s"
 msgstr "Monto de pago faltante para la factura %s"
 
 #. module: payment_rutavity
+#. odoo-python
+#: code:addons/payment_rutavity/controllers/portal.py:0
+msgid "Most Overdue"
+msgstr "Más vencidas"
+
+#. module: payment_rutavity
+#. odoo-python
+#: code:addons/payment_rutavity/models/payment_transaction.py:0
+msgid "No inbound payment method line found for journal %s"
+msgstr "No se encontró línea de método de pago entrante para el diario %s"
+
+#. module: payment_rutavity
+#. odoo-python
+#: code:addons/payment_rutavity/controllers/portal.py:0
+msgid "No invoices found with the provided numbers"
+msgstr "No se encontraron facturas con los números proporcionados"
+
+#. module: payment_rutavity
+#. odoo-python
+#: code:addons/payment_rutavity/controllers/payment.py:0
+msgid "No valid invoices found for payment"
+msgstr "No se encontraron facturas válidas para el pago"
+
+#. module: payment_rutavity
 #. odoo-javascript
 #: code:addons/payment_rutavity/static/src/interactions/payment_form.js:0
 msgid "Ocurrió un error al procesar su pago"
@@ -431,6 +642,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_rutavity.field_payment_provider__epayco_private_key
 msgid "PRIVATE_KEY"
 msgstr ""
+
+#. module: payment_rutavity
+#: model_terms:ir.ui.view,arch_db:payment_rutavity.portal_payment_confirm
+#: model_terms:ir.ui.view,arch_db:payment_rutavity.portal_payment_status
+#: model_terms:ir.ui.view,arch_db:payment_rutavity.website_sale_confirmation_rutavity
+msgid "PSE Transaction Information"
+msgstr "Información de transacción PSE"
 
 #. module: payment_rutavity
 #: model:ir.model.fields,field_description:payment_rutavity.field_payment_provider__epayco_public_key
@@ -520,6 +738,12 @@ msgid "Payment gateway transaction status."
 msgstr "Estado de la transacción de la pasarela de pagos."
 
 #. module: payment_rutavity
+#. odoo-python
+#: code:addons/payment_rutavity/models/payment_transaction.py:0
+msgid "Payment move must be posted before reconciliation"
+msgstr "El movimiento de pago debe ser publicado antes de reconciliar"
+
+#. module: payment_rutavity
 #. odoo-javascript
 #: code:addons/payment_rutavity/static/src/interactions/payment_form.js:0
 msgid "Payment processing failed"
@@ -531,6 +755,11 @@ msgid "Pending"
 msgstr "Pendiente"
 
 #. module: payment_rutavity
+#: model_terms:ir.ui.view,arch_db:payment_rutavity.portal_payment_status
+msgid "Pending Bank Confirmation"
+msgstr "Confirmación bancaria pendiente"
+
+#. module: payment_rutavity
 #. odoo-javascript
 #: code:addons/payment_rutavity/static/src/interactions/invoice_payment_overdue.js:0
 msgid "Please correct the invalid amounts before proceeding with payment."
@@ -538,10 +767,29 @@ msgstr ""
 "Por favor, corrija los montos inválidos antes de proceder con el pago."
 
 #. module: payment_rutavity
+#. odoo-javascript
+#: code:addons/payment_rutavity/static/src/interactions/invoice_search.js:0
+#: model_terms:ir.ui.view,arch_db:payment_rutavity.portal_invoice_search_page
+msgid "Please enter at least one invoice number"
+msgstr "Por favor, ingrese al menos un número de factura"
+
+#. module: payment_rutavity
+#. odoo-javascript
+#: code:addons/payment_rutavity/static/src/interactions/invoice_search.js:0
+msgid "Please enter valid invoice numbers"
+msgstr "Por favor, ingrese números de factura válidos"
+
+#. module: payment_rutavity
 #. odoo-python
-#: code:addons/payment_rutavity/controllers/payment.py:0
-msgid "Please log in to pay your invoices"
-msgstr "Por favor, inicie sesión para pagar sus facturas"
+#: code:addons/payment_rutavity/controllers/portal.py:0
+msgid "Please provide at least one invoice number"
+msgstr "Por favor, proporcione al menos un número de factura"
+
+#. module: payment_rutavity
+#. odoo-python
+#: code:addons/payment_rutavity/controllers/portal.py:0
+msgid "Please provide valid invoice numbers"
+msgstr "Por favor, proporcione números de factura válidos"
 
 #. module: payment_rutavity
 #. odoo-javascript
@@ -600,7 +848,15 @@ msgid "Por favor, seleccione un tipo de documento."
 msgstr ""
 
 #. module: payment_rutavity
+#: model_terms:ir.ui.view,arch_db:payment_rutavity.portal_invoice_search_page
+msgid "Proceed to payment with your preferred method"
+msgstr "Ir a pagar con su método preferido"
+
+#. module: payment_rutavity
 #: model_terms:ir.ui.view,arch_db:payment_rutavity.payment_transaction_form_rutavity
+#: model_terms:ir.ui.view,arch_db:payment_rutavity.portal_payment_confirm
+#: model_terms:ir.ui.view,arch_db:payment_rutavity.portal_payment_status
+#: model_terms:ir.ui.view,arch_db:payment_rutavity.website_sale_confirmation_rutavity
 msgid "Reference"
 msgstr "Referencia"
 
@@ -620,9 +876,21 @@ msgstr ""
 "documentos de transacción guardados"
 
 #. module: payment_rutavity
+#: model_terms:ir.ui.view,arch_db:payment_rutavity.portal_payment_confirm
+#: model_terms:ir.ui.view,arch_db:payment_rutavity.portal_payment_status
+#: model_terms:ir.ui.view,arch_db:payment_rutavity.website_sale_confirmation_rutavity
+msgid "Response"
+msgstr "Respuesta"
+
+#. module: payment_rutavity
 #: model:ir.model.fields.selection,name:payment_rutavity.selection__payment_transaction__gateway_status__6
 msgid "Reversed"
 msgstr "Reversado"
+
+#. module: payment_rutavity
+#: model_terms:ir.ui.view,arch_db:payment_rutavity.portal_invoice_search_page
+msgid "Review the invoices found"
+msgstr "Revise las facturas encontradas"
 
 #. module: payment_rutavity
 #: model:ir.model.fields.selection,name:payment_rutavity.selection__payment_provider__code__rutavity
@@ -637,10 +905,15 @@ msgid "Rutavity %(payment_type)s payment - %(payment_reference)s"
 msgstr "Pago de %(payment_type)s Rutavity - %(payment_reference)s"
 
 #. module: payment_rutavity
-#: model:ir.model.fields,field_description:payment_rutavity.field_res_partner__anonymized_name
-#: model:ir.model.fields,field_description:payment_rutavity.field_res_users__anonymized_name
-msgid "Anonymized Name"
-msgstr "Nombre anonimizado"
+#. odoo-python
+#: code:addons/payment_rutavity/controllers/portal.py:0
+msgid "Search Invoices"
+msgstr "Buscar facturas"
+
+#. module: payment_rutavity
+#: model_terms:ir.ui.view,arch_db:payment_rutavity.portal_invoice_search_page
+msgid "Searching invoices..."
+msgstr "Buscando facturas..."
 
 #. module: payment_rutavity
 #: model_terms:ir.ui.view,arch_db:payment_rutavity.portal_my_invoices_bulk_payment
@@ -649,6 +922,9 @@ msgstr "Seleccionar todos"
 
 #. module: payment_rutavity
 #: model_terms:ir.ui.view,arch_db:payment_rutavity.payment_transaction_form_rutavity
+#: model_terms:ir.ui.view,arch_db:payment_rutavity.portal_payment_confirm
+#: model_terms:ir.ui.view,arch_db:payment_rutavity.portal_payment_status
+#: model_terms:ir.ui.view,arch_db:payment_rutavity.website_sale_confirmation_rutavity
 msgid "Status"
 msgstr "Estado"
 
@@ -658,9 +934,27 @@ msgid "Street, number, neighborhood"
 msgstr "Calle, número, barrio"
 
 #. module: payment_rutavity
+#. odoo-python
+#: code:addons/payment_rutavity/models/payment_transaction.py:0
+msgid ""
+"Sum of custom invoice amounts (%(custom)s) does not match transaction amount"
+" (%(transaction)s)"
+msgstr ""
+"Suma de montos de facturas personalizados (%(custom)s) no coincide con el "
+"monto de la transacción"
+
+#. module: payment_rutavity
 #: model_terms:ir.ui.view,arch_db:payment_rutavity.pse_payment_form
 msgid "Tax Identification Number"
 msgstr "Número de identificación tributaria"
+
+#. module: payment_rutavity
+#. odoo-python
+#: code:addons/payment_rutavity/models/payment_transaction.py:0
+msgid "The payment related to transaction %(ref)s has been posted: %(link)s"
+msgstr ""
+"La transacción relacionada con la referencia %(ref)s ha sido publicada: "
+"%(link)s"
 
 #. module: payment_rutavity
 #: model:ir.model.fields,help:payment_rutavity.field_payment_provider__code
@@ -696,15 +990,44 @@ msgstr ""
 "pasarela"
 
 #. module: payment_rutavity
+#. odoo-python
+#: code:addons/payment_rutavity/controllers/portal.py:0
+msgid "Too many requests. Please wait a moment and try again."
+msgstr ""
+"Demasiadas solicitudes. Por favor, espere un momento y vuelva a intentarlo."
+
+#. module: payment_rutavity
+#: model_terms:ir.ui.view,arch_db:payment_rutavity.portal_invoice_search_page
+msgid "Total to Pay"
+msgstr "Total a pagar"
+
+#. module: payment_rutavity
 #: model_terms:ir.ui.view,arch_db:payment_rutavity.portal_selected_invoices_payment_page
 msgid "Total to pay"
 msgstr "Total a pagar"
+
+#. module: payment_rutavity
+#: model_terms:ir.ui.view,arch_db:payment_rutavity.portal_payment_confirm
+#: model_terms:ir.ui.view,arch_db:payment_rutavity.portal_payment_status
+#: model_terms:ir.ui.view,arch_db:payment_rutavity.website_sale_confirmation_rutavity
+msgid "Transaction Date"
+msgstr "Fecha de transacción"
 
 #. module: payment_rutavity
 #. odoo-python
 #: code:addons/payment_rutavity/controllers/payment_gateway.py:0
 msgid "Transaction ID not found"
 msgstr "ID de transacción no encontrado"
+
+#. module: payment_rutavity
+#: model:ir.model.fields,field_description:payment_rutavity.field_payment_transaction__transaction_type
+msgid "Transaction Type"
+msgstr "Tipo de Transacción"
+
+#. module: payment_rutavity
+#: model:ir.model.fields,field_description:payment_rutavity.field_payment_transaction__transaction_type_translated
+msgid "Transaction Type Translated"
+msgstr "Tipo de transacción traducido"
 
 #. module: payment_rutavity
 #. odoo-python
@@ -727,6 +1050,16 @@ msgstr ""
 "guardada"
 
 #. module: payment_rutavity
+#: model:ir.model.fields,help:payment_rutavity.field_payment_transaction__transaction_type_translated
+msgid "Translated type of transaction for display purposes"
+msgstr "Tipo de transacción traducido para fines de visualización"
+
+#. module: payment_rutavity
+#: model:ir.model.fields,help:payment_rutavity.field_payment_transaction__transaction_type
+msgid "Type of transaction: order, invoice or another type"
+msgstr "Tipo de transacción: pedido, factura o otro tipo"
+
+#. module: payment_rutavity
 #. odoo-python
 #: code:addons/payment_rutavity/models/payment_transaction.py:0
 msgid "Unknown error"
@@ -739,12 +1072,62 @@ msgid "Unknown message"
 msgstr "Mensaje desconocido"
 
 #. module: payment_rutavity
+#. odoo-python
+#: code:addons/payment_rutavity/controllers/portal.py:0
+msgid "Vendor Bills"
+msgstr "Facturas de proveedores"
+
+#. module: payment_rutavity
+#. odoo-python
+#: code:addons/payment_rutavity/models/payment_transaction.py:0
+msgid ""
+"Warning: Custom amount %(custom)s for invoice %(invoice)s exceeds residual "
+"%(residual)s. Using residual amount."
+msgstr ""
+"Advertencia: El monto personalizado %(custom)s para la factura %(invoice)s "
+"excede el saldo pendiente %(residual)s. Usando el saldo pendiente."
+
+#. module: payment_rutavity
+#. odoo-python
+#: code:addons/payment_rutavity/models/payment_transaction.py:0
+msgid "Warning: No invoice lines found to reconcile for invoice %(invoice)s"
+msgstr ""
+"Advertencia: No se encontraron líneas de factura para reconciliar para la "
+"factura %(invoice)s"
+
+#. module: payment_rutavity
+#. odoo-python
+#: code:addons/payment_rutavity/models/payment_transaction.py:0
+msgid "Warning: No payment lines found to reconcile for payment %(payment)s"
+msgstr ""
+"Advertencia: No se encontraron líneas de pago para reconciliar para el pago "
+"%(payment)s"
+
+#. module: payment_rutavity
 #. odoo-javascript
 #: code:addons/payment_rutavity/static/src/interactions/payment_form.js:0
 msgid ""
-"Ya tiene una transacción pendiente para este pedido. Por favor, espere a que"
-" se complete antes de intentar un nuevo pago."
+"Ya tiene una transacción pendiente para este documento. Por favor, espere a "
+"que se complete antes de intentar un nuevo pago."
 msgstr ""
+
+#. module: payment_rutavity
+#: model_terms:ir.ui.view,arch_db:payment_rutavity.portal_invoice_search_page
+msgid ""
+"You can enter multiple invoice numbers separated by commas. Example: "
+"100120039, 100120040, 100120041."
+msgstr ""
+"Puede ingresar múltiples números de factura separados por comas. Ejemplo: "
+"100120039, 100120040, 100120041."
+
+#. module: payment_rutavity
+#: model_terms:ir.ui.view,arch_db:payment_rutavity.portal_payment_status
+msgid ""
+"Your PSE payment is being processed by your bank. \n"
+"                            You will receive a confirmation once the bank approves the transaction."
+msgstr ""
+"Su pago PSE está siendo procesado por su banco. \n"
+"Recibirá una confirmación una vez que el banco apruebe la transacción."
 
 #. module: payment_rutavity
 #: model_terms:payment.provider,auth_msg:payment_rutavity.payment_provider_rutavity

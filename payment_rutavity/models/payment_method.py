@@ -21,10 +21,26 @@ class PaymentMethod(models.Model):
         if not partner or partner.is_public:
             return {}
 
+        # Build firstName from first_name and second_name
+        first_name_parts = []
+        if partner.first_name:
+            first_name_parts.append(partner.first_name)
+        if partner.second_name:
+            first_name_parts.append(partner.second_name)
+        first_name = " ".join(first_name_parts) if first_name_parts else partner.name
+
+        # Build lastName from first_surname and second_surname
+        last_name_parts = []
+        if partner.first_surname:
+            last_name_parts.append(partner.first_surname)
+        if partner.second_surname:
+            last_name_parts.append(partner.second_surname)
+        last_name = " ".join(last_name_parts) if last_name_parts else partner.name
+
         return {
             "partner_data": {
-                "firstName": partner.name or "",
-                "lastName": partner.name or "",
+                "firstName": first_name.title(),
+                "lastName": last_name.title(),
                 "email": partner.email or "",
                 "phone": partner._format_phone_number(),
                 "documentType": partner._format_document_type(),

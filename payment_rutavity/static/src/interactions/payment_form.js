@@ -15,70 +15,127 @@ patch(PaymentForm.prototype, {
         super.setup();
         this.bankFieldElement = null;
         this.bankList = [];
-        this.documentPaymentData = {
-            customAmountsData: {},
+        this.paymentContext.documentPaymentData = {
+            documentsData: {},
             totalAmount: 0,
-            documentIds: []
+            documentIds: [],
+            documentType: null,
+            documentModel: null,
+            documentErrorMessage: null
         };
     },
 
     /**
-     * Collect invoice amounts data from the payment card inputs
-     * Used for overdue invoices with custom amounts
+     * Collect document amounts data from current payment context
      * 
      * @private
      * @return {void}
      */
-    _collectInvoiceAmountsData() {
+    _collectDocumentAmountData() {
         const transactionRoute = this.paymentContext.transactionRoute;
 
-        // Check if this is an overdue invoices payment
-        if (!transactionRoute || !transactionRoute.includes('/invoice/transaction/overdue')) {
-            // Reset invoice payment data if not overdue invoices
-            this.documentPaymentData.customAmountsData = {};
-            this.documentPaymentData.totalAmount = 0;
-            this.documentPaymentData.documentIds = [];
+        // Route patterns mapping to document types
+        const routePatterns = this._getRoutePatterns();
+
+        // Try to match route and extract document info
+        let documentIds = [];
+        let documentType = null;
+        let documentModel = null;
+        let documentErrorMessage = null;
+        let documentTotalAmount = 0;
+        let documentDocumentsData = {
+            type: null,
+            data: [],
+        };
+
+        if (!transactionRoute) {
+            console.warn('No transaction route found');
             return;
         }
 
-        // Try to collect invoice amounts from the invoice payment cards
-        const invoicesPaymentCard = document.getElementById('invoices_payment_card');
+        for (const { pattern, model, type, errorMessage } of routePatterns) {
+            const matches = transactionRoute.match(pattern);
+            if (matches) {
+                documentModel = model;
+                documentType = documentDocumentsData.type = type;
+                documentErrorMessage = errorMessage;
 
-        if (!invoicesPaymentCard) {
-            console.warn('Invoices payment card element not found');
-            return;
-        }
+                // For single invoice/order, extract ID from route and convert to array
+                if (documentType === 'multiple_invoices') {
+                    // Try to collect invoice amounts from the invoice payment cards
+                    const invoicesPaymentCard = document.getElementById('invoices_payment_card');
+                    const amountInputs = invoicesPaymentCard.querySelectorAll('.invoice-amount-input');
 
-        const customAmountsData = {};
-        let totalAmount = 0;
-        const documentIds = [];
-        const amountInputs = invoicesPaymentCard.querySelectorAll('.invoice-amount-input');
+                    amountInputs.forEach(input => {
+                        const invoiceId = parseInt(input.dataset.invoiceId);
+                        const inputAmount = parseFloat(input.value) || 0;
+                        const currencyId = parseInt(input.dataset.currencyId);
 
-        amountInputs.forEach(input => {
-            const invoiceId = parseInt(input.dataset.invoiceId);
-            const inputAmount = parseFloat(input.value) || 0;
-            const currencyId = parseInt(input.dataset.currencyId);
+                        if (invoiceId && inputAmount > 0) {
+                            documentDocumentsData.data.push({
+                                id: invoiceId,
+                                amount: inputAmount,
+                                currency_id: currencyId
+                            });
 
-            if (invoiceId && inputAmount > 0) {
-                customAmountsData[invoiceId] = {
-                    amount: inputAmount,
-                    currency_id: currencyId
-                };
-
-                documentIds.push(invoiceId);
-                totalAmount += inputAmount;
+                            documentIds.push(invoiceId);
+                            documentTotalAmount += inputAmount;
+                        }
+                    });
+                } else {
+                    documentIds = [parseInt(matches[1], 10)];
+                    documentTotalAmount = this.paymentContext.amount;
+                }
+                break;
             }
-        });
+        }
 
-        // Update state
-        this.documentPaymentData.customAmountsData = customAmountsData;
-        this.documentPaymentData.totalAmount = totalAmount;
-        this.documentPaymentData.documentIds = documentIds;
+        // If we can't determine the document type, model or ids, allow to proceed
+        if (!documentType || !documentModel || !documentIds || documentIds.length === 0 || !documentErrorMessage || !documentTotalAmount || !documentDocumentsData.type) {
+            console.warn('Unable to determine document type, model, ids, total amount or documents data for pending transaction check');
+            return;
+        }
+
+        // Update the document payment data
+        this.paymentContext.documentPaymentData.documentsData = documentDocumentsData;
+        this.paymentContext.documentPaymentData.totalAmount = documentTotalAmount;
+        this.paymentContext.documentPaymentData.documentIds = documentIds;
+        this.paymentContext.documentPaymentData.documentType = documentType;
+        this.paymentContext.documentPaymentData.documentModel = documentModel;
+        this.paymentContext.documentPaymentData.documentErrorMessage = documentErrorMessage;
+    },
+
+    /**
+     * Get the route patterns for the document types
+     * @private
+     * @returns {Array} The route patterns
+     */
+    _getRoutePatterns() {
+        return [
+            {
+                pattern: /\/invoice\/transaction\/overdue/,
+                model: 'account.move',
+                type: 'multiple_invoices',
+                errorMessage: "Ya tiene una transacción pendiente para una o más facturas. Por favor, espere a que se complete antes de intentar un nuevo pago."
+            },
+            {
+                pattern: /\/invoice\/transaction\/(\d+)/,
+                model: 'account.move',
+                type: 'single_invoice',
+                errorMessage: "Ya tiene una transacción pendiente para esta factura. Por favor, espere a que se complete antes de intentar un nuevo pago."
+            },
+            {
+                pattern: /\/shop\/payment\/transaction\/(\d+)/,
+                model: 'sale.order',
+                type: 'single_order',
+                errorMessage: "Ya tiene una transacción pendiente para este pedido. Por favor, espere a que se complete antes de intentar un nuevo pago."
+            },
+        ];
     },
 
     /**
      * Prepare the params for the RPC to the transaction route.
-     * Override to include invoice_amounts_detail for overdue invoices with custom amounts.
+     * Override to include documents_data for overdue invoices with custom amounts.
      * 
      * @override method from payment.payment_form
      * @private
@@ -88,10 +145,11 @@ patch(PaymentForm.prototype, {
         const transactionRouteParams = super._prepareTransactionRouteParams(...arguments);
 
         // Check if we have invoice payment data
-        if (Object.keys(this.documentPaymentData.customAmountsData).length > 0) {
-            const jsonValue = JSON.stringify(this.documentPaymentData.customAmountsData);
-            transactionRouteParams.invoice_amounts_detail = jsonValue;
-            transactionRouteParams.amount = this.documentPaymentData.totalAmount;
+        if (Object.keys(this.paymentContext.documentPaymentData.documentsData).length > 0
+            && this.paymentContext.documentPaymentData.documentType !== 'single_order'
+        ) {
+            transactionRouteParams.documents_data = this.paymentContext.documentPaymentData.documentsData;
+            transactionRouteParams.amount = this.paymentContext.documentPaymentData.totalAmount;
         }
 
         return transactionRouteParams;
@@ -216,64 +274,11 @@ patch(PaymentForm.prototype, {
      */
     async _checkPendingTransactions() {
         try {
-            const transactionRoute = this.paymentContext.transactionRoute;
-
-            // Route patterns mapping to document types
-            const routePatterns = [
-                {
-                    pattern: /\/invoice\/transaction\/overdue/,
-                    model: 'account.move', type: 'multiple_invoices',
-                    errorMessage: "Ya tiene una transacción pendiente para una o más facturas. Por favor, espere a que se complete antes de intentar un nuevo pago."
-                },
-                { 
-                    pattern: /\/invoice\/transaction\/(\d+)/,
-                    model: 'account.move',
-                    type: 'single_invoice',
-                    errorMessage: "Ya tiene una transacción pendiente para esta factura. Por favor, espere a que se complete antes de intentar un nuevo pago." },
-                { 
-                    pattern: /\/shop\/payment\/transaction\/(\d+)/,
-                    model: 'sale.order',
-                    type: 'single_order',
-                    errorMessage: "Ya tiene una transacción pendiente para este pedido. Por favor, espere a que se complete antes de intentar un nuevo pago." },
-            ];
-
-            // Try to match route and extract document info
-            let documentIds = null;
-            let documentType = null;
-            let documentModel = null;
-            let documentErrorMessage = null;
-
-            if (transactionRoute) {
-                for (const { pattern, model, type, errorMessage } of routePatterns) {
-                    const matches = transactionRoute.match(pattern);
-                    if (matches) {
-                        documentModel = model;
-                        documentType = type;
-                        documentErrorMessage = errorMessage;
-
-                        // For single invoice/order, extract ID from route and convert to array
-                        if (documentType !== 'multiple_invoices' && matches[1]) {
-                            documentIds = [parseInt(matches[1], 10)];
-                        } else if (documentType === 'multiple_invoices') {
-                            // For multiple invoices, use the collected invoice IDs
-                            documentIds = this.documentPaymentData.documentIds;
-                        }
-                        break;
-                    }
-                }
-            }
-
-            // If we can't determine the document type, model or ids, allow to proceed
-            if (!documentType || !documentModel || !documentIds || documentIds.length === 0 || !documentErrorMessage) {
-                console.warn('Unable to determine document type, model or ids for pending transaction check');
-                return { canProceed: false };
-            }
-
             // Check for pending transactions
             const result = await rpc('/payment/gateway/check_pending_transactions', {
-                'document_type': documentType,
-                'document_model': documentModel,
-                'document_ids': documentIds,
+                'document_type': this.paymentContext.documentPaymentData.documentType,
+                'document_model': this.paymentContext.documentPaymentData.documentModel,
+                'document_ids': this.paymentContext.documentPaymentData.documentIds,
             });
 
             if (!result.success) {
@@ -287,7 +292,7 @@ patch(PaymentForm.prototype, {
 
             if (result.has_pending) {
                 this.services.notification.add(
-                    _t(documentErrorMessage),
+                    _t(this.paymentContext.documentPaymentData.documentErrorMessage ?? _t("Ya tiene una transacción pendiente para este documento. Por favor, espere a que se complete antes de intentar un nuevo pago.")),
                     { type: 'warning' }
                 );
                 return { canProceed: false };
@@ -316,8 +321,8 @@ patch(PaymentForm.prototype, {
         // Block the entire UI to prevent fiddling with other interactions.
         this._disableButton(true);
 
-        // Collect invoice amounts data at the beginning for overdue invoices
-        this._collectInvoiceAmountsData();
+        // Collect document amounts data
+        this._collectDocumentAmountData();
 
         const checkedRadio = this.el.querySelector('input[name="o_payment_radio"]:checked');
 

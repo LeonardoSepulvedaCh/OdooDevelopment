@@ -1,0 +1,201 @@
+<odoo>
+    <!-- Extend payment status template for Rutavity PSE additional information -->
+    <template id="portal_payment_status" name="Portal Payment Status" inherit_id="payment.payment_status">
+        <xpath expr="//div[@name='o_payment_status']" position="inside">
+            <!-- Show additional PSE information for Rutavity transactions -->
+            <t t-if="tx.provider_code == 'rutavity' and tx.payment_method_code == 'pse'">
+                <h4 class="mb-3 text-center">PSE Transaction Information</h4>
+                <div class="text-bg-light row row-cols-1 row-cols-md-2 mx-0 mb-3 py-2 rounded">
+                    <!-- Transaction reference -->
+                    <t t-call="payment.summary_item">
+                        <t t-set="name" t-value="'pse_reference'"/>
+                        <t t-set="label">Reference</t>
+                        <t t-set="value" t-value="tx.provider_reference"/>
+                    </t>
+                    
+                    <!-- Gateway status -->
+                    <t t-call="payment.summary_item">
+                        <t t-set="name" t-value="'pse_status'"/>
+                        <t t-set="label">Status</t>
+                        <t t-set="value" t-value="tx._fields['gateway_status'].convert_to_export(tx.gateway_status, tx)"/>
+                        <t t-set="include_separator" t-value="True"/>
+                    </t>
+                    
+                    <!-- Transaction date from gateway_response_data JSON -->
+                    <t t-if="tx.gateway_response_data and tx.gateway_response_data.get('fecha')">
+                        <t t-set="date_raw" t-value="tx.gateway_response_data.get('fecha')"/>
+                        <t t-set="date_formatted" t-value="datetime.datetime.strptime(date_raw, '%Y-%m-%d %H:%M:%S').strftime('%d/%m/%Y %H:%M:%S') if date_raw else ''"/>
+                        <t t-call="payment.summary_item">
+                            <t t-set="name" t-value="'pse_date'"/>
+                            <t t-set="label">Transaction Date</t>
+                            <t t-set="value" t-value="date_formatted"/>
+                        </t>
+                    </t>
+                    
+                    <!-- Gateway response message -->
+                    <t t-if="tx.gateway_response_message">
+                        <t t-call="payment.summary_item">
+                            <t t-set="name" t-value="'pse_message'"/>
+                            <t t-set="label">Response</t>
+                            <t t-set="value" t-value="tx.gateway_response_message"/>
+                            <t t-set="include_separator" t-value="True"/>
+                        </t>
+                    </t>
+                </div>
+                
+                <!-- Additional alert for pending status -->
+                <div t-if="tx.gateway_status == '3'" class="alert alert-warning d-flex gap-3 mb-3">
+                    <div>
+                        <i class="fa fa-clock-o"/>
+                    </div>
+                    <div class="w-100">
+                        <h6 class="alert-heading mb-1">Pending Bank Confirmation</h6>
+                        <p class="mb-0 small">
+                            Your PSE payment is being processed by your bank. 
+                            You will receive a confirmation once the bank approves the transaction.
+                        </p>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+    </template>
+
+    <!-- Extend payment confirmation template for Rutavity PSE additional information -->
+    <template id="portal_payment_confirm" name="Portal Payment Confirm" inherit_id="payment.confirm">
+        <xpath expr="//div[@t-att-class]" position="after">
+            <!-- Show additional PSE information for Rutavity transactions -->
+            <t t-if="tx.provider_code == 'rutavity' and tx.payment_method_code == 'pse'">
+                <h4 class="mb-3 text-center">PSE Transaction Information</h4>
+                <div class="text-bg-light row row-cols-1 row-cols-md-2 mx-0 mb-3 py-2 rounded">
+                    <!-- Transaction reference -->
+                    <t t-call="payment.summary_item">
+                        <t t-set="name" t-value="'pse_reference'"/>
+                        <t t-set="label">Reference</t>
+                        <t t-set="value" t-value="tx.provider_reference"/>
+                    </t>
+                    <!-- Gateway status -->
+                    <t t-call="payment.summary_item">
+                        <t t-set="name" t-value="'pse_status'"/>
+                        <t t-set="label">Status</t>
+                        <t t-set="value" t-value="tx._fields['gateway_status'].convert_to_export(tx.gateway_status, tx)"/>
+                        <t t-set="include_separator" t-value="True"/>
+                    </t>
+                    
+                    <!-- Transaction date from gateway_response_data JSON -->
+                    <t t-if="tx.gateway_response_data and (tx.gateway_response_data.get('fecha') or tx.gateway_response_data.get('x_fecha_transaccion'))">
+                        <t t-set="date_raw" t-value="tx.gateway_response_data.get('fecha') or tx.gateway_response_data.get('x_fecha_transaccion')"/>
+                        <t t-set="date_formatted" t-value="datetime.datetime.strptime(date_raw, '%Y-%m-%d %H:%M:%S').strftime('%d/%m/%Y %H:%M:%S') if date_raw else ''"/>
+                        <t t-call="payment.summary_item">
+                            <t t-set="name" t-value="'pse_date'"/>
+                            <t t-set="label">Transaction Date</t>
+                            <t t-set="value" t-value="date_formatted"/>
+                        </t>
+                    </t>
+                    
+                    <!-- Gateway response message -->
+                    <t t-if="tx.gateway_response_message">
+                        <t t-call="payment.summary_item">
+                            <t t-set="name" t-value="'pse_message'"/>
+                            <t t-set="label">Response</t>
+                            <t t-set="value" t-value="tx.gateway_response_message"/>
+                            <t t-set="include_separator" t-value="True"/>
+                        </t>
+                    </t>
+
+                    <t t-if="tx.gateway_bank">
+                        <t t-call="payment.summary_item">
+                            <t t-set="name" t-value="'pse_bank'"/>
+                            <t t-set="label">Bank</t>
+                            <t t-set="value" t-value="tx.gateway_bank"/>
+                        </t>
+                    </t>
+
+                    <t t-if="tx.gateway_response_data and tx.gateway_response_data.get('x_description')">
+                        <t t-call="payment.summary_item">
+                            <t t-set="name" t-value="'pse_description'"/>
+                            <t t-set="label">Description</t>
+                            <t t-set="value" t-value="tx.gateway_response_data.get('x_description')"/>
+                        </t>
+                    </t>
+                </div>
+            </t>
+        </xpath>
+
+        <xpath expr="//div[hasclass('offset-md-3')]" position="replace">
+            <div class="col d-flex justify-content-between">
+                <t t-if="tx.provider_code == 'rutavity' and tx.payment_method_code == 'pse' and tx.gateway_status == '3'">
+                    <button type="button" class="btn btn-primary" onclick="location.reload()">
+                        <i class="fa fa-refresh me-2"/>Refresh
+                    </button>
+                </t>
+                <a role="button" class="btn btn-secondary" href="/my/home">
+                    Go to my Account <i class="oi oi-arrow-right ms-2"/>
+                </a>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="website_sale_confirmation_rutavity" name="Website Sale Confirmation Rutavity" inherit_id="website_sale.payment_confirmation_status">
+        <xpath expr="//div[@name='order_confirmation']" position="after">
+            <t t-set="tx_sudo" t-value="order.get_portal_last_transaction()"/>
+            <t t-if="tx_sudo.provider_code == 'rutavity' and tx_sudo.payment_method_code == 'pse'">
+                <h4 class="mb-3 text-center">PSE Transaction Information</h4>
+                <div class="text-bg-light row row-cols-1 row-cols-md-2 mx-0 mb-3 py-2 rounded">
+                    <!-- Transaction reference -->
+                    <t t-call="payment.summary_item">
+                        <t t-set="name" t-value="'pse_reference'"/>
+                        <t t-set="label">Reference</t>
+                        <t t-set="value" t-value="tx_sudo.provider_reference"/>
+                    </t>
+                    
+                    <!-- Gateway status -->
+                    <t t-call="payment.summary_item">
+                        <t t-set="name" t-value="'pse_status'"/>
+                        <t t-set="label">Status</t>
+                        <t t-set="value" t-value="tx_sudo._fields['gateway_status'].convert_to_export(tx_sudo.gateway_status, tx_sudo)"/>
+                        <t t-set="include_separator" t-value="True"/>
+                    </t>
+                    
+                    <!-- Transaction date -->
+                    <t t-if="tx_sudo.gateway_response_data and (tx_sudo.gateway_response_data.get('fecha') or tx_sudo.gateway_response_data.get('x_fecha_transaccion'))">
+                        <t t-set="date_raw" t-value="tx_sudo.gateway_response_data.get('fecha') or tx_sudo.gateway_response_data.get('x_fecha_transaccion')"/>
+                        <t t-set="date_formatted" t-value="datetime.datetime.strptime(date_raw, '%Y-%m-%d %H:%M:%S').strftime('%d/%m/%Y %H:%M:%S') if date_raw else ''"/>
+                        <t t-call="payment.summary_item">
+                            <t t-set="name" t-value="'pse_date'"/>
+                            <t t-set="label">Transaction Date</t>
+                            <t t-set="value" t-value="date_formatted"/>
+                        </t>
+                    </t>
+                    
+                    <!-- Gateway response message -->
+                    <t t-if="tx_sudo.gateway_response_message">
+                        <t t-call="payment.summary_item">
+                            <t t-set="name" t-value="'pse_message'"/>
+                            <t t-set="label">Response</t>
+                            <t t-set="value" t-value="tx_sudo.gateway_response_message"/>
+                            <t t-set="include_separator" t-value="True"/>
+                        </t>
+                    </t>
+
+                    <!-- Bank information -->
+                    <t t-if="tx_sudo.gateway_bank">
+                        <t t-call="payment.summary_item">
+                            <t t-set="name" t-value="'pse_bank'"/>
+                            <t t-set="label">Bank</t>
+                            <t t-set="value" t-value="tx_sudo.gateway_bank"/>
+                        </t>
+                    </t>
+
+                    <!-- Description -->
+                    <t t-if="tx_sudo.gateway_response_data and tx_sudo.gateway_response_data.get('x_description')">
+                        <t t-call="payment.summary_item">
+                            <t t-set="name" t-value="'pse_description'"/>
+                            <t t-set="label">Description</t>
+                            <t t-set="value" t-value="tx_sudo.gateway_response_data.get('x_description')"/>
+                        </t>
+                    </t>
+                </div>
+            </t>
+        </xpath>
+    </template>
+</odoo>

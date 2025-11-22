@@ -1,11 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data noupdate="1">
+    <data noupdate="0">
         <!-- Public user can read account moves (invoices) from current company -->
         <record id="account_move_public_user_rule" model="ir.rule">
             <field name="name">Public User: Read Account Moves (Current Company)</field>
             <field name="model_id" ref="account.model_account_move"/>
             <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+            <field name="groups" eval="[(4, ref('base.group_public'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <!-- Public user can read account move lines (invoice lines) from current company -->
+        <record id="account_move_line_public_user_rule" model="ir.rule">
+            <field name="name">Public User: Read Account Move Lines (Current Company)</field>
+            <field name="model_id" ref="account.model_account_move_line"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+            <field name="groups" eval="[(4, ref('base.group_public'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <!-- Public user can read payment terms from current company -->
+        <record id="account_payment_term_public_user_rule" model="ir.rule">
+            <field name="name">Public User: Read Payment Terms (Current Company)</field>
+            <field name="model_id" ref="account.model_account_payment_term"/>
+            <field name="domain_force">[('company_id', 'in', [False] + company_ids)]</field>
             <field name="groups" eval="[(4, ref('base.group_public'))]"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="False"/>
@@ -19,6 +43,18 @@
             <field name="model_id" ref="payment.model_payment_transaction"/>
             <field name="domain_force">[('company_id', 'in', company_ids)]</field>
             <field name="groups" eval="[(4, ref('base.group_public'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <!-- Portal user can read payment transactions from current company -->
+        <record id="payment_transaction_portal_user_rule" model="ir.rule">
+            <field name="name">Portal User: Read Payment Transactions (Current Company)</field>
+            <field name="model_id" ref="payment.model_payment_transaction"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+            <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="False"/>
             <field name="perm_create" eval="False"/>

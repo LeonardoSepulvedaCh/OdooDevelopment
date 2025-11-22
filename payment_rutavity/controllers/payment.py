@@ -3,31 +3,34 @@ from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.http import request
 from odoo.addons.account_payment.controllers import portal as account_payment_portal
-import json
 
 
 class PaymentPortalRutavity(account_payment_portal.PaymentPortal):
 
     @http.route("/invoice/transaction/overdue", type="jsonrpc", auth="public")
     def overdue_invoices_transaction(
-        self, payment_reference, invoice_amounts_detail=None, **kwargs
+        self, payment_reference, documents_data=None, **kwargs
     ):
         """
         Override to support custom payment amounts per invoice.
 
         :param str payment_reference: The reference to the current payment
-        :param str invoice_amounts_detail: JSON string with custom amounts per invoice (optional)
+        :param str documents_data: JSON string with custom amounts per invoice (optional)
         :param dict kwargs: Additional data passed to _create_transaction
         :return: The mandatory values for the processing of the transaction
         :rtype: dict
         :raise: ValidationError if user is not logged in or validation fails
         """
-        partner = request.env.user.partner_id
-
         # If custom amounts are provided, filter invoices based on them
-        if invoice_amounts_detail:
-            # Parse the invoice_amounts_detail to get the invoice IDs
-            invoice_ids = self._extract_invoice_ids_from_amounts(invoice_amounts_detail)
+        if (
+            documents_data
+            and documents_data.get("type") == "multiple_invoices"
+            and documents_data.get("data")
+        ):
+            # Extract the document ids from the documents_data
+            invoice_ids = self._extract_document_ids_from_documents_data(
+                documents_data.get("data")
+            )
             overdue_invoices = request.env["account.move"].browse(invoice_ids).exists()
 
             # Validate that invoices has to be paid
@@ -53,27 +56,22 @@ class PaymentPortalRutavity(account_payment_portal.PaymentPortal):
             )
 
         # Process custom amounts if provided
-        custom_amounts = None
-        if invoice_amounts_detail:
-            custom_amounts = self._process_invoice_amounts_detail(
-                invoice_amounts_detail, overdue_invoices
-            )
-
-            # Calculate total from custom amounts (array format)
-            total_amount = sum(item["amount"] for item in custom_amounts)
-            kwargs["amount"] = total_amount
+        if (
+            documents_data
+            and documents_data.get("type") == "multiple_invoices"
+            and documents_data.get("data")
+        ):
+            self._validate_documents_data(documents_data.get("data"), overdue_invoices)
+            custom_create_values = {
+                "documents_data": documents_data,
+                "landing_route": "/payment/confirmation",
+            }
 
         # Validate transaction kwargs
         self._validate_transaction_kwargs(kwargs)
 
-        # Prepare custom create values with invoice_amounts_detail
-        custom_create_values = {
-            "invoice_ids": [Command.set(overdue_invoices.ids)],
-        }
-
-        # Add invoice amounts detail if provided
-        if custom_amounts:
-            custom_create_values["invoice_amounts_detail"] = custom_amounts
+        # Prepare custom create values with documents_data
+        custom_create_values["invoice_ids"] = [Command.set(overdue_invoices.ids)]
 
         # Merge with any existing custom_create_values from kwargs
         if "custom_create_values" in kwargs:
@@ -84,7 +82,7 @@ class PaymentPortalRutavity(account_payment_portal.PaymentPortal):
         kwargs.update(
             {
                 "currency_id": currencies[0].id,
-                "partner_id": partner.id,
+                "partner_id": request.env.user.partner_id.id,
                 "reference_prefix": payment_reference,
             }
         )
@@ -95,76 +93,43 @@ class PaymentPortalRutavity(account_payment_portal.PaymentPortal):
             **kwargs,
         )
 
+        if (
+            documents_data
+            and documents_data.get("type") == "multiple_invoices"
+            and documents_data.get("data")
+        ):
+            tx_sudo._update_landing_route()
+
         return tx_sudo._get_processing_values()
 
-    def _extract_invoice_ids_from_amounts(self, invoice_amounts_detail):
+    def _extract_document_ids_from_documents_data(self, documents_data):
         """
-        Extract invoice IDs from the invoice_amounts_detail parameter.
+        Extract document ids from the documents_data parameter.
 
-        :param invoice_amounts_detail: JSON string or dict with invoice amounts
-        :return: List of invoice IDs
+        :param documents_data: list of dicts with document ids
+        :return: List of document ids
         :rtype: list
         """
-        # Parse JSON string if provided
-        if isinstance(invoice_amounts_detail, str):
-            try:
-                custom_amounts = json.loads(invoice_amounts_detail)
-            except (json.JSONDecodeError, TypeError):
-                return []
-        elif isinstance(invoice_amounts_detail, dict):
-            custom_amounts = invoice_amounts_detail
-        else:
-            return []
+        return list(map(lambda document: int(document.get("id")), documents_data))
 
-        # Extract invoice IDs (keys can be strings or ints)
-        invoice_ids = []
-        for key in custom_amounts.keys():
-            try:
-                invoice_ids.append(int(key))
-            except (ValueError, TypeError):
-                continue
-
-        return invoice_ids
-
-    def _process_invoice_amounts_detail(self, invoice_amounts_detail, invoices):
+    def _validate_documents_data(self, documents_data, invoices):
         """
-        Process and validate custom payment amounts for invoices.
+        Validate the documents data.
 
-        :param str invoice_amounts_detail: JSON string with custom amounts
+        :param documents_data: list of dicts with invoice data [{"id": int, "amount": float, "currency_id": int}, ...]
         :param recordset invoices: Invoice recordset
-        :return: List of dicts with invoice payment details
-        :rtype: list
+        :return: None
         :raises ValidationError: If validation fails
         """
+        if not documents_data or not isinstance(documents_data, list):
+            raise ValidationError(_("Invalid payment amounts data format"))
 
-        # Parse JSON string if provided
-        if isinstance(invoice_amounts_detail, str):
-            try:
-                custom_amounts = json.loads(invoice_amounts_detail)
-            except (json.JSONDecodeError, TypeError):
-                raise ValidationError(_("Invalid payment amounts data format"))
-        elif isinstance(invoice_amounts_detail, dict):
-            custom_amounts = invoice_amounts_detail
-        else:
-            # If no custom amounts provided, use full amounts
-            custom_amounts = {}
-            for invoice in invoices:
-                custom_amounts[str(invoice.id)] = {
-                    "amount": invoice.amount_residual,
-                    "currency_id": invoice.currency_id.id,
-                }
+        # Convert documents_data list to dict for easier lookup
+        documents_dict = {int(doc.get("id")): doc for doc in documents_data}
 
-        # Validate custom amounts and build array
-        validated_amounts = []
         for invoice in invoices:
-            invoice_id_str = str(invoice.id)
-
-            # Try to find the invoice amount (key could be string or int)
-            amount_data = None
-            if invoice_id_str in custom_amounts:
-                amount_data = custom_amounts[invoice_id_str]
-            elif invoice.id in custom_amounts:
-                amount_data = custom_amounts[invoice.id]
+            # Find the document data for this invoice
+            amount_data = documents_dict.get(invoice.id)
 
             if not amount_data:
                 raise ValidationError(
@@ -199,15 +164,3 @@ class PaymentPortalRutavity(account_payment_portal.PaymentPortal):
                 raise ValidationError(
                     _("Currency mismatch for invoice %s", invoice.name)
                 )
-
-            # Add to array with new format
-            validated_amounts.append(
-                {
-                    "type": "invoice",
-                    "id": invoice.id,
-                    "amount": amount,
-                    "currency_id": currency_id,
-                }
-            )
-
-        return validated_amounts

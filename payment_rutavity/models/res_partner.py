@@ -15,7 +15,7 @@ class ResPartner(models.Model):
     def _compute_anonymized_name(self):
         """
         Compute anonymized name showing only first 3 characters of each word.
-        Rest of characters are replaced with asterisks.
+        Rest of characters are replaced with 3 asterisks.
         """
         for partner in self:
             if not partner.name:
@@ -30,8 +30,8 @@ class ResPartner(models.Model):
                     # If word has 3 or fewer characters, show it as is
                     anonymized_words.append(word)
                 else:
-                    # Show first 3 characters + asterisks for the rest
-                    anonymized_word = word[:3] + ("*" * (len(word) - 3))
+                    # Show first 3 characters + 3 asterisks
+                    anonymized_word = word[:3] + "***"
                     anonymized_words.append(anonymized_word)
 
             partner.anonymized_name = " ".join(anonymized_words)

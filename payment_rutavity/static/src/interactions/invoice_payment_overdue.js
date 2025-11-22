@@ -20,6 +20,7 @@ export class InvoicePaymentAmounts extends Interaction {
      */
     setup() {
         this.amountInputs = this.el.querySelectorAll('.invoice-amount-input');
+        this.paymentOptionRadios = this.el.querySelectorAll('.payment-option-radio');
         this.totalAmountDisplay = document.getElementById('payment_total_amount');
         this.currencySymbol = document.getElementById('payment_total_currency')?.textContent || '$';
         
@@ -49,8 +50,9 @@ export class InvoicePaymentAmounts extends Interaction {
                 style: 'decimal',
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
+                useGrouping: true, // Explicitly enable thousands separator
             });
-            
+
             const formattedNumber = formatter.format(amount);
             return `${this.currencySymbol} ${formattedNumber}`;
         } catch (error) {
@@ -60,7 +62,7 @@ export class InvoicePaymentAmounts extends Interaction {
     }
 
     /**
-     * Setup event listeners for all amount inputs
+     * Setup event listeners for all amount inputs and payment option radios
      */
     setupEventListeners() {
         this.amountInputs.forEach(input => {
@@ -70,6 +72,37 @@ export class InvoicePaymentAmounts extends Interaction {
             // Validate and auto-correct on blur
             input.addEventListener('blur', (e) => this.handleInputBlur(e.target));
         });
+        
+        // Setup listeners for payment option radio buttons
+        this.paymentOptionRadios.forEach(radio => {
+            radio.addEventListener('change', (e) => this.handlePaymentOptionChange(e.target));
+        });
+    }
+
+    /**
+     * Handle payment option radio change (installment or full payment)
+     * Updates the editable input value and recalculates total
+     */
+    handlePaymentOptionChange(radio) {
+        if (!radio.checked) {
+            return;
+        }
+        
+        const invoiceId = radio.dataset.invoiceId;
+        const selectedAmount = parseFloat(radio.dataset.amount) || 0;
+        
+        // Find the corresponding input for this invoice
+        const amountInput = this.el.querySelector(
+            `.invoice-amount-input[data-invoice-id="${invoiceId}"]`
+        );
+        
+        if (amountInput) {
+            // Update the input with the selected amount
+            amountInput.value = selectedAmount.toFixed(2);
+            
+            // Recalculate total
+            this.updateTotalAmount();
+        }
     }
 
     /**
@@ -78,17 +111,17 @@ export class InvoicePaymentAmounts extends Interaction {
     handleInputBlur(input) {
         let value = parseFloat(input.value) || 0;
         const maxAmount = parseFloat(input.dataset.maxAmount) || 0;
-        
+
         // Auto-correct if exceeds max
         if (value > maxAmount) {
             value = maxAmount;
         }
-        
+
         // Set minimum value
         if (value < 0.01) {
             value = 0.01;
         }
-        
+
         // Format to 2 decimals
         input.value = value.toFixed(2);
         this.updateTotalAmount();
@@ -104,7 +137,7 @@ export class InvoicePaymentAmounts extends Interaction {
         this.amountInputs.forEach(input => {
             const value = parseFloat(input.value) || 0;
             const maxAmount = parseFloat(input.dataset.maxAmount) || 0;
-            
+
             // Validate each input
             if (value <= 0 || value > maxAmount) {
                 isValid = false;
@@ -133,7 +166,7 @@ export class InvoicePaymentAmounts extends Interaction {
         const card = input.closest('.invoice-card');
         const errorMsg = card?.querySelector('.invalid-amount-msg');
         const maxDisplay = errorMsg?.querySelector('.max-amount-display');
-        
+
         if (errorMsg && maxDisplay) {
             maxDisplay.textContent = maxAmount.toFixed(2);
             errorMsg.classList.remove('d-none');
@@ -147,7 +180,7 @@ export class InvoicePaymentAmounts extends Interaction {
     hideValidationError(input) {
         const card = input.closest('.invoice-card');
         const errorMsg = card?.querySelector('.invalid-amount-msg');
-        
+
         if (errorMsg) {
             errorMsg.classList.add('d-none');
             input.classList.remove('is-invalid');

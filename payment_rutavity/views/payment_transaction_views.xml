@@ -27,11 +27,11 @@
                 </group>
                 
                 <!-- Add invoice amounts detail for multiple invoice payments -->
-                <group name="invoice_amounts_detail_group" 
-                       string="Invoice Payment Details"
-                       invisible="not invoice_amounts_detail"
+                <group name="documents_data_group" 
+                       string="Documents Data"
+                       invisible="not documents_data"
                        colspan="2">
-                    <field name="invoice_amounts_detail" widget="json_viewer" readonly="1" nolabel="1"/>
+                    <field name="documents_data" widget="json_viewer" readonly="1" nolabel="1"/>
                 </group>
             </xpath>
         </field>
