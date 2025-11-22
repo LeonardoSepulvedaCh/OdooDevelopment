@@ -4,6 +4,10 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
+# Constantes
+UNDEFINED_DATE_LABEL = 'No definida'
+APPROVAL_REQUEST_MODEL = 'approval.request'
+
 class SaleCreditQuotaApplication(models.Model):
     _inherit = 'sale.credit.quota.application'
 
@@ -140,7 +144,7 @@ class SaleCreditQuotaApplication(models.Model):
                     (self.customer_id.name, 
                      existing_approved.name,
                      existing_approved.name,
-                     existing_approved.credit_quota_end_date or 'No definida')
+                     existing_approved.credit_quota_end_date or UNDEFINED_DATE_LABEL)
                 )
         
         # Validar requisitos mínimos antes de enviar
@@ -173,7 +177,7 @@ class SaleCreditQuotaApplication(models.Model):
             approval_vals['date_end'] = fields.Datetime.to_datetime(self.credit_quota_end_date).replace(hour=23, minute=59, second=59)
         
         # Crear la solicitud de aprobación
-        approval_request = self.env['approval.request'].create(approval_vals)
+        approval_request = self.env[APPROVAL_REQUEST_MODEL].create(approval_vals)
         
         # Vincular bidireccionalmente
         self.write({'approval_request_id': approval_request.id})
@@ -191,7 +195,7 @@ class SaleCreditQuotaApplication(models.Model):
         # Retornar acción para abrir la solicitud de aprobación
         return {
             'type': 'ir.actions.act_window',
-            'res_model': 'approval.request',
+            'res_model': APPROVAL_REQUEST_MODEL,
             'res_id': approval_request.id,
             'view_mode': 'form',
             'target': 'current',
@@ -245,7 +249,7 @@ class SaleCreditQuotaApplication(models.Model):
         
         return {
             'type': 'ir.actions.act_window',
-            'res_model': 'approval.request',
+            'res_model': APPROVAL_REQUEST_MODEL,
             'res_id': self.approval_request_id.id,
             'view_mode': 'form',
             'target': 'current',
@@ -254,6 +258,10 @@ class SaleCreditQuotaApplication(models.Model):
     def _approval_approved(self):
         """Método llamado cuando la solicitud de aprobación es aprobada"""
         self.ensure_one()
+        
+        # Verificar que no esté ya aprobado para evitar ejecutar la lógica múltiples veces
+        if self.state == 'approved':
+            return True
         
         values = {
             'state': 'approved',
@@ -362,12 +370,12 @@ class SaleCreditQuotaApplication(models.Model):
             })
             
             self.customer_id.message_post(
-                body=_('Cupos de crédito finalizados y restablecidos a 0 desde la solicitud %s (fecha fin: %s)') % (self.name, self.credit_quota_end_date or 'No definida'),
+                body=_('Cupos de crédito finalizados y restablecidos a 0 desde la solicitud %s (fecha fin: %s)') % (self.name, self.credit_quota_end_date or UNDEFINED_DATE_LABEL),
                 message_type='notification'
             )
         
         self.message_post(
-            body=_('Solicitud finalizada - Cupos de crédito restablecidos a 0 (fecha fin del cupo: %s)') % (self.credit_quota_end_date or 'No definida'),
+            body=_('Solicitud finalizada - Cupos de crédito restablecidos a 0 (fecha fin del cupo: %s)') % (self.credit_quota_end_date or UNDEFINED_DATE_LABEL),
             message_type='notification'
         )
         
@@ -483,7 +491,7 @@ class SaleCreditQuotaApplication(models.Model):
 
         if missing_fields:
             raise ValidationError(
-                _('Los siguientes campos son obligatorios para aprobar la solicitud %s') % 
+                _('Los siguientes campos son obligatorios para aprobar la solicitud:\n• %s') % 
                 '\n• '.join(missing_fields)
             )
     

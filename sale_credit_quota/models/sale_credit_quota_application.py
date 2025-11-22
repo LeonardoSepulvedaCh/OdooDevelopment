@@ -133,7 +133,7 @@ class SaleCreditQuotaApplication(models.Model):
     audit_observations = fields.Text(string='Observaciones sobre la Auditoría')
 
     # Campo de integración con la app de Aprobaciones
-    approval_request_id = fields.Many2one('approval.request', string='Solicitud de Aprobación', readonly=True, copy=False, tracking=1, ondelete='cascade')
+    approval_request_id = fields.Many2one('approval.request', string='Solicitud de Aprobación', readonly=True, copy=False, tracking=1, ondelete='set null')
 
     # Onchange methods - para traer los datos del cliente
     @api.onchange('customer_id')

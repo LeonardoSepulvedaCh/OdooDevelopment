@@ -25,40 +25,30 @@ class ApprovalRequest(models.Model):
         
         # Después del compute, verificar cambios y sincronizar
         for record in self:
-            if record.id and record.credit_quota_application_id:
-                old_status = old_statuses.get(record.id)
-                new_status = record.request_status
-                
-                # Detectar cambio de estado
-                if old_status and old_status != new_status:
-                    try:
-                        if new_status == 'approved' and old_status != 'approved':
-                            record.credit_quota_application_id.with_context(from_approval=True)._approval_approved()
-                        elif new_status == 'refused' and old_status != 'refused':
-                            record.credit_quota_application_id.with_context(from_approval=True)._approval_refused()
-                    except Exception as e:
-                        _logger.error(
-                            'Error al sincronizar estado de la solicitud de cupo %s: %s',
-                            record.credit_quota_application_id.name, str(e)
-                        )
+            old_status = old_statuses.get(record.id)
+            record._sync_credit_quota_state(old_status, record.request_status)
         
         return res
     
-    @api.model_create_multi
-    def create(self, vals_list):
-        """Override create para vincular bidireccionalmente con la solicitud de cupo"""
-        records = super(ApprovalRequest, self).create(vals_list)
+    def _sync_credit_quota_state(self, old_status, new_status):
+        """Sincroniza el estado con la solicitud de cupo de crédito asociada"""
+        # Verificar si hay solicitud de cupo vinculada
+        if not (self.id and self.credit_quota_application_id):
+            return
         
-        for record in records:
-            # Si ya viene el campo credit_quota_application_id en vals, ya está vinculado
-            # Si no, intentar buscar por referencia
-            if not record.credit_quota_application_id and record.reference:
-                credit_quota_app = self.env['sale.credit.quota.application'].search([
-                    ('name', '=', record.reference)
-                ], limit=1)
-                
-                if credit_quota_app and credit_quota_app.approval_request_id == record:
-                    record.credit_quota_application_id = credit_quota_app.id
+        # Verificar si hubo cambio de estado
+        if not old_status or old_status == new_status:
+            return
         
-        return records
+        # Sincronizar según el nuevo estado
+        try:
+            if new_status == 'approved' and old_status != 'approved':
+                self.credit_quota_application_id.with_context(from_approval=True)._approval_approved()
+            elif new_status == 'refused' and old_status != 'refused':
+                self.credit_quota_application_id.with_context(from_approval=True)._approval_refused()
+        except Exception as e:
+            _logger.error(
+                'Error al sincronizar estado de la solicitud de cupo %s: %s',
+                self.credit_quota_application_id.name, str(e)
+            )
 

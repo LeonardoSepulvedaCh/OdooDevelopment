@@ -254,17 +254,31 @@ class SaleCreditQuotaApplication(models.Model):
             valid_invoices = 0
             
             for invoice in paid_invoices:
-                payment_lines = invoice._get_reconciled_info_JSON_values()
+                # En Odoo 19, obtener pagos reconciliados desde las líneas de la factura
+                payment_moves = self.env['account.move']
                 
-                if not payment_lines:
+                # Obtener las líneas de cuentas por cobrar/pagar de la factura
+                receivable_lines = invoice.line_ids.filtered(
+                    lambda l: l.account_id.account_type == 'asset_receivable'
+                )
+                
+                # Obtener todos los movimientos de pago reconciliados
+                for line in receivable_lines:
+                    # Pagos que reconcilian débitos (matched_debit_ids)
+                    for partial in line.matched_debit_ids:
+                        if partial.debit_move_id.move_id.move_type == 'entry':
+                            payment_moves |= partial.debit_move_id.move_id
+                    
+                    # Pagos que reconcilian créditos (matched_credit_ids)
+                    for partial in line.matched_credit_ids:
+                        if partial.credit_move_id.move_id.move_type == 'entry':
+                            payment_moves |= partial.credit_move_id.move_id
+                
+                if not payment_moves:
                     continue
                 
-                last_payment_date = None
-                
-                for payment in payment_lines:
-                    payment_date = fields.Date.from_string(payment.get('date'))
-                    if not last_payment_date or payment_date > last_payment_date:
-                        last_payment_date = payment_date
+                # Obtener la fecha del último pago
+                last_payment_date = max(payment_moves.mapped('date'))
                 
                 if last_payment_date and invoice.invoice_date_due:
                     days_diff = (last_payment_date - invoice.invoice_date_due).days
