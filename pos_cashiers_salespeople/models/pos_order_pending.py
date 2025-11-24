@@ -1,4 +1,5 @@
 from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError
 import json
 
 
@@ -27,11 +28,29 @@ class PosOrderPending(models.Model):
     pos_config_id = fields.Many2one('pos.config', string='Punto de Venta')
     note = fields.Text(string='Notas')
     
+    @api.constrains('name', 'pos_config_id')
+    def _check_unique_name_per_config(self):
+        """
+        Valida que el nombre del pedido sea único por punto de venta.
+        """
+        for record in self:
+            if record.name and record.pos_config_id:
+                # Buscar otros registros con el mismo nombre y config
+                existing_orders = self.search([
+                    ('name', '=', record.name),
+                    ('pos_config_id', '=', record.pos_config_id.id),
+                    ('id', '!=', record.id)
+                ])
+                if existing_orders:
+                    raise ValidationError(
+                        _('Ya existe un pedido con el nombre "%s" en este punto de venta.') % record.name
+                    )
+    
     def get_order_lines_data(self):
         if self.order_lines:
             try:
                 return json.loads(self.order_lines)
-            except:
+            except (ValueError, TypeError):
                 return []
         return []
     

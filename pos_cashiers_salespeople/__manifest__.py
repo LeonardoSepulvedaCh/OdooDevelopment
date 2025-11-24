@@ -1,6 +1,6 @@
 {
     'name': 'POS - Cajeros y Vendedores',
-    'version': '1.0.0',
+    'version': '1.0.2',
     'category': 'Rutavity/Point of Sale',
     'summary': 'Configuración de cajeros y vendedores por POS',
     'description': '''

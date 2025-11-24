@@ -1,5 +1,11 @@
 import { registry } from "@web/core/registry";
-import { Component, useState, onWillStart } from "@odoo/owl";
+import {
+  Component,
+  useState,
+  onWillStart,
+  onMounted,
+  onWillUnmount,
+} from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useService } from "@web/core/utils/hooks";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -32,6 +38,30 @@ export class PendingOrdersScreen extends Component {
       );
       await this.loadPendingOrders();
     });
+
+    onMounted(() => {
+      // Listener para manejar cambios de tamaño de ventana
+      this.resizeHandler = this.handleResize.bind(this);
+      window.addEventListener("resize", this.resizeHandler);
+      // Verificar el tamaño inicial
+      this.handleResize();
+    });
+
+    onWillUnmount(() => {
+      // Limpiar el listener al desmontar el componente
+      if (this.resizeHandler) {
+        window.removeEventListener("resize", this.resizeHandler);
+      }
+    });
+  }
+
+  handleResize() {
+    // Si la pantalla es mayor a 768px (no es móvil), resetear el estado
+    // para mostrar ambos paneles simultáneamente
+    const isMobile = window.innerWidth <= 768;
+    if (!isMobile && this.state.showMobileDetail) {
+      this.state.showMobileDetail = false;
+    }
   }
 
   async loadPendingOrders() {
