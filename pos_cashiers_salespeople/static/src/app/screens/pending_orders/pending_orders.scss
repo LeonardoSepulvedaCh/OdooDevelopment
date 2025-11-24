@@ -1,75 +1,284 @@
 .pending-orders-screen {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+
+  .card {
+    border-radius: 10px;
+  }
+
+  tbody {
+    border: none;
+    border-color: transparent;
+  }
+
+  .btn-delete i {
+    color: #d40000;
+    border: none;
+    font-size: 16px;
+    &:hover {
+      color: #f30000;
+      cursor: pointer;
+    }
+  }
+
+  .controls {
+    border-bottom: 1px solid #d3d3d368;
+    height: auto;
+    min-height: 50px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+
+    h3 {
+      font-size: 1.1rem;
+    }
+
+    @media (max-width: 768px) {
+      padding: 0.75rem !important;
+
+      h3 {
+        font-size: 0.95rem;
+      }
+
+      .btn {
+        font-size: 0.85rem;
+        padding: 0.4rem 0.75rem;
+      }
+    }
+  }
+
+  .leftpane {
+    // En pantallas grandes: layout horizontal (panel izquierdo)
+    flex: 0 0 40%;
+    max-width: 40%;
+    height: 100% !important;
+    border-right: 1px solid #dee2e6;
+    border-bottom: none;
+
+    // En tablets y móviles: layout vertical (panel superior)
+    @media (max-width: 1024px) {
+      flex: 0 0 100%;
+      max-width: 100%;
+      height: 45% !important;
+      border-right: none;
+      border-bottom: 1px solid #dee2e6;
+    }
+
+    // En móviles: ocultar si tiene la clase hide-on-mobile
+    @media (max-width: 768px) {
+      height: 100% !important;
+      
+      &.hide-on-mobile {
+        display: none !important;
+      }
+    }
+  }
+
+  .rightpane {
+    padding: 0;
+    // En pantallas grandes: layout horizontal (panel derecho)
+    flex: 1;
+    max-width: 60%;
+    height: 100% !important;
+    width: auto;
+    min-width: 0;
+    margin: 0;
+
+    // En tablets y móviles: layout vertical (panel inferior)
+    @media (max-width: 1024px) {
+      flex: 0 0 100%;
+      max-width: 100%;
+      height: 55% !important;
+    }
+
+    // En móviles: ocultar si tiene la clase hide-on-mobile
+    @media (max-width: 768px) {
+      height: 100% !important;
+      
+      &.hide-on-mobile {
+        display: none !important;
+      }
+    }
+  }
+
+  .screen-full-width {
     width: 100%;
     height: 100%;
+    display: flex;
+    // En pantallas grandes: layout horizontal (row)
+    flex-direction: row;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    overflow: hidden;
 
-    .card {
-        border-radius: 10px;
+    // En tablets y móviles: layout vertical (column)
+    @media (max-width: 1024px) {
+      flex-direction: column;
     }
+  }
 
-    tbody {
-        border: none;
-        border-color: transparent;
+  // Ajustes para cards de órdenes
+  .order-card {
+    @media (max-width: 768px) {
+      padding: 0.75rem !important;
+      margin-bottom: 0.75rem !important;
+
+      h5 {
+        font-size: 1rem;
+      }
+
+      h4 {
+        font-size: 1.1rem;
+      }
+
+      p {
+        font-size: 0.85rem;
+      }
+
+      .btn-delete {
+        padding: 0.25rem 0.5rem;
+      }
     }
+  }
 
-    .btn-delete i {
-        color: #d40000;
-        border: none;
-        font-size: 16px;
-        &:hover {
-            color: #f30000;
-            cursor: pointer;
+  // Ajustes para el detalle de la orden
+  .order-details {
+    @media (max-width: 768px) {
+      .card {
+        margin-bottom: 0.75rem !important;
+      }
+
+      .card-header h5,
+      .card-header h6 {
+        font-size: 0.95rem;
+      }
+
+      .card-body {
+        padding: 0.75rem;
+        font-size: 0.9rem;
+      }
+
+      // Hacer la tabla responsive
+      .table-responsive {
+        font-size: 0.85rem;
+
+        th,
+        td {
+          padding: 0.5rem 0.25rem;
         }
+
+        th:first-child,
+        td:first-child {
+          min-width: 100px;
+        }
+      }
+
+      // Ajustar botones
+      .btn-lg {
+        font-size: 1rem;
+        padding: 0.6rem 1.2rem;
+      }
+    }
+  }
+
+  // Ajustes para columnas en móvil
+  @media (max-width: 576px) {
+    .order-details .card-body .row {
+      .col-6 {
+        flex: 0 0 100%;
+        max-width: 100%;
+      }
+    }
+  }
+
+  // Mensajes de estado (cargando, sin órdenes, etc.)
+  .text-center {
+    p {
+      @media (max-width: 768px) {
+        font-size: 0.9rem;
+      }
     }
 
-    .controls {
-        border-bottom: 1px solid #d3d3d368;
-        height: 50px;
-        position: sticky;
-        top: 0;
-        z-index: 100;
+    i.fa-3x {
+      @media (max-width: 768px) {
+        font-size: 2rem;
+      }
     }
+  }
 
-    .leftpane {
-        flex: 0 0 40%;
-        max-width: 40%;
+  // Ajustes para el área de contenido
+  .content {
+    @media (max-width: 768px) {
+      padding: 0.75rem !important;
     }
+  }
 
-    .rightpane {
-        padding: 0;
-        flex: 1;
-        width: auto;
-        min-width: 0;
+  // Botón de volver - solo visible en móviles
+  .back-button-mobile {
+    display: none;
+    
+    @media (max-width: 768px) {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.5rem 0.75rem;
+      font-size: 1rem;
+      
+      i {
         margin: 0;
+      }
+    }
+  }
+
+  // Optimización de espacios en pantallas pequeñas
+  @media (max-width: 480px) {
+    .order-card {
+      .d-flex {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .text-end {
+        text-align: left !important;
+      }
     }
 
-    .screen-full-width {
+    .order-details {
+      .table-responsive {
+        font-size: 0.75rem;
+
+        th,
+        td {
+          padding: 0.4rem 0.2rem;
+        }
+      }
+
+      .btn-lg {
         width: 100%;
-        height: 100%;
-        display: flex;
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
+        font-size: 0.95rem;
+      }
     }
+  }
 }
 
 ::-webkit-scrollbar {
-    width: 5px;
+  width: 5px;
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: #cccccc;
-    border-radius: 4px;
+  background-color: #cccccc;
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background-color: #8a8a8a;
+  background-color: #8a8a8a;
 }
 
 ::-webkit-scrollbar-track {
-    background-color: #f1f1f1;
+  background-color: #f1f1f1;
 }

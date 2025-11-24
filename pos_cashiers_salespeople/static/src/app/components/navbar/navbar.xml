@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_cashiers_salespeople.Navbar" t-inherit="point_of_sale.Navbar" t-inherit-mode="extension">
-        <xpath expr="//div[@class='navbar-menu d-flex']" position="inside">
+        <xpath expr="//div[hasclass('navbar-menu')]" position="inside">
             <button class="btn btn-light btn-lg lh-lg" t-on-click="onClickPendingOrders" t-att-class="{'active': mainButton === 'pending_orders'}">
-                Pedidos Pendientes
+                <i class="fa fa-clock-o" title="Pedidos Pendientes"></i>
+                <span class="d-none d-md-inline ms-2">Pedidos Pendientes</span>
             </button>
         </xpath>
     </t>

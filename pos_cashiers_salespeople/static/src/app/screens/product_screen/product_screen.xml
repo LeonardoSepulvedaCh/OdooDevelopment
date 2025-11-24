@@ -10,7 +10,7 @@
                 t-attf-class="{{ currentOrder.isEmpty() ? 'btn-secondary' : 'btn-primary' }}" 
                 t-on-click="() => this.createOrder()">
                 <span class="d-block">Realizar pedido</span>
-                <span t-esc="total" />
+                <span t-out="total" />
             </button>
             
             <!-- Botón normal de pago para cajeros y otros usuarios -->
@@ -19,7 +19,7 @@
                 t-attf-class="{{ currentOrder.isEmpty() ? 'btn-secondary' : 'btn-primary' }}" 
                 t-on-click="() => this.pos.pay()">
                 <span class="d-block">Pay</span>
-                <span t-esc="total" />
+                <span t-out="total" />
             </button>
         </xpath>
 

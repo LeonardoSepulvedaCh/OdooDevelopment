@@ -1,7 +1,7 @@
 {
     'name': 'POS - Cajeros y Vendedores',
-    'version': '19.0.0.0.0',
-    'category': 'Milan/POS',
+    'version': '1.0.0',
+    'category': 'Rutavity/Point of Sale',
     'summary': 'Configuración de cajeros y vendedores por POS',
     'description': '''
         Este módulo extiende la configuración del POS para permitir definir:

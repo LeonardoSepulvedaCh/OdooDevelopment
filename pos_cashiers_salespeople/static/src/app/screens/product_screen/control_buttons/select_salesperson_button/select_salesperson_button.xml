@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
     <t t-name="pos_cashiers_salespeople.SelectSalespersonButton">
         <button class="set-salesperson btn btn-secondary btn-lg lh-lg text-truncate w-auto" t-on-click="onClickSelectSalesperson">
-            <div t-if="currentSalesperson" t-esc="currentSalesperson.name" class="text-truncate text-action" />
+            <div t-if="currentSalesperson" t-out="currentSalesperson.name" class="text-truncate text-action" />
             <t t-else="">Vendedor</t>
         </button>
     </t>
