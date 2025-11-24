@@ -1,0 +1,80 @@
+// Contenedor del rightpane con posicionamiento relativo
+.product-screen .rightpane {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+// Controles de paginación fijos en la parte inferior
+.pagination-controls-fixed {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--o-color-bg-view);
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+  min-height: 80px;
+  z-index: 10;
+
+  .btn {
+    min-width: 120px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+
+    &:not(:disabled):hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  .pagination-info {
+    user-select: none;
+
+    .fw-bold {
+      color: var(--o-color-text-primary);
+      margin-bottom: 4px;
+    }
+
+    .text-muted {
+      color: var(--o-color-text-secondary);
+    }
+  }
+}
+
+// Ajustar el contenedor para que tenga espacio para los controles
+.product-screen .rightpane .pos-pagination-container {
+  padding-bottom: 90px;
+
+  .overflow-y-auto {
+    flex: 1;
+    overflow-y: auto;
+  }
+}
+
+// Responsive para pantallas pequeñas
+@media (max-width: 768px) {
+  .pagination-controls-fixed {
+    flex-direction: column;
+    padding: 1rem;
+    min-height: auto;
+
+    .btn {
+      width: 100%;
+      min-width: unset;
+    }
+
+    .pagination-info {
+      order: -1;
+      margin-bottom: 1rem;
+    }
+  }
+
+  .product-screen .rightpane .pos-pagination-container {
+    padding-bottom: 150px;
+  }
+}

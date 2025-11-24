@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="pos_product_pagination.ProductScreen" t-inherit="point_of_sale.ProductScreen" t-inherit-mode="extension">
+        
+        <!-- Modificar el contenedor principal del rightpane para soportar posicionamiento absoluto -->
+        <xpath expr="//div[hasclass('rightpane')]/div[hasclass('position-relative')]" position="attributes">
+            <attribute name="class">position-relative d-flex flex-column flex-grow-1 overflow-hidden pos-pagination-container</attribute>
+        </xpath>
+
+        <!-- Agregar controles de paginación al final del rightpane -->
+        <xpath expr="//div[hasclass('rightpane')]" position="inside">
+            <div t-if="paginationInfo.totalProducts > 0 and (!ui.isSmall or pos.mobile_pane === 'right')" 
+                 class="pagination-controls-fixed d-flex align-items-center justify-content-between gap-2 p-3 border-top bg-view">
+                <!-- Botón Anterior -->
+                <button 
+                    class="btn btn-lg flex-shrink-0"
+                    t-att-class="paginationInfo.hasPrevious ? 'btn-primary' : 'btn-secondary'"
+                    t-att-disabled="!paginationInfo.hasPrevious"
+                    t-on-click="goToPreviousPage">
+                    <i class="fa fa-chevron-left me-2"/>
+                    <span>Anterior</span>
+                </button>
+
+                <!-- Información de paginación -->
+                <div class="pagination-info text-center flex-grow-1">
+                    <div class="fw-bold fs-5">
+                        Página <t t-out="paginationInfo.currentPage"/> de <t t-out="paginationInfo.totalPages"/>
+                    </div>
+                    <div class="text-muted small">
+                        Mostrando <t t-out="paginationInfo.startProduct"/> - <t t-out="paginationInfo.endProduct"/> de <t t-out="paginationInfo.totalProducts"/> productos
+                    </div>
+                </div>
+
+                <!-- Botón Siguiente -->
+                <button 
+                    class="btn btn-lg flex-shrink-0"
+                    t-att-class="paginationInfo.hasNext ? 'btn-primary' : 'btn-secondary'"
+                    t-att-disabled="!paginationInfo.hasNext"
+                    t-on-click="goToNextPage">
+                    <span>Siguiente</span>
+                    <i class="fa fa-chevron-right ms-2"/>
+                </button>
+            </div>
+        </xpath>
+
+    </t>
+
+</templates>
+

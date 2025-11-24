@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Vista de formulario de pos.config -->
+    <record id="view_pos_config_form_pagination" model="ir.ui.view">
+        <field name="name">pos.config.form.pagination</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+        <field name="arch" type="xml">
+            
+            <!-- Agregar setting para paginación de productos -->
+            <xpath expr="//div[hasclass('o_settings_container')][last()]" position="after">
+                <div class="row mt16 o_settings_container">
+                    <setting string="Paginación de Productos" 
+                             help="Configura cuántos productos se mostrarán por página en el POS">
+                        <div class="content-group">
+                            <div class="row mt16">
+                                <label for="products_per_page" string="Productos por Página" class="col-lg-4 o_light_label"/>
+                                <field name="products_per_page" class="col-lg-2"/>
+                            </div>
+                        </div>
+                    </setting>
+                </div>
+            </xpath>
+            
+        </field>
+    </record>
+
+</odoo>
+

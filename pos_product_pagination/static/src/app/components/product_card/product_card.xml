@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="pos_product_pagination.ProductCard" t-inherit="point_of_sale.ProductCard" t-inherit-mode="extension">
+        
+        <!-- Agregar el precio del producto después del nombre -->
+        <xpath expr="//div[hasclass('product-name')]" position="after">
+            <div class="product-price-info d-flex justify-content-between align-items-center mt-1 px-2 pb-1">
+                <span class="product-price fw-bold text-primary fs-6">
+                    <t t-out="props.product.priceFormatted || '$ 0.00'"/>
+                </span>
+            </div>
+        </xpath>
+
+    </t>
+
+</templates>
+
