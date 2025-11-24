@@ -1,0 +1,174 @@
+.section-product-images {
+  text-align: center;
+
+  .product-image-viewer {
+    max-width: 100%;
+
+    .main-image-container {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+
+      .main-product-image {
+        width: 100%;
+        height: auto;
+        max-height: 400px;
+        object-fit: contain;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      /* Botones de navegación */
+      .image-nav-btn {
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 10;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0.8;
+        transition: opacity 0.3s ease;
+
+        &:hover {
+          opacity: 1;
+        }
+
+        &.prev-btn {
+          left: 10px;
+        }
+
+        &.next-btn {
+          right: 10px;
+        }
+
+        i {
+          font-size: 18px;
+        }
+      }
+
+      /* Contador de imágenes */
+      .image-counter {
+        bottom: 10px;
+        right: 10px;
+        background-color: rgba(0, 0, 0, 0.6);
+        color: white;
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 500;
+      }
+    }
+
+    /* Miniaturas */
+    .image-thumbnails {
+      .thumbnail-wrapper {
+        cursor: pointer;
+        border: 2px solid transparent;
+        border-radius: 6px;
+        padding: 2px;
+        transition: all 0.2s ease;
+
+        &:hover {
+          border-color: #dee2e6;
+          transform: scale(1.05);
+        }
+
+        &.active {
+          border-color: #0d6efd;
+          box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.25);
+        }
+
+        .thumbnail-image {
+          width: 80px;
+          height: 80px;
+          object-fit: cover;
+          display: block;
+        }
+      }
+    }
+  }
+}
+
+/* Responsividad para pantallas pequeñas */
+@media (max-width: 768px) {
+  .section-product-images {
+    .product-image-viewer {
+      .main-image-container {
+        .main-product-image {
+          max-height: 300px;
+        }
+
+        .image-nav-btn {
+          width: 35px;
+          height: 35px;
+
+          i {
+            font-size: 16px;
+          }
+        }
+      }
+
+      .image-thumbnails {
+        .thumbnail-wrapper {
+          .thumbnail-image {
+            width: 60px;
+            height: 60px;
+          }
+        }
+      }
+    }
+  }
+}
+
+/* Para navegadores basados en WebKit (Chrome, Safari, Edge) */
+.pos {
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+    transition: background-color 0.3s ease;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+}
+
+/* Para Firefox */
+.pos * {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
+/* Aplicar también al popup de producto */
+.modal-content,
+.modal-dialog {
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+}

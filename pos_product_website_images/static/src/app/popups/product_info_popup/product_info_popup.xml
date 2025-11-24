@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <!-- Extiende la plantilla del ProductInfoPopup para agregar la sección de imágenes -->
+    <t t-name="point_of_sale.ProductInfoPopup" t-inherit="point_of_sale.ProductInfoPopup" t-inherit-mode="extension">
+        
+        <!-- Insertar la galería de imágenes después del header y antes de la descripción -->
+        <xpath expr="//div[hasclass('section-public-description')]" position="before">
+            <div class="section-product-images mt-3 mb-4 pb-4 border-bottom" t-if="hasImages">
+                <h3 class="section-title text-start">
+                    Imágenes del Producto
+                </h3>
+                
+                <!-- Imagen principal -->
+                <div class="product-image-viewer">
+                    <div class="main-image-container position-relative">
+                        <img 
+                            t-att-src="currentImage.image_url" 
+                            t-att-alt="currentImage.name"
+                            class="main-product-image img-fluid rounded"
+                        />
+                        
+                        <!-- Botones de navegación (solo si hay más de una imagen) -->
+                        <t t-if="productImages.length > 1">
+                            <button 
+                                class="btn btn-light image-nav-btn prev-btn position-absolute"
+                                t-on-click="previousImage"
+                                aria-label="Imagen anterior"
+                            >
+                                <i class="fa fa-chevron-left"/>
+                            </button>
+                            <button 
+                                class="btn btn-light image-nav-btn next-btn position-absolute"
+                                t-on-click="nextImage"
+                                aria-label="Siguiente imagen"
+                            >
+                                <i class="fa fa-chevron-right"/>
+                            </button>
+                            
+                            <!-- Indicador de imagen actual -->
+                            <div class="image-counter position-absolute">
+                                <span t-out="imageState.currentImageIndex + 1"/> / <span t-out="productImages.length"/>
+                            </div>
+                        </t>
+                    </div>
+                    
+                    <!-- Miniaturas (solo si hay más de una imagen) -->
+                    <div class="image-thumbnails mt-3 d-flex gap-2 flex-wrap justify-content-center" t-if="productImages.length > 1">
+                        <t t-foreach="productImages" t-as="image" t-key="image.id">
+                            <div 
+                                class="thumbnail-wrapper"
+                                t-att-class="{'active': imageState.currentImageIndex === image_index}"
+                                t-on-click="() => this.selectImage(image_index)"
+                            >
+                                <img 
+                                    t-att-src="image.image_url" 
+                                    t-att-alt="image.name"
+                                    class="thumbnail-image rounded"
+                                    t-att-title="image.name"
+                                />
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+        
+    </t>
+
+</templates>
