@@ -1,7 +1,7 @@
 {
     'name': 'Contactos Adicionales',
-    'version': '1.0',
-    'category': 'Milan/Contactos',
+    'version': '1.0.0',
+    'category': 'Rutavity/Contactos',
     'summary': 'Añade personas de contacto adicionales a los contactos',
     'description': """
         Este módulo permite añadir personas de contacto adicionales a los contactos.
@@ -17,5 +17,5 @@
     ],
     'installable': True,
     'auto_install': False,
-    'application': True,
+    'application': False,
 }
