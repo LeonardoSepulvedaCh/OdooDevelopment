@@ -1,4 +1,4 @@
-from datetime import date, timedelta
+from datetime import timedelta
 import calendar
 import logging
 
@@ -153,7 +153,7 @@ class ResPartner(models.Model):
     def _post_birthday_messages(self, channel, partners_today, partners_tomorrow, odoobot_partner):
         try:
             notify_all_members = False
-            today = date.today()
+            today = fields.Date.to_date(fields.Date.today())
             tomorrow = today + timedelta(days=1)
 
             if partners_today:
