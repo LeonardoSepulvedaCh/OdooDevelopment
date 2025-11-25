@@ -7,14 +7,14 @@
         <field name="inherit_id" ref="base.view_res_partner_filter"/>
         <field name="arch" type="xml">
             <filter name="type_company" position="after">
-                <filter string="Empleados" name="type_employee" domain="[('employee_ids', '!=', False)]"/>
-                <filter string="Sin Empleados" name="type_no_employee" domain="[('employee_ids', '=', False)]"/>
+                <filter string="Empleados" name="type_employee" domain="[('employee_ids', '!=', False)]" groups="hr.group_hr_user"/>
+                <filter string="Sin Empleados" name="type_no_employee" domain="[('employee_ids', '=', False)]" groups="hr.group_hr_user"/>
             </filter>
         </field>
     </record>
 
-    <!-- Heredar la acción de contactos para excluir empleados por defecto -->
+    <!-- Heredar la acción de contactos para excluir empleados por defecto (solo si el usuario tiene permisos) -->
     <record id="contacts.action_contacts" model="ir.actions.act_window">
-        <field name="context">{'default_is_company': True, 'search_default_type_no_employee': 1}</field>
+        <field name="context">{'default_is_company': True}</field>
     </record>
 </odoo>

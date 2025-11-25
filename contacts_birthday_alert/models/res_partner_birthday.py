@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import date, timedelta
 import calendar
 import logging
 
@@ -38,7 +38,7 @@ class ResPartner(models.Model):
 
         if not target_user or not target_user.partner_id:
             _logger.warning("send_birthday_notifications: no hay target_user válido, abortando.")
-            return True
+            return
 
         record_for_tz = self.with_user(target_user.id)
         today_str = fields.Date.context_today(record_for_tz)
@@ -57,7 +57,7 @@ class ResPartner(models.Model):
 
         if not partners_today and not partners_tomorrow:
             _logger.debug("send_birthday_notifications: no hay cumpleaños hoy ni mañana.")
-            return True
+            return
 
         try:
             odoobot_user = self.env.ref('base.user_root')
@@ -75,21 +75,19 @@ class ResPartner(models.Model):
                 odoobot_partner
             )
 
-        return True
-
     # Busca o crea el canal de cumpleaños.
     def _get_or_create_birthday_channel(self):
         channel_name = "Cumpleaños Clientes"
-        Channel = self.env['discuss.channel']
+        channel_model = self.env['discuss.channel']
         
-        channel = Channel.sudo().search([
+        channel = channel_model.sudo().search([
             ('name', '=', channel_name),
             ('channel_type', '=', 'channel')
         ], limit=1)
 
         if not channel:
             try:
-                channel = Channel.sudo().create({
+                channel = channel_model.sudo().create({
                     'name': channel_name,
                     'channel_type': 'channel',
                 })
@@ -108,49 +106,67 @@ class ResPartner(models.Model):
 
         return channel
 
+    # Calcula la edad que cumplirá un partner en una fecha específica.
+    def _calculate_age_on_date(self, partner, reference_date):
+        if not partner.birth_date:
+            return None
+        return reference_date.year - partner.birth_date.year
+
+    # Formatea la lista de partners con sus edades.
+    def _format_partner_list_items(self, partners, reference_date):
+        items = []
+        for partner in partners:
+            age = self._calculate_age_on_date(partner, reference_date)
+            if age is not None:
+                items.append("<li>%s - %d años</li>" % (partner.name, age))
+            else:
+                items.append("<li>%s</li>" % partner.name)
+        return "\n".join(items)
+
+    # Publica un mensaje de cumpleaños en el canal.
+    def _post_single_birthday_message(self, channel, partners, title, reference_date, odoobot_partner, notify_all_members=False):
+        if not partners:
+            return None
+
+        items = self._format_partner_list_items(partners, reference_date)
+        body = _("""
+        %s
+        <ul>
+        %s
+        </ul>
+        """ % (title, items))
+
+        message = channel.sudo().message_post(
+            body=body,
+            body_is_html=True,
+            author_id=odoobot_partner.id if odoobot_partner else False,
+            message_type='comment',
+            subtype_xmlid='mail.mt_comment',
+        )
+
+        if notify_all_members:
+            self._notify_channel_members(channel, message)
+
+        return message
+
     # Publica los mensajes de cumpleaños en el canal.
     def _post_birthday_messages(self, channel, partners_today, partners_tomorrow, odoobot_partner):
-
         try:
             notify_all_members = False
+            today = date.today()
+            tomorrow = today + timedelta(days=1)
 
             if partners_today:
-                today_body = _("""
-                <h5><b>🎂🥳HOY CUMPLEN AÑOS LOS SIGUIENTES CLIENTES🥳🎂</b></h5>
-                <ul>
-                %s
-                </ul>
-                """ % "\n".join(["<li>%s</li>" % name for name in partners_today.mapped('name')]))
-                
-                message_today = channel.sudo().message_post(
-                    body=today_body,
-                    body_is_html=True,
-                    author_id=odoobot_partner.id if odoobot_partner else False,
-                    message_type='comment',
-                    subtype_xmlid='mail.mt_comment',
+                title = "<h5><b>🎂🥳HOY CUMPLEN AÑOS LOS SIGUIENTES CLIENTES🥳🎂</b></h5>"
+                self._post_single_birthday_message(
+                    channel, partners_today, title, today, odoobot_partner, notify_all_members
                 )
-
-                if notify_all_members:
-                    self._notify_channel_members(channel, message_today)
 
             if partners_tomorrow:
-                tomorrow_body = _("""
-                <b>📆🎂Mañana cumplen años los siguientes clientes🎂📆</b>
-                <ul>
-                %s
-                </ul>
-                """ % "\n".join(["<li>%s</li>" % name for name in partners_tomorrow.mapped('name')]))
-
-                message_tomorrow = channel.sudo().message_post(
-                    body=tomorrow_body,
-                    body_is_html=True,
-                    author_id=odoobot_partner.id if odoobot_partner else False,
-                    message_type='comment',
-                    subtype_xmlid='mail.mt_comment',
+                title = "<b>📆🎂Mañana cumplen años los siguientes clientes🎂📆</b>"
+                self._post_single_birthday_message(
+                    channel, partners_tomorrow, title, tomorrow, odoobot_partner, notify_all_members
                 )
-
-                if notify_all_members:
-                    self._notify_channel_members(channel, message_tomorrow)
 
         except Exception as e:
             _logger.exception(
