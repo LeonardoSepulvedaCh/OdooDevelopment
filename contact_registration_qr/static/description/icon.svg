@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+    <!-- Fondo morado de Odoo -->
+    <rect width="256" height="256" fill="#714B67"/>
+    
+    <!-- QR Code simplificado -->
+    <g transform="translate(48, 48)">
+        <!-- Fondo blanco del QR -->
+        <rect width="160" height="160" fill="white"/>
+        
+        <!-- Patrón de QR simplificado -->
+        <g fill="#714B67">
+            <!-- Esquina superior izquierda -->
+            <rect x="10" y="10" width="40" height="40"/>
+            <rect x="15" y="15" width="30" height="30" fill="white"/>
+            <rect x="20" y="20" width="20" height="20" fill="#714B67"/>
+            
+            <!-- Esquina superior derecha -->
+            <rect x="110" y="10" width="40" height="40"/>
+            <rect x="115" y="15" width="30" height="30" fill="white"/>
+            <rect x="120" y="20" width="20" height="20" fill="#714B67"/>
+            
+            <!-- Esquina inferior izquierda -->
+            <rect x="10" y="110" width="40" height="40"/>
+            <rect x="15" y="115" width="30" height="30" fill="white"/>
+            <rect x="20" y="120" width="20" height="20" fill="#714B67"/>
+            
+            <!-- Patrón central -->
+            <rect x="60" y="20" width="15" height="15"/>
+            <rect x="80" y="20" width="15" height="15"/>
+            <rect x="70" y="40" width="15" height="15"/>
+            <rect x="90" y="40" width="15" height="15"/>
+            <rect x="20" y="60" width="15" height="15"/>
+            <rect x="40" y="70" width="15" height="15"/>
+            <rect x="60" y="60" width="15" height="15"/>
+            <rect x="80" y="70" width="15" height="15"/>
+            <rect x="100" y="60" width="15" height="15"/>
+            <rect x="120" y="70" width="15" height="15"/>
+            <rect x="70" y="90" width="15" height="15"/>
+            <rect x="90" y="100" width="15" height="15"/>
+            <rect x="60" y="110" width="15" height="15"/>
+            <rect x="80" y="120" width="15" height="15"/>
+            <rect x="100" y="110" width="15" height="15"/>
+            <rect x="120" y="130" width="15" height="15"/>
+            <rect x="130" y="100" width="15" height="15"/>
+        </g>
+    </g>
+</svg>
+

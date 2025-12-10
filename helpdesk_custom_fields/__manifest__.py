@@ -28,6 +28,7 @@
         "data/helpdesk_sequences.xml",
         "data/helpdesk_tags.xml",
         "data/res_partner_category.xml",
+        "data/helpdesk_warranty_stages.xml",
         "report/helpdesk_warranty_report.xml",
         "report/helpdesk_warranty_report_action.xml",
         "views/helpdesk_ticket_views.xml",

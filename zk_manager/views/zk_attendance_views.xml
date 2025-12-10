@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vista de formulario para registros de asistencia ZK -->
+    <record id="view_zk_attendance_form" model="ir.ui.view">
+        <field name="name">zk.attendance.form</field>
+        <field name="model">zk.attendance</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Nombre del usuario"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <label for="device_id" string="Dispositivo"/>
+                            <div class="o_row">
+                                <i class="fa fa-hdd-o text-muted" title="Dispositivo" aria-hidden="true"/>
+                                <field name="device_id" readonly="1" class="oe_inline"/>
+                            </div>
+                            <label for="user_id" string="ID Usuario"/>
+                            <div class="o_row">
+                                <i class="fa fa-user text-muted" title="Usuario" aria-hidden="true"/>
+                                <field name="user_id" class="oe_inline"/>
+                            </div>
+                            <field name="uid"/>
+                        </group>
+                        <group>
+                            <label for="datetime_formatted_device" string="Fecha y hora (Dispositivo)"/>
+                            <div class="o_row">
+                                <i class="fa fa-hdd-o text-primary" title="Hora del dispositivo" aria-hidden="true"/>
+                                <field name="datetime_formatted_device" class="oe_inline" style="font-weight: bold; color: #00875A;"/>
+                            </div>
+                            <label for="timestamp" string="Fecha y hora (Odoo)"/>
+                            <div class="o_row">
+                                <i class="fa fa-clock-o text-muted" title="Hora convertida por Odoo" aria-hidden="true"/>
+                                <field name="timestamp" class="oe_inline"/>
+                            </div>
+                            <label for="date" string="Fecha"/>
+                            <div class="o_row">
+                                <i class="fa fa-calendar text-muted" title="Fecha" aria-hidden="true"/>
+                                <field name="date" class="oe_inline"/>
+                            </div>
+                            <field name="hour" widget="float_time"/>
+                        </group>
+                    </group>
+                    <group>
+                        <label for="status" string="Estado"/>
+                        <div class="o_row">
+                            <i class="fa fa-info-circle text-muted" title="Estado" aria-hidden="true"/>
+                            <field name="status" class="oe_inline"/>
+                        </div>
+                        <label for="punch" string="Tipo de marcación"/>
+                        <div class="o_row">
+                            <i class="fa fa-hand-pointer-o text-muted" title="Marcación" aria-hidden="true"/>
+                            <field name="punch" class="oe_inline"/>
+                        </div>
+                        <field name="active" widget="boolean_toggle"/>
+                    </group>
+                    <group>
+                        <field name="create_date"/>
+                        <field name="write_date"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vista de lista para registros de asistencia ZK -->
+    <record id="view_zk_attendance_list" model="ir.ui.view">
+        <field name="name">zk.attendance.list</field>
+        <field name="model">zk.attendance</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="user_id"/>
+                <field name="device_id"/>
+                <field name="datetime_formatted_device" string="Fecha y hora"/>
+                <field name="status"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Vista de búsqueda para registros de asistencia ZK -->
+    <record id="view_zk_attendance_search" model="ir.ui.view">
+        <field name="name">zk.attendance.search</field>
+        <field name="model">zk.attendance</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" string="Usuario" filter_domain="[('name', 'ilike', self)]"/>
+                <field name="user_id" string="ID Usuario"/>
+                <field name="device_id" string="Dispositivo"/>
+                <field name="date" string="Fecha"/>
+                <filter string="Hoy" name="filter_today" domain="[('date', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Esta semana" name="filter_week" domain="[('date', '&gt;=', (context_today() + relativedelta(weeks=-1, weekday=0)).strftime('%Y-%m-%d')), ('date', '&lt;=', (context_today() + relativedelta(weekday=6)).strftime('%Y-%m-%d'))]"/>
+                <filter string="Este mes" name="filter_month" domain="[('date', '&gt;=', (context_today() + relativedelta(day=1)).strftime('%Y-%m-%d')), ('date', '&lt;=', (context_today() + relativedelta(day=31)).strftime('%Y-%m-%d'))]"/>
+                <filter string="Dispositivo" name="group_device" context="{'group_by': 'device_id'}"/>
+                <filter string="Usuario" name="group_user" context="{'group_by': 'name'}"/>
+                <filter string="Fecha" name="group_date" context="{'group_by': 'date:day'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Acción para registros de asistencia ZK -->
+    <record id="action_zk_attendance" model="ir.actions.act_window">
+        <field name="name">Registros de Asistencia</field>
+        <field name="res_model">zk.attendance</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No hay registros de asistencia
+            </p>
+            <p>
+                Los registros de asistencia se importan automáticamente desde los dispositivos ZK conectados.
+            </p>
+        </field>
+    </record>
+</odoo>

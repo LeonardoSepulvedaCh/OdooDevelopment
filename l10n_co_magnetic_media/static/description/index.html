@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Colombia - Medios Magnéticos</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #875A7B;
+            border-bottom: 3px solid #875A7B;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #875A7B;
+            margin-top: 30px;
+        }
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        .badge-version {
+            background-color: #5cb85c;
+            color: white;
+        }
+        .badge-category {
+            background-color: #5bc0de;
+            color: white;
+        }
+        .feature-list {
+            list-style: none;
+            padding-left: 0;
+        }
+        .feature-list li:before {
+            content: "✓ ";
+            color: #5cb85c;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .warning {
+            background-color: #fcf8e3;
+            border-left: 4px solid #f0ad4e;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .info {
+            background-color: #d9edf7;
+            border-left: 4px solid #5bc0de;
+            padding: 15px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>🇨🇴 Colombia - Medios Magnéticos</h1>
+    
+    <p>
+        <span class="badge badge-version">v1.0.0</span>
+        <span class="badge badge-category">Accounting/Localizations</span>
+    </p>
+    
+    <h2>📋 Descripción</h2>
+    <p>
+        Módulo para la gestión de <strong>Medios Magnéticos</strong> e <strong>Informes de Exógenas</strong> 
+        según normativa DIAN de Colombia para Odoo v19.
+    </p>
+    <p>
+        Este módulo extiende la funcionalidad de contactos para organizar y gestionar la información 
+        tributaria requerida en los reportes de exógenas colombianos.
+    </p>
+    
+    <h2>✨ Características Principales</h2>
+    <ul class="feature-list">
+        <li><strong>Pestaña "Medios Magnéticos"</strong>: Nueva pestaña como primera posición en el formulario de contactos</li>
+        <li><strong>Campos de Nombres y Apellidos</strong>: Integración con el módulo contacts_name_split</li>
+        <li><strong>Primer Nombre</strong> (obligatorio)</li>
+        <li><strong>Segundo Nombre</strong></li>
+        <li><strong>Primer Apellido</strong> (obligatorio)</li>
+        <li><strong>Segundo Apellido</strong></li>
+        <li><strong>Estructura preparada</strong>: Grupos y secciones listas para agregar campos tributarios</li>
+        <li><strong>Compatible con multicompañía</strong></li>
+        <li><strong>Cumple con normativa DIAN</strong></li>
+    </ul>
+    
+    <div class="info">
+        <strong>ℹ️ Nota:</strong> Este módulo está en desarrollo activo. Los campos tributarios y funcionalidades 
+        de reportes se agregarán progresivamente.
+    </div>
+    
+    <h2>📦 Dependencias</h2>
+    <ul>
+        <li><code>base</code>: Módulo base de Odoo</li>
+        <li><code>contacts</code>: Gestión de contactos</li>
+        <li><code>account</code>: Contabilidad</li>
+        <li><code>l10n_co</code>: Localización colombiana base</li>
+        <li><code>l10n_latam_base</code>: Base de localización LATAM</li>
+        <li><code>contacts_name_split</code>: Gestión de nombres y apellidos separados</li>
+    </ul>
+    
+    <h2>🚀 Uso</h2>
+    <ol>
+        <li>Ir a <strong>Contactos</strong></li>
+        <li>Abrir o crear un contacto</li>
+        <li>La pestaña <strong>"Medios Magnéticos"</strong> aparecerá como primera pestaña del formulario</li>
+        <li>Completar los campos de nombres y apellidos (obligatorios)</li>
+    </ol>
+    
+    <h2>🔄 Próximas Versiones</h2>
+    <ul>
+        <li>Campos tributarios colombianos (Régimen tributario, Actividad económica, etc.)</li>
+        <li>Modelos de soporte para datos maestros</li>
+        <li>Generador de reportes de exógenas</li>
+        <li>Exportación en formatos DIAN</li>
+    </ul>
+    
+    <h2>👨‍💻 Autor</h2>
+    <p>
+        <strong>Rutavity</strong><br>
+        <a href="https://www.rutavity.com" target="_blank">https://www.rutavity.com</a>
+    </p>
+    
+    <h2>📄 Licencia</h2>
+    <p>OPL-1 (Odoo Proprietary License v1.0)</p>
+    
+    <div class="warning">
+        <strong>⚠️ Importante:</strong> Este módulo requiere que el módulo <code>contacts_name_split</code> 
+        esté instalado previamente.
+    </div>
+    
+</body>
+</html>
+

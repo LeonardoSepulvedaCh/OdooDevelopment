@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Template del formulario público de registro -->
+    <template id="registration_form" name="Formulario de Registro de Contacto">
+        <html>
+            <head>
+                <meta charset="utf-8"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1"/>
+                <title>Registro de Contacto</title>
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"/>
+                <link rel="stylesheet" href="/contact_registration_qr/static/src/css/registration_form.css"/>
+            </head>
+            <body>
+                <section class="pt-5 pb-5 registration-container">
+                    <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-8 col-lg-6">
+                        
+                        <!-- Encabezado -->
+                        <div class="text-center mb-5">
+                            <h1 class="mb-3 fw-bold">Registro de Contacto</h1>
+                            <p class="lead text-muted">Complete el siguiente formulario para registrarse</p>
+                        </div>
+
+                        <!-- Mensajes de éxito/error -->
+                        <t t-if="success">
+                            <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+                                <h5 class="alert-heading mb-2">¡Registro Exitoso!</h5>
+                                <p class="mb-0">Sus datos han sido guardados correctamente. Gracias por registrarse con nosotros.</p>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        </t>
+                        
+                        <t t-if="error">
+                            <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+                                <h5 class="alert-heading mb-2">Error en el Registro</h5>
+                                <p class="mb-0">
+                                    <t t-if="error == 'missing_fields'">
+                                        Por favor complete todos los campos obligatorios marcados con asterisco (*).
+                                    </t>
+                                    <t t-elif="error == 'registration_failed'">
+                                        Ocurrió un error al procesar su registro. Por favor verifique los datos ingresados e intente nuevamente. Si el problema persiste, contacte al administrador.
+                                    </t>
+                                    <t t-else="">
+                                        Error al procesar su solicitud. Por favor intente nuevamente.
+                                    </t>
+                                </p>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        </t>
+
+                        <!-- Formulario -->
+                        <div class="card registration-card">
+                            <div class="card-body p-5">
+                                <form action="/contact/register/submit" method="post">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                    <input type="hidden" name="token" t-att-value="token"/>
+
+                                    <h5 class="mb-3 fw-bold">Información Personal</h5>
+
+                                    <!-- Nombres -->
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="first_name" class="form-label fw-bold">
+                                                Primer Nombre <span class="text-danger">*</span>
+                                            </label>
+                                            <input type="text" 
+                                                   class="form-control form-control-lg" 
+                                                   id="first_name" 
+                                                   name="first_name" 
+                                                   required="required"
+                                                   placeholder="Primer nombre"/>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="second_name" class="form-label fw-bold">
+                                                Segundo Nombre
+                                            </label>
+                                            <input type="text" 
+                                                   class="form-control form-control-lg" 
+                                                   id="second_name" 
+                                                   name="second_name" 
+                                                   placeholder="Segundo nombre"/>
+                                        </div>
+                                    </div>
+
+                                    <!-- Apellidos -->
+                                    <div class="row">
+                                        <div class="col-md-6 mb-4">
+                                            <label for="first_surname" class="form-label fw-bold">
+                                                Primer Apellido <span class="text-danger">*</span>
+                                            </label>
+                                            <input type="text" 
+                                                   class="form-control form-control-lg" 
+                                                   id="first_surname" 
+                                                   name="first_surname" 
+                                                   required="required"
+                                                   placeholder="Primer apellido"/>
+                                        </div>
+                                        <div class="col-md-6 mb-4">
+                                            <label for="second_surname" class="form-label fw-bold">
+                                                Segundo Apellido
+                                            </label>
+                                            <input type="text" 
+                                                   class="form-control form-control-lg" 
+                                                   id="second_surname" 
+                                                   name="second_surname" 
+                                                   placeholder="Segundo apellido"/>
+                                        </div>
+                                    </div>
+
+                                    <!-- Tipo de Documento -->
+                                    <div class="mb-4">
+                                        <label for="l10n_latam_identification_type_id" class="form-label fw-bold">
+                                            Tipo de Documento <span class="text-danger">*</span>
+                                        </label>
+                                        <select class="form-select form-select-lg" 
+                                                id="l10n_latam_identification_type_id" 
+                                                name="l10n_latam_identification_type_id" 
+                                                required="required">
+                                            <option value="">Seleccione tipo de documento</option>
+                                            <t t-foreach="id_types" t-as="id_type">
+                                                <option t-att-value="id_type.id" t-out="id_type.name"/>
+                                            </t>
+                                        </select>
+                                    </div>
+
+                                    <!-- Número de Documento (Cédula/NIT) -->
+                                    <div class="mb-4">
+                                        <label for="vat" class="form-label fw-bold">
+                                            Número de Identificación <span class="text-danger">*</span>
+                                        </label>
+                                        <input type="text" 
+                                               class="form-control form-control-lg" 
+                                               id="vat" 
+                                               name="vat" 
+                                               required="required"
+                                               placeholder="Ingrese su número de identificación"/>
+                                    </div>
+
+                                    <!-- Régimen Tributario -->
+                                    <div class="mb-4">
+                                        <label for="l10n_co_tax_regime_id" class="form-label fw-bold">
+                                            Régimen Tributario <span class="text-danger">*</span>
+                                        </label>
+                                        <select class="form-select form-select-lg" 
+                                                id="l10n_co_tax_regime_id" 
+                                                name="l10n_co_tax_regime_id" 
+                                                required="required">
+                                            <option value="">Seleccione el régimen tributario</option>
+                                            <t t-foreach="tax_regimes" t-as="regime">
+                                                <option t-att-value="regime.id" t-out="regime.name"/>
+                                            </t>
+                                        </select>
+                                    </div>
+
+                                    <!-- Correo Electrónico -->
+                                    <div class="mb-4">
+                                        <label for="email" class="form-label fw-bold">
+                                            Correo Electrónico <span class="text-danger">*</span>
+                                        </label>
+                                        <input type="email" 
+                                               class="form-control form-control-lg" 
+                                               id="email" 
+                                               name="email" 
+                                               required="required"
+                                               placeholder="correo@ejemplo.com"/>
+                                    </div>
+
+                                    <hr class="my-4"/>
+                                    <h5 class="mb-3 fw-bold">Información de Dirección</h5>
+
+                                    <!-- Dirección -->
+                                    <div class="mb-3">
+                                        <label for="street" class="form-label">Dirección</label>
+                                        <input type="text" 
+                                               class="form-control" 
+                                               id="street" 
+                                               name="street" 
+                                               placeholder="Calle, número, apartamento"/>
+                                    </div>
+
+                                    <div class="row">
+                                        <!-- Departamento/Estado -->
+                                        <div class="col-md-6 mb-3">
+                                            <label for="state_id" class="form-label">Departamento</label>
+                                            <select class="form-select" id="state_id" name="state_id">
+                                                <option value="">Seleccione un departamento</option>
+                                                <t t-foreach="states" t-as="state">
+                                                    <option t-att-value="state.id" t-out="state.name"/>
+                                                </t>
+                                            </select>
+                                        </div>
+
+                                        <!-- Ciudad/Municipio -->
+                                        <div class="col-md-6 mb-3">
+                                            <label for="city_id" class="form-label">Ciudad/Municipio</label>
+                                            <select class="form-select" id="city_id" name="city_id">
+                                                <option value="">Seleccione primero un departamento</option>
+                                                <t t-foreach="cities" t-as="city">
+                                                    <option t-att-value="city.id" 
+                                                            t-att-data-state-id="city.state_id.id if city.state_id else ''"
+                                                            t-out="city.name"
+                                                            style="display: none;"/>
+                                                </t>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <!-- País -->
+                                        <div class="col-md-8 mb-3">
+                                            <label for="country_id" class="form-label">País</label>
+                                            <select class="form-select" id="country_id" name="country_id">
+                                                <option value="">Seleccione un país</option>
+                                                <t t-foreach="countries" t-as="country">
+                                                    <option t-att-value="country.id" 
+                                                            t-out="country.name"
+                                                            t-att-selected="'selected' if country.code == 'CO' else None"/>
+                                                </t>
+                                            </select>
+                                        </div>
+
+                                        <!-- Código Postal -->
+                                        <div class="col-md-4 mb-3">
+                                            <label for="zip" class="form-label">Código Postal</label>
+                                            <input type="text" 
+                                                   class="form-control" 
+                                                   id="zip" 
+                                                   name="zip" 
+                                                   placeholder="Código"/>
+                                        </div>
+                                    </div>
+
+                                    <hr class="my-4"/>
+                                    
+                                    <!-- Obligaciones y Responsabilidades Fiscales -->
+                                    <div class="mb-4">
+                                        <label class="form-label fw-bold">Obligaciones y Responsabilidades Fiscales</label>
+                                        <div class="border rounded-3 p-3 bg-light obligations-grid">
+                                            <t t-if="not obligation_types">
+                                                <p class="text-muted small mb-0">No hay obligaciones fiscales disponibles</p>
+                                            </t>
+                                            <t t-foreach="obligation_types" t-as="obligation">
+                                                <div class="form-check mb-2">
+                                                    <input class="form-check-input" 
+                                                           type="checkbox" 
+                                                           t-att-value="obligation.id" 
+                                                           t-att-id="'obligation_%s' % obligation.id"
+                                                           name="l10n_co_edi_obligation_type_ids"/>
+                                                    <label class="form-check-label" t-att-for="'obligation_%s' % obligation.id">
+                                                        <t t-out="obligation.display_name"/>
+                                                    </label>
+                                                </div>
+                                            </t>
+                                        </div>
+                                        <small class="form-text text-muted">
+                                            Seleccione las obligaciones fiscales que apliquen a su actividad económica
+                                        </small>
+                                    </div>
+
+                                    <!-- Botón de envío -->
+                                    <div class="d-grid gap-2 mt-4">
+                                        <button type="submit" class="btn btn-submit btn-lg text-white">
+                                            Registrarse
+                                        </button>
+                                    </div>
+
+                                    <p class="text-muted text-center mt-3 mb-0 small">
+                                        <span class="text-danger">*</span> Campos obligatorios
+                                    </p>
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            // Filtrar ciudades según el departamento seleccionado
+            document.addEventListener('DOMContentLoaded', function() {
+                const stateSelect = document.getElementById('state_id');
+                const citySelect = document.getElementById('city_id');
+                
+                if (stateSelect &amp;&amp; citySelect) {
+                    stateSelect.addEventListener('change', function() {
+                        const selectedStateId = this.value;
+                        const cityOptions = citySelect.querySelectorAll('option');
+                        
+                        // Resetear el select de ciudad
+                        citySelect.value = '';
+                        
+                        // Mostrar/ocultar ciudades según el departamento seleccionado
+                        cityOptions.forEach(function(option) {
+                            if (option.value === '') {
+                                // Opción por defecto
+                                if (selectedStateId) {
+                                    option.textContent = 'Seleccione una ciudad';
+                                    option.style.display = 'block';
+                                } else {
+                                    option.textContent = 'Seleccione primero un departamento';
+                                    option.style.display = 'block';
+                                }
+                            } else {
+                                const cityStateId = option.getAttribute('data-state-id');
+                                if (cityStateId === selectedStateId) {
+                                    option.style.display = 'block';
+                                } else {
+                                    option.style.display = 'none';
+                                }
+                            }
+                        });
+                        
+                        // Habilitar/deshabilitar el select de ciudad
+                        citySelect.disabled = !selectedStateId;
+                    });
+                    
+                    // Inicializar: deshabilitar ciudad si no hay departamento seleccionado
+                    if (!stateSelect.value) {
+                        citySelect.disabled = true;
+                    }
+                }
+            });
+        </script>
+        </body>
+        </html>
+    </template>
+
+</odoo>
+

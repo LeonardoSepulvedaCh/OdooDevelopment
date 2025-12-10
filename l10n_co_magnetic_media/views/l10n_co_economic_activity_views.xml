@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Vista de lista para l10n_co.economic.activity -->
+    <record id="view_l10n_co_economic_activity_list" model="ir.ui.view">
+        <field name="name">l10n.co.economic.activity.list</field>
+        <field name="model">l10n_co.economic.activity</field>
+        <field name="arch" type="xml">
+            <list string="Actividades Económicas" default_order="code">
+                <field name="sequence" widget="handle"/>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+    
+    <!-- Vista de formulario para l10n_co.economic.activity -->
+    <record id="view_l10n_co_economic_activity_form" model="ir.ui.view">
+        <field name="name">l10n.co.economic.activity.form</field>
+        <field name="model">l10n_co.economic.activity</field>
+        <field name="arch" type="xml">
+            <form string="Actividad Económica">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <widget name="web_ribbon" title="Archivado" bg_color="text-bg-danger" invisible="active"/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code" placeholder="Ej: 0111"/>
+                            <field name="name" placeholder="Descripción de la actividad económica"/>
+                        </group>
+                        <group>
+                            <field name="sequence"/>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="display_name_complete" readonly="1" string="Nombre Completo (Vista)"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <!-- Vista de búsqueda para l10n_co.economic.activity -->
+    <record id="view_l10n_co_economic_activity_search" model="ir.ui.view">
+        <field name="name">l10n.co.economic.activity.search</field>
+        <field name="model">l10n_co.economic.activity</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Actividades Económicas">
+                <field name="code" string="Código"
+                       filter_domain="[('code', 'ilike', self)]"/>
+                <field name="name" string="Descripción"
+                       filter_domain="[('name', 'ilike', self)]"/>
+                <separator/>
+                <filter string="Activas" name="active" 
+                        domain="[('active', '=', True)]"/>
+                <filter string="Inactivas" name="inactive" 
+                        domain="[('active', '=', False)]"/>
+                <separator/>
+                <filter string="Código" name="group_by_code" 
+                        context="{'group_by': 'code'}"/>
+            </search>
+        </field>
+    </record>
+    
+    <!-- Acción de ventana para l10n_co.economic.activity -->
+    <record id="action_l10n_co_economic_activity" model="ir.actions.act_window">
+        <field name="name">Actividades Económicas</field>
+        <field name="res_model">l10n_co.economic.activity</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Crea la primera actividad económica
+            </p>
+            <p>
+                Las actividades económicas son códigos CIIU (Clasificación Industrial Internacional Uniforme)
+                utilizados para clasificar las actividades económicas de los contactos según la DIAN.
+            </p>
+        </field>
+    </record>
+    
+    <!-- Menú para l10n_co.economic.activity -->
+    <menuitem id="menu_l10n_co_economic_activity_root"
+              name="Actividades Económicas"
+              parent="contacts.res_partner_menu_config"
+              action="action_l10n_co_economic_activity"
+              sequence="30"/>
+
+</odoo>
+

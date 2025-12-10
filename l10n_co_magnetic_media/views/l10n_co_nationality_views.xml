@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Vista de lista para l10n_co.nationality -->
+    <record id="view_l10n_co_nationality_list" model="ir.ui.view">
+        <field name="name">l10n.co.nationality.list</field>
+        <field name="model">l10n_co.nationality</field>
+        <field name="arch" type="xml">
+            <list string="Nacionalidades" default_order="code">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+    
+    <!-- Vista de formulario para l10n_co.nationality -->
+    <record id="view_l10n_co_nationality_form" model="ir.ui.view">
+        <field name="name">l10n.co.nationality.form</field>
+        <field name="model">l10n_co.nationality</field>
+        <field name="arch" type="xml">
+            <form string="Nacionalidad">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <widget name="web_ribbon" title="Archivado" bg_color="text-bg-danger" invisible="active"/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code" placeholder="Ej: 1"/>
+                            <field name="name" placeholder="Nombre de la nacionalidad"/>
+                        </group>
+                        <group>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="display_name_complete" readonly="1" string="Nombre Completo (Vista)"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <!-- Vista de búsqueda para l10n_co.nationality -->
+    <record id="view_l10n_co_nationality_search" model="ir.ui.view">
+        <field name="name">l10n.co.nationality.search</field>
+        <field name="model">l10n_co.nationality</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Nacionalidades">
+                <field name="code" string="Código"
+                       filter_domain="[('code', 'ilike', self)]"/>
+                <field name="name" string="Nombre"
+                       filter_domain="[('name', 'ilike', self)]"/>
+                <separator/>
+                <filter string="Activas" name="active" 
+                        domain="[('active', '=', True)]"/>
+                <filter string="Inactivas" name="inactive" 
+                        domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+    
+    <!-- Acción de ventana para l10n_co.nationality -->
+    <record id="action_l10n_co_nationality" model="ir.actions.act_window">
+        <field name="name">Nacionalidades</field>
+        <field name="res_model">l10n_co.nationality</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Crea la primera nacionalidad
+            </p>
+            <p>
+                Las nacionalidades clasifican a los contactos según su origen
+                para efectos tributarios en Colombia.
+            </p>
+        </field>
+    </record>
+    
+    <!-- Menú para l10n_co.nationality -->
+    <menuitem id="menu_l10n_co_nationality_root"
+              name="Nacionalidades"
+              parent="contacts.res_partner_menu_config"
+              action="action_l10n_co_nationality"
+              sequence="60"/>
+
+</odoo>
+

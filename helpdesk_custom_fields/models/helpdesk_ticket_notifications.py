@@ -80,9 +80,9 @@ class HelpdeskTicket(models.Model):
             return None
         
         channel_name = f"Garantias {self.branch_id.name}"
-        Channel = self.env['discuss.channel']
+        discuss_channel = self.env['discuss.channel']
         
-        channel = Channel.sudo().search([
+        channel = discuss_channel.sudo().search([
             ('name', '=', channel_name),
             ('channel_type', '=', 'channel')
         ], limit=1)
@@ -90,7 +90,7 @@ class HelpdeskTicket(models.Model):
         # Si no existe, crearlo
         if not channel:
             try:
-                channel = Channel.sudo().create({
+                channel = discuss_channel.sudo().create({
                     'name': channel_name,
                     'channel_type': 'channel',
                     'description': f'Canal de notificaciones de garantías para el almacén {self.branch_id.name}',

@@ -11,29 +11,26 @@
 
     <!-- Template del documento -->
     <template id="cash_closing_document">
-        <t t-call="web.external_layout">
-            <div class="page">
-                <!-- Imagen de encabezado -->
-                <div class="text-center mb-3">
-                    <img src="/pos_cash_report/static/img/header.png" alt="Header" class="header-image"/>
-                </div>
-                
+        <t t-set="data" t-value="doc.get_report_data()"/>
+        <t t-call="web.basic_layout">
+            <div class="cash-closing-report">
+                <div class="page">
                 <!-- Encabezado -->
                 <div class="text-center mb-3">
                     <h2 class="report-title"><span class="fw-bold">REPORTE DE CIERRE DE CAJA</span></h2>
                     <p class="datetime-info">
-                        <span class="fw-bold">Apertura:</span> <span t-out="doc.start_at" t-options="{'widget': 'datetime'}"/> | 
-                        <span class="fw-bold">Cierre:</span> <span t-out="doc.stop_at" t-options="{'widget': 'datetime'}"/>
+                        <span class="fw-bold">Apertura:</span> <span t-out="data['start_at']" t-options="{'widget': 'datetime'}"/> | 
+                        <span class="fw-bold">Cierre:</span> <span t-out="data['stop_at']" t-options="{'widget': 'datetime'}"/>
                     </p>
                 </div>
 
                 <div class="general-information">
                     <h5><strong>Información General</strong></h5>
                     <div class="content d-flex flex-row flex-wrap">
-                        <p class="mb-1 me-3"><strong>Cajero:</strong> <span t-out="doc.user_id.name"/></p>
-                        <p class="mb-1 me-3"><strong>POS:</strong> <span t-out="doc.config_id.name"/></p>
-                        <p class="mb-0 me-3"><strong>Estado:</strong> <span t-if="doc.state == 'closed'">Cerrado</span><span t-else="" t-out="doc.state"/></p>
-                        <p class="me-3"><span class="fw-bold">Sesión:</span> <span t-out="doc.name"/><br/></p>
+                        <p class="mb-1 me-3"><strong>Cajero:</strong> <span t-out="data['user'].name"/></p>
+                        <p class="mb-1 me-3"><strong>POS:</strong> <span t-out="data['config'].name"/></p>
+                        <p class="mb-0 me-3"><strong>Estado:</strong> <span t-out="data['state_display']"/></p>
+                        <p class="me-3"><span class="fw-bold">Sesión:</span> <span t-out="data['session_number']"/><br/></p>
                     </div>
 
                 </div>
@@ -41,100 +38,102 @@
 
                 <div class="financial-summary">
                     <h5><strong>Resumen Financiero</strong></h5>
-                    <table class="table table-sm table-borderless">
-                        <tr>
-                            <td><strong>Ventas:</strong></td>
-                            <td class="text-end">
-                                <span t-esc="'{:,.2f}'.format(sum(doc.order_ids.filtered(lambda o: o.state in ['paid', 'done', 'invoiced']).mapped('amount_total')))"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><strong>Gastos:</strong></td>
-                            <td class="text-end">
-                                <span t-esc="'{:,.2f}'.format(abs(sum(doc.statement_line_ids.filtered(lambda l: l.amount &lt; 0).mapped('amount'))))"/>
-                            </td>
-                        </tr>
-                        <tr class="border-top">
-                            <td><strong>Efectivo Inicial:</strong></td>
-                            <td class="text-end">
-                                <span t-out="doc.cash_register_balance_start" t-options="{'widget': 'float', 'precision': 2}"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><strong>Efectivo Esperado:</strong></td>
-                            <td class="text-end">
-                                <span t-out="doc.cash_register_balance_end" t-options="{'widget': 'float', 'precision': 2}"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><strong>Efectivo Contado:</strong></td>
-                            <td class="text-end">
-                                <span t-out="doc.cash_register_balance_end_real" t-options="{'widget': 'float', 'precision': 2}"/>
-                            </td>
-                        </tr>
-                        <tr class="border-top">
-                            <td><strong>Diferencia:</strong></td>
-                            <td class="text-end">
-                                <span t-out="doc.cash_register_difference" 
-                                        t-options="{'widget': 'float', 'precision': 2}"
-                                        t-attf-class="#{doc.cash_register_difference != 0 and 'text-danger fw-bold' or ''}"/>
-                            </td>
-                        </tr>
-                    </table>
+                    <div class="financial-summary-container">
+                        <div class="financial-column">
+                            <table class="table table-sm table-borderless">
+                                <tr>
+                                    <td><strong>Ventas:</strong></td>
+                                    <td class="text-end">
+                                        <span t-out="data['total_sales']" t-options="{'widget': 'float', 'precision': 2}"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Gastos:</strong></td>
+                                    <td class="text-end">
+                                        <span t-out="data['total_expenses']" t-options="{'widget': 'float', 'precision': 2}"/>
+                                    </td>
+                                </tr>
+                                <tr class="border-top">
+                                    <td><strong>Efectivo Inicial:</strong></td>
+                                    <td class="text-end">
+                                        <span t-out="data['cash_box_start']" t-options="{'widget': 'float', 'precision': 2}"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="financial-column">
+                            <table class="table table-sm table-borderless">
+                                <tr>
+                                    <td><strong>Efectivo Esperado:</strong></td>
+                                    <td class="text-end">
+                                        <span t-out="data['cash_box_end_expected']" t-options="{'widget': 'float', 'precision': 2}"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Efectivo Contado:</strong></td>
+                                    <td class="text-end">
+                                        <span t-out="data['cash_box_end_real']" t-options="{'widget': 'float', 'precision': 2}"/>
+                                    </td>
+                                </tr>
+                                <tr class="border-top">
+                                    <td><strong>Diferencia:</strong></td>
+                                    <td class="text-end">
+                                        <span t-out="data['difference']" 
+                                                t-options="{'widget': 'float', 'precision': 2}"
+                                                t-attf-class="#{data['has_difference'] and 'text-danger fw-bold' or ''}"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
                 </div>
              
                 <!-- Métodos de Pago -->
                 <div class="mb-4">
                     <h5><strong>Métodos de Pago</strong></h5>
-                    <t t-set="payment_methods" t-value="{}"/>
-                    <t t-foreach="doc.order_ids.filtered(lambda o: o.state in ['paid', 'done', 'invoiced']).mapped('payment_ids')" t-as="payment">
-                        <t t-set="method_name" t-value="payment.payment_method_id.name"/>
-                        <t t-if="method_name not in payment_methods" t-set="payment_methods" t-value="{**payment_methods, method_name: {'count': 0, 'total': 0.0}}"/>
-                        <t t-set="payment_methods" t-value="{**payment_methods, method_name: {'count': payment_methods[method_name]['count'] + 1, 'total': payment_methods[method_name]['total'] + payment.amount}}"/>
-                    </t>
-                    
-                    <table class="table table-sm table-striped payment-methods-table">
-                        <thead class="table-dark">
-                            <tr>
-                                <th>Método de Pago</th>
-                                <th class="text-center">Cantidad de Transacciones</th>
-                                <th class="text-end">Monto Total</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <t t-foreach="payment_methods.items()" t-as="method_data">
+                    <t t-if="data['has_payment_methods']">
+                        <table class="table table-sm table-striped payment-methods-table">
+                            <thead class="table-dark">
                                 <tr>
-                                    <td><strong t-esc="method_data[0]"/></td>
-                                    <td class="text-center"><span t-esc="method_data[1]['count']"/></td>
+                                    <th>Método de Pago</th>
+                                    <th class="text-center">Cantidad de Transacciones</th>
+                                    <th class="text-end">Monto Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="data['payment_methods']" t-as="method">
+                                    <tr>
+                                        <td><strong t-out="method['name']"/></td>
+                                        <td class="text-center"><span t-out="method['count']"/></td>
+                                        <td class="text-end">
+                                            <span t-out="method['total']" t-options="{'widget': 'float', 'precision': 2}"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                                <tr class="fw-bold">
+                                    <td><strong>TOTAL</strong></td>
+                                    <td class="text-center"><span t-out="data['payment_methods_totals']['count']"/></td>
                                     <td class="text-end">
-                                        <span t-esc="'{:,.2f}'.format(method_data[1]['total'])"/>
+                                        <span t-out="data['payment_methods_totals']['amount']" t-options="{'widget': 'float', 'precision': 2}"/>
                                     </td>
                                 </tr>
-                            </t>
-                            <tr class="fw-bold">
-                                <td><strong>TOTAL</strong></td>
-                                <td class="text-center"><span t-esc="sum([data['count'] for data in payment_methods.values()])"/></td>
-                                <td class="text-end">
-                                    <span t-esc="'{:,.2f}'.format(sum([data['total'] for data in payment_methods.values()]))"/>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </t>
+                    <t t-else="">
+                        <p class="text-muted">No hay métodos de pago registrados.</p>
+                    </t>
                 </div>
 
                 <!-- Desglose por Denominaciones -->
-                <t t-if="doc.config_id.cash_control">
+                <t t-if="data['cash_control_enabled']">
                     <div class="mb-4 denominations-section">
                         <h5><strong>Denominaciones</strong></h5>
-                        <t t-set="denominations_data" t-value="doc._get_cash_denominations(doc)"/>
-                        <t t-set="bills" t-value="denominations_data.get('bills', [])"/>
-                        <t t-set="coins" t-value="denominations_data.get('coins', [])"/>
-                        
-                        <t t-if="bills or coins">
+                        <t t-if="data['has_denominations']">
                             <div class="denominations-container">
                                 <!-- Tabla de Billetes -->
                                 <div class="denominations-column">
-                                    <t t-if="bills">
+                                    <t t-if="data['denominations']['bills']">
                                         <table class="table table-sm table-striped denominations-table">
                                             <thead class="table-dark">
                                                 <tr>
@@ -144,20 +143,20 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <t t-foreach="bills" t-as="denom">
+                                                <t t-foreach="data['denominations']['bills']" t-as="denom">
                                                     <tr>
                                                         <td><strong t-out="denom['formatted_value']"/></td>
-                                                        <td class="text-center"><span t-esc="denom['count']"/></td>
+                                                        <td class="text-center"><span t-out="denom['count']"/></td>
                                                         <td class="text-end">
-                                                            <span t-esc="'{:,.2f}'.format(denom['total'])"/>
+                                                            <span t-out="denom['total']" t-options="{'widget': 'float', 'precision': 2}"/>
                                                         </td>
                                                     </tr>
                                                 </t>
                                                 <tr class="table-secondary fw-bold">
                                                     <td><strong>TOTAL BILLETES</strong></td>
-                                                    <td class="text-center"><span t-esc="sum([d['count'] for d in bills])"/></td>
+                                                    <td class="text-center"><span t-out="data['denominations_totals']['bills']['count']"/></td>
                                                     <td class="text-end">
-                                                        <span t-esc="'{:,.2f}'.format(sum([d['total'] for d in bills]))"/>
+                                                        <span t-out="data['denominations_totals']['bills']['total']" t-options="{'widget': 'float', 'precision': 2}"/>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -170,7 +169,7 @@
                                 
                                 <!-- Tabla de Monedas -->
                                 <div class="denominations-column">
-                                    <t t-if="coins">
+                                    <t t-if="data['denominations']['coins']">
                                         <table class="table table-sm table-striped denominations-table">
                                             <thead class="table-dark">
                                                 <tr>
@@ -180,20 +179,20 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <t t-foreach="coins" t-as="denom">
+                                                <t t-foreach="data['denominations']['coins']" t-as="denom">
                                                     <tr>
                                                         <td><strong t-out="denom['formatted_value']"/></td>
-                                                        <td class="text-center"><span t-esc="denom['count']"/></td>
+                                                        <td class="text-center"><span t-out="denom['count']"/></td>
                                                         <td class="text-end">
-                                                            <span t-esc="'{:,.2f}'.format(denom['total'])"/>
+                                                            <span t-out="denom['total']" t-options="{'widget': 'float', 'precision': 2}"/>
                                                         </td>
                                                     </tr>
                                                 </t>
                                                 <tr class="table-secondary fw-bold">
                                                     <td><strong>TOTAL MONEDAS</strong></td>
-                                                    <td class="text-center"><span t-esc="sum([d['count'] for d in coins])"/></td>
+                                                    <td class="text-center"><span t-out="data['denominations_totals']['coins']['count']"/></td>
                                                     <td class="text-end">
-                                                        <span t-esc="'{:,.2f}'.format(sum([d['total'] for d in coins]))"/>
+                                                        <span t-out="data['denominations_totals']['coins']['total']" t-options="{'widget': 'float', 'precision': 2}"/>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -210,7 +209,7 @@
                                 <div class="alert alert-info">
                                     <h6 class="mb-0">
                                         <strong>TOTAL EFECTIVO CONTADO: 
-                                            <span t-esc="'{:,.2f}'.format(sum([d['total'] for d in bills]) + sum([d['total'] for d in coins]))"/>
+                                            <span t-out="data['denominations_totals']['grand_total']" t-options="{'widget': 'float', 'precision': 2}"/>
                                         </strong>
                                     </h6>
                                 </div>
@@ -223,11 +222,10 @@
                 </t>
 
                 <!-- Desglose de Efectivo -->
-                <t t-if="doc.config_id.cash_control">
+                <t t-if="data['cash_control_enabled']">
                     <div class="mb-4">
                         <h5><strong>Movimientos</strong></h5>
-                        <t t-set="cash_lines" t-value="doc.statement_line_ids.filtered(lambda l: l.amount != 0)"/>
-                        <t t-if="cash_lines">
+                        <t t-if="data['cash_movements']['has_movements']">
                             <table class="table table-sm table-striped cash-movements-table">
                                 <thead class="table-dark">
                                     <tr>
@@ -237,14 +235,14 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <t t-foreach="cash_lines" t-as="line">
+                                    <t t-foreach="data['cash_movements']['lines']" t-as="line">
                                         <tr>
-                                            <td><span t-out="line.payment_ref or line.name or 'Movimiento de efectivo'"/></td>
-                                            <td class="text-center"><span t-out="line.date" t-options="{'widget': 'date'}"/></td>
+                                            <td><span t-out="line['description']"/></td>
+                                            <td class="text-center"><span t-out="line['date']" t-options="{'widget': 'date'}"/></td>
                                             <td class="text-end">
-                                                <span t-out="line.amount" 
+                                                <span t-out="line['amount']" 
                                                         t-options="{'widget': 'float', 'precision': 2}"
-                                                        t-attf-class="#{line.amount &lt; 0 and 'text-danger' or 'text-success'}"/>
+                                                        t-attf-class="#{line['is_negative'] and 'text-danger' or 'text-success'}"/>
                                             </td>
                                         </tr>
                                     </t>
@@ -252,8 +250,9 @@
                                         <td><strong>TOTAL MOVIMIENTOS</strong></td>
                                         <td></td>
                                         <td class="text-end">
-                                            <span t-esc="'{:,.2f}'.format(sum(cash_lines.mapped('amount')))" 
-                                                    t-attf-class="#{sum(cash_lines.mapped('amount')) &lt; 0 and 'text-danger' or 'text-success'}"/>
+                                            <span t-out="data['cash_movements']['total']" 
+                                                    t-options="{'widget': 'float', 'precision': 2}"
+                                                    t-attf-class="#{data['cash_movements']['total'] &lt; 0 and 'text-danger' or 'text-success'}"/>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -268,15 +267,14 @@
                 <!-- Órdenes de la sesión -->
                 <div class="mb-4">
                     <h5><strong>Órdenes</strong></h5>
-                    <t t-set="paid_orders" t-value="doc.order_ids.filtered(lambda o: o.state in ['paid', 'done', 'invoiced'])"/>
                     <table class="table table-sm table-borderless summary-orders-table">
                         <tr>
                             <td><strong>Total de Órdenes:</strong></td>
-                            <td t-esc="len(paid_orders)"/>
+                            <td t-out="data['orders']['paid_count']"/>
                         </tr>
                         <tr>
                             <td><strong>Órdenes Canceladas:</strong></td>
-                            <td t-esc="len(doc.order_ids.filtered(lambda o: o.state == 'cancel'))"/>
+                            <td t-out="data['orders']['cancelled_count']"/>
                         </tr>
                     </table>
                 </div>
@@ -307,12 +305,6 @@
                     </div>
                 </div>
 
-                <!-- Pie de página -->
-                <div class="text-center mt-5 pt-3">
-                    <small>
-                        Generado: <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y %H:%M')"/> | 
-                        Industrias Bicicletas Milán S.A.
-                    </small>
                 </div>
             </div>
         </t>

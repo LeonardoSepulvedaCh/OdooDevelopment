@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Vista de lista para l10n_co.fiscal.regime -->
+    <record id="view_l10n_co_fiscal_regime_list" model="ir.ui.view">
+        <field name="name">l10n.co.fiscal.regime.list</field>
+        <field name="model">l10n_co.fiscal.regime</field>
+        <field name="arch" type="xml">
+            <list string="Regímenes Fiscales" default_order="code">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="vigencia_desde"/>
+                <field name="vigencia_hasta"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+    
+    <!-- Vista de formulario para l10n_co.fiscal.regime -->
+    <record id="view_l10n_co_fiscal_regime_form" model="ir.ui.view">
+        <field name="name">l10n.co.fiscal.regime.form</field>
+        <field name="model">l10n_co.fiscal.regime</field>
+        <field name="arch" type="xml">
+            <form string="Régimen Fiscal">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <widget name="web_ribbon" title="Archivado" bg_color="text-bg-danger" invisible="active"/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code" placeholder="Ej: 48"/>
+                            <field name="name" placeholder="Nombre del régimen fiscal"/>
+                        </group>
+                        <group>
+                            <field name="vigencia_desde"/>
+                            <field name="vigencia_hasta"/>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="display_name_complete" readonly="1" string="Nombre Completo (Vista)"/>
+                    </group>
+                    <separator string="Información de Vigencia"/>
+                    <group>
+                        <div class="alert alert-info" role="alert">
+                            <i class="fa fa-info-circle" title="Información"/> 
+                            <strong>Nota:</strong> Si el campo "Vigencia hasta" está vacío, 
+                            el régimen fiscal está activo indefinidamente.
+                        </div>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <!-- Vista de búsqueda para l10n_co.fiscal.regime -->
+    <record id="view_l10n_co_fiscal_regime_search" model="ir.ui.view">
+        <field name="name">l10n.co.fiscal.regime.search</field>
+        <field name="model">l10n_co.fiscal.regime</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Regímenes Fiscales">
+                <field name="code" string="Código"
+                       filter_domain="[('code', 'ilike', self)]"/>
+                <field name="name" string="Nombre"
+                       filter_domain="[('name', 'ilike', self)]"/>
+                <separator/>
+                <filter string="Activos" name="active" 
+                        domain="[('active', '=', True)]"/>
+                <filter string="Inactivos" name="inactive" 
+                        domain="[('active', '=', False)]"/>
+                <separator/>
+                <filter string="Vigentes" name="vigentes" 
+                        domain="['|', ('vigencia_hasta', '=', False), ('vigencia_hasta', '&gt;=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Vencidos" name="vencidos" 
+                        domain="[('vigencia_hasta', '!=', False), ('vigencia_hasta', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
+            </search>
+        </field>
+    </record>
+    
+    <!-- Acción de ventana para l10n_co.fiscal.regime -->
+    <record id="action_l10n_co_fiscal_regime" model="ir.actions.act_window">
+        <field name="name">Regímenes Fiscales</field>
+        <field name="res_model">l10n_co.fiscal.regime</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_active': 1, 'search_default_vigentes': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Crea el primer régimen fiscal
+            </p>
+            <p>
+                Los regímenes fiscales clasifican a los contactos según su responsabilidad
+                frente al IVA para efectos de facturación electrónica en Colombia.
+            </p>
+        </field>
+    </record>
+    
+    <!-- Menú para l10n_co.fiscal.regime -->
+    <menuitem id="menu_l10n_co_fiscal_regime_root"
+              name="Regímenes Fiscales"
+              parent="contacts.res_partner_menu_config"
+              action="action_l10n_co_fiscal_regime"
+              sequence="80"/>
+
+</odoo>

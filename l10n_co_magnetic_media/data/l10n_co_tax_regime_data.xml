@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Régimen Tributario: Empresas del Estado -->
+        <record id="tax_regime_ee" model="l10n_co.tax.regime">
+            <field name="code">EE</field>
+            <field name="name">Empresas del Estado.</field>
+            <field name="sequence">10</field>
+            <field name="retencion_fuente" eval="False"/>
+            <field name="retencion_cree" eval="False"/>
+            <field name="retencion_iva" eval="False"/>
+            <field name="retencion_timbre" eval="False"/>
+            <field name="retencion_ica" eval="False"/>
+            <field name="tipo_factura_electronica">2</field>
+            <field name="active" eval="True"/>
+        </record>
+        
+        <!-- Régimen Tributario: Extranjero -->
+        <record id="tax_regime_ex" model="l10n_co.tax.regime">
+            <field name="code">EX</field>
+            <field name="name">Extranjero.</field>
+            <field name="sequence">20</field>
+            <field name="retencion_fuente" eval="False"/>
+            <field name="retencion_cree" eval="False"/>
+            <field name="retencion_iva" eval="False"/>
+            <field name="retencion_timbre" eval="False"/>
+            <field name="retencion_ica" eval="False"/>
+            <field name="tipo_factura_electronica">2</field>
+            <field name="active" eval="True"/>
+        </record>
+        
+        <!-- Régimen Tributario: Gran Contribuyente -->
+        <record id="tax_regime_gc" model="l10n_co.tax.regime">
+            <field name="code">GC</field>
+            <field name="name">Gran Contribuyente.</field>
+            <field name="sequence">30</field>
+            <field name="retencion_fuente" eval="False"/>
+            <field name="retencion_cree" eval="False"/>
+            <field name="retencion_iva" eval="False"/>
+            <field name="retencion_timbre" eval="False"/>
+            <field name="retencion_ica" eval="False"/>
+            <field name="tipo_factura_electronica">2</field>
+            <field name="active" eval="True"/>
+        </record>
+        
+        <!-- Régimen Tributario: No Responsable de Iva -->
+        <record id="tax_regime_nr" model="l10n_co.tax.regime">
+            <field name="code">NR</field>
+            <field name="name">No Responsable de Iva.</field>
+            <field name="sequence">40</field>
+            <field name="retencion_fuente" eval="False"/>
+            <field name="retencion_cree" eval="False"/>
+            <field name="retencion_iva" eval="False"/>
+            <field name="retencion_timbre" eval="False"/>
+            <field name="retencion_ica" eval="False"/>
+            <field name="tipo_factura_electronica">0</field>
+            <field name="active" eval="True"/>
+        </record>
+        
+        <!-- Régimen Tributario: Régimen Común -->
+        <record id="tax_regime_rc" model="l10n_co.tax.regime">
+            <field name="code">RC</field>
+            <field name="name">Régimen Comun.</field>
+            <field name="sequence">50</field>
+            <field name="retencion_fuente" eval="False"/>
+            <field name="retencion_cree" eval="False"/>
+            <field name="retencion_iva" eval="False"/>
+            <field name="retencion_timbre" eval="False"/>
+            <field name="retencion_ica" eval="False"/>
+            <field name="tipo_factura_electronica">2</field>
+            <field name="active" eval="True"/>
+        </record>
+        
+        <!-- Régimen Tributario: Régimen Común no Retenedor -->
+        <record id="tax_regime_rcn" model="l10n_co.tax.regime">
+            <field name="code">RCN</field>
+            <field name="name">Regimen Común no Retenedor.</field>
+            <field name="sequence">60</field>
+            <field name="retencion_fuente" eval="False"/>
+            <field name="retencion_cree" eval="False"/>
+            <field name="retencion_iva" eval="False"/>
+            <field name="retencion_timbre" eval="False"/>
+            <field name="retencion_ica" eval="False"/>
+            <field name="tipo_factura_electronica">2</field>
+            <field name="active" eval="True"/>
+        </record>
+        
+        <!-- Régimen Tributario: Régimen Especial -->
+        <record id="tax_regime_re" model="l10n_co.tax.regime">
+            <field name="code">RE</field>
+            <field name="name">Regimen Especial.</field>
+            <field name="sequence">70</field>
+            <field name="retencion_fuente" eval="False"/>
+            <field name="retencion_cree" eval="False"/>
+            <field name="retencion_iva" eval="False"/>
+            <field name="retencion_timbre" eval="False"/>
+            <field name="retencion_ica" eval="False"/>
+            <field name="tipo_factura_electronica">2</field>
+            <field name="active" eval="True"/>
+        </record>
+        
+        <!-- Régimen Tributario: Régimen Simplificado -->
+        <record id="tax_regime_rs" model="l10n_co.tax.regime">
+            <field name="code">RS</field>
+            <field name="name">Régimen Simplificado.</field>
+            <field name="sequence">80</field>
+            <field name="retencion_fuente" eval="False"/>
+            <field name="retencion_cree" eval="False"/>
+            <field name="retencion_iva" eval="False"/>
+            <field name="retencion_timbre" eval="False"/>
+            <field name="retencion_ica" eval="False"/>
+            <field name="tipo_factura_electronica">0</field>
+            <field name="active" eval="True"/>
+        </record>
+        
+        <!-- Régimen Tributario: Usuario Aduanero -->
+        <record id="tax_regime_ua" model="l10n_co.tax.regime">
+            <field name="code">UA</field>
+            <field name="name">Usuario Aduanero</field>
+            <field name="sequence">90</field>
+            <field name="retencion_fuente" eval="False"/>
+            <field name="retencion_cree" eval="False"/>
+            <field name="retencion_iva" eval="False"/>
+            <field name="retencion_timbre" eval="False"/>
+            <field name="retencion_ica" eval="False"/>
+            <field name="tipo_factura_electronica">2</field>
+            <field name="active" eval="True"/>
+        </record>
+        
+        <!-- Régimen Tributario: Régimen Simple de Tributación -->
+        <record id="tax_regime_rst" model="l10n_co.tax.regime">
+            <field name="code">RST</field>
+            <field name="name">Régimen Simple de Tributación</field>
+            <field name="sequence">100</field>
+            <field name="retencion_fuente" eval="False"/>
+            <field name="retencion_cree" eval="False"/>
+            <field name="retencion_iva" eval="False"/>
+            <field name="retencion_timbre" eval="False"/>
+            <field name="retencion_ica" eval="False"/>
+            <field name="tipo_factura_electronica">0</field>
+            <field name="active" eval="True"/>
+        </record>
+        
+        <!-- Régimen Tributario: No responsable de IVA con facturador electrónico -->
+        <record id="tax_regime_nrf" model="l10n_co.tax.regime">
+            <field name="code">NRF</field>
+            <field name="name">NRF- No responsable de IVA con facturador electr</field>
+            <field name="sequence">110</field>
+            <field name="retencion_fuente" eval="False"/>
+            <field name="retencion_cree" eval="False"/>
+            <field name="retencion_iva" eval="False"/>
+            <field name="retencion_timbre" eval="False"/>
+            <field name="retencion_ica" eval="False"/>
+            <field name="tipo_factura_electronica">0</field>
+            <field name="active" eval="True"/>
+        </record>
+        
+        <!-- Régimen Tributario: No Responsable de Iva - Factu. -->
+        <record id="tax_regime_nrfe" model="l10n_co.tax.regime">
+            <field name="code">NRFE</field>
+            <field name="name">No Responsable de Iva - Factu.</field>
+            <field name="sequence">120</field>
+            <field name="retencion_fuente" eval="False"/>
+            <field name="retencion_cree" eval="False"/>
+            <field name="retencion_iva" eval="False"/>
+            <field name="retencion_timbre" eval="False"/>
+            <field name="retencion_ica" eval="False"/>
+            <field name="tipo_factura_electronica">0</field>
+            <field name="active" eval="True"/>
+        </record>
+        
+        <!-- Régimen Tributario: Persona Jurídica no obligada -->
+        <record id="tax_regime_pjnr" model="l10n_co.tax.regime">
+            <field name="code">PJNR</field>
+            <field name="name">Persona Jurídica no obligada .</field>
+            <field name="sequence">130</field>
+            <field name="retencion_fuente" eval="False"/>
+            <field name="retencion_cree" eval="False"/>
+            <field name="retencion_iva" eval="False"/>
+            <field name="retencion_timbre" eval="False"/>
+            <field name="retencion_ica" eval="False"/>
+            <field name="tipo_factura_electronica">0</field>
+            <field name="active" eval="True"/>
+        </record>
+        
+    </data>
+</odoo>
+

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Nacionalidades - Colombia -->
+    <!-- Total de registros: 4 -->
+    
+    <record id="l10n_co_nationality_1" model="l10n_co.nationality">
+        <field name="code">1</field>
+        <field name="name">Nacional</field>
+    </record>
+    
+    <record id="l10n_co_nationality_2" model="l10n_co.nationality">
+        <field name="code">2</field>
+        <field name="name">Extranjero</field>
+    </record>
+    
+    <record id="l10n_co_nationality_3" model="l10n_co.nationality">
+        <field name="code">3</field>
+        <field name="name">PT con clave</field>
+    </record>
+    
+    <record id="l10n_co_nationality_4" model="l10n_co.nationality">
+        <field name="code">4</field>
+        <field name="name">PT Sin Clave</field>
+    </record>
+
+</odoo>
+

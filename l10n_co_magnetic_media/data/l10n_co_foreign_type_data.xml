@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Tipos de Extranjero - Colombia -->
+    <!-- Total de registros: 3 -->
+    
+    <record id="l10n_co_foreign_type_0" model="l10n_co.foreign.type">
+        <field name="code">0</field>
+        <field name="name">No aplica</field>
+    </record>
+    
+    <record id="l10n_co_foreign_type_1" model="l10n_co.foreign.type">
+        <field name="code">1</field>
+        <field name="name">Con Clave</field>
+    </record>
+    
+    <record id="l10n_co_foreign_type_2" model="l10n_co.foreign.type">
+        <field name="code">2</field>
+        <field name="name">Sin Clave</field>
+    </record>
+
+</odoo>
+

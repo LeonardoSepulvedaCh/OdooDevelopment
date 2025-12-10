@@ -1,8 +1,51 @@
-# -*- coding: utf-8 -*-
+import logging
+import re
 
 from odoo import http
 from odoo.http import request
 from odoo.addons.web.controllers.report import ReportController
+
+_logger = logging.getLogger(__name__)
+
+
+def sanitize_filename(filename):
+    filename = re.sub(r'[\x00-\x1f\x7f-\x9f]', '', filename)
+    filename = filename.replace('"', '').replace("'", '').replace('\\', '')
+    filename = re.sub(r'[;\r\n]', '', filename)
+    filename = re.sub(r'[^\w\s\-\.]', '_', filename)
+    if len(filename) > 200:
+        filename = filename[:200]
+    return filename.strip()
+
+
+# Validación contra IDOR: verificar acceso legítimo
+def validate_session_access(session):
+    if not session or not session.exists():
+        return False
+    
+    user = request.env.user
+    
+    # Verificar que la sesión pertenezca a una compañía accesible por el usuario
+    if session.config_id.company_id.id not in user.company_ids.ids:
+        _logger.warning(
+            "Usuario %s (ID: %s) intentó acceder a sesión %s de compañía no autorizada %s",
+            user.login, user.id, session.id, session.config_id.company_id.name
+        )
+        return False
+    
+    # Verificar que el usuario tenga acceso al POS de la sesión
+    # Los usuarios deben tener acceso a través de grupos de POS o ser managers
+    has_pos_access = user.has_group('point_of_sale.group_pos_user') or \
+                     user.has_group('point_of_sale.group_pos_manager')
+    
+    if not has_pos_access:
+        _logger.warning(
+            "Usuario %s (ID: %s) sin permisos de POS intentó acceder a sesión %s",
+            user.login, user.id, session.id
+        )
+        return False
+    
+    return True
 
 
 class PosCashReportController(ReportController):
@@ -14,20 +57,30 @@ class PosCashReportController(ReportController):
         try:
             session = request.env['pos.session'].browse(session_id)
             
-            # Verificar permisos
+            # Verificar existencia de la sesión
             if not session.exists():
                 return request.not_found()
             
-            # Verificar que el usuario tenga permisos para ver la sesión
+            # Validación contra IDOR: verificar acceso legítimo
+            if not validate_session_access(session):
+                _logger.warning(
+                    "Acceso denegado a sesión %s para usuario %s",
+                    session_id, request.env.user.login
+                )
+                return request.not_found()
+            
+            # Verificar permisos estándar de Odoo
             session.check_access_rights('read')
             session.check_access_rule('read')
             
             # Generar el reporte
             report = request.env.ref('pos_cash_report.action_cash_report')
-            pdf_content, content_type = report._render_qweb_pdf([session_id])
+            pdf_content, _ = report._render_qweb_pdf([session_id])
             
-            # Nombre del archivo
-            filename = f"Cierre_Caja_{session.name}_{session.stop_at.strftime('%Y%m%d_%H%M') if session.stop_at else 'actual'}.pdf"
+            # Nombre del archivo con sanitización de seguridad
+            safe_session_name = sanitize_filename(session.name)
+            date_str = session.stop_at.strftime('%Y%m%d_%H%M') if session.stop_at else 'actual'
+            filename = f"Cierre_Caja_{safe_session_name}_{date_str}.pdf"
             
             # Retornar el PDF
             pdfhttpheaders = [
@@ -38,17 +91,8 @@ class PosCashReportController(ReportController):
             
             return request.make_response(pdf_content, headers=pdfhttpheaders)
             
-        except Exception as e:
-            # Log del error
-            request.env['ir.logging'].sudo().create({
-                'name': 'pos_cash_report.controller',
-                'type': 'server',
-                'level': 'ERROR',
-                'message': f'Error generando reporte de cierre: {str(e)}',
-                'path': 'pos_cash_report.controllers.main',
-                'func': 'report_cash_closing_pdf',
-                'line': '1',
-            })
+        except Exception:
+            _logger.exception("Error generando reporte de cierre de caja para sesión ID: %s", session_id)
             return request.not_found()
 
     @http.route(['/pos/cash_report/generate/<int:session_id>'], 
@@ -61,7 +105,15 @@ class PosCashReportController(ReportController):
             if not session.exists():
                 return {'error': 'Sesión no encontrada'}
             
-            # Verificar permisos
+            # Validación contra IDOR: verificar acceso legítimo
+            if not validate_session_access(session):
+                _logger.warning(
+                    "Acceso denegado a sesión %s para usuario %s",
+                    session_id, request.env.user.login
+                )
+                return {'error': 'No tiene permisos para acceder a esta sesión'}
+            
+            # Verificar permisos estándar de Odoo
             session.check_access_rights('read')
             session.check_access_rule('read')
             
@@ -75,7 +127,8 @@ class PosCashReportController(ReportController):
                 'message': 'Reporte generado exitosamente'
             }
             
-        except Exception as e:
+        except Exception:
+            _logger.exception("Error generando URL de reporte para sesión ID: %s", session_id)
             return {
-                'error': f'Error al generar el reporte: {str(e)}'
+                'error': 'Error al generar el reporte. Contacte al administrador.'
             }

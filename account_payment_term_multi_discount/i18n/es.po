@@ -1,0 +1,187 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_payment_term_multi_discount
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-11-25 22:31+0000\n"
+"PO-Revision-Date: 2025-11-25 22:31+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: account_payment_term_multi_discount
+#: model_terms:ir.ui.view,arch_db:account_payment_term_multi_discount.view_payment_term_form_inherit_multi_discount
+msgid "Before"
+msgstr "Antes de"
+
+#. module: account_payment_term_multi_discount
+#: model:ir.model.fields,help:account_payment_term_multi_discount.field_account_payment_term__discount_ids
+msgid ""
+"Configure multiple early payment discount options with different percentages"
+" and dates"
+msgstr ""
+"Configurar varias opciones de descuento por pronto pago con diferentes "
+"porcentajes y fechas"
+
+#. module: account_payment_term_multi_discount
+#: model:ir.model.fields,field_description:account_payment_term_multi_discount.field_account_payment_term_discount__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: account_payment_term_multi_discount
+#: model:ir.model.fields,field_description:account_payment_term_multi_discount.field_account_payment_term_discount__create_date
+msgid "Created on"
+msgstr "Creado el"
+
+#. module: account_payment_term_multi_discount
+#: model:ir.model.fields,field_description:account_payment_term_multi_discount.field_account_payment_term_discount__discount_days
+msgid "Days"
+msgstr "Días"
+
+#. module: account_payment_term_multi_discount
+#: model:ir.model.fields.selection,name:account_payment_term_multi_discount.selection__account_payment_term_discount__delay_type__days_after_end_of_month
+msgid "Days after end of month"
+msgstr "Días después del final del mes"
+
+#. module: account_payment_term_multi_discount
+#: model:ir.model.fields.selection,name:account_payment_term_multi_discount.selection__account_payment_term_discount__delay_type__days_after_end_of_next_month
+msgid "Days after end of next month"
+msgstr "Días después del final del mes siguiente"
+
+#. module: account_payment_term_multi_discount
+#: model:ir.model.fields.selection,name:account_payment_term_multi_discount.selection__account_payment_term_discount__delay_type__days_after
+msgid "Days after invoice date"
+msgstr "Días después de la fecha de la factura"
+
+#. module: account_payment_term_multi_discount
+#: model:ir.model.fields,field_description:account_payment_term_multi_discount.field_account_payment_term_discount__days_next_month
+msgid "Days on the next month"
+msgstr "Días en el mes siguiente"
+
+#. module: account_payment_term_multi_discount
+#: model:ir.model.fields,field_description:account_payment_term_multi_discount.field_account_payment_term_discount__delay_type
+msgid "Delay Type"
+msgstr "Tipo de retraso"
+
+#. module: account_payment_term_multi_discount
+#: model:ir.model.fields,field_description:account_payment_term_multi_discount.field_account_payment_term_discount__discount_percentage
+msgid "Discount %"
+msgstr "Descuento %"
+
+#. module: account_payment_term_multi_discount
+#. odoo-python
+#: code:addons/account_payment_term_multi_discount/models/account_payment_term_discount.py:0
+msgid "Discount days must be positive."
+msgstr "Los días de descuento deben ser positivos."
+
+#. module: account_payment_term_multi_discount
+#. odoo-python
+#: code:addons/account_payment_term_multi_discount/models/account_move.py:0
+msgid "Discount of %(amount)s if paid today"
+msgstr "Descuento de %(amount)s si se paga hoy"
+
+#. module: account_payment_term_multi_discount
+#. odoo-python
+#: code:addons/account_payment_term_multi_discount/models/account_move.py:0
+msgid "Discount of %(amount)s if paid within %(days)s days"
+msgstr "Descuento de %(amount)s si se paga dentro de %(days)s días"
+
+#. module: account_payment_term_multi_discount
+#. odoo-python
+#: code:addons/account_payment_term_multi_discount/models/account_payment_term_discount.py:0
+msgid "Discount percentage must be between 0 and 100."
+msgstr "El porcentaje de descuento debe estar entre 0 y 100."
+
+#. module: account_payment_term_multi_discount
+#: model:ir.model.fields,field_description:account_payment_term_multi_discount.field_account_move__display_name
+#: model:ir.model.fields,field_description:account_payment_term_multi_discount.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:account_payment_term_multi_discount.field_account_payment_register__display_name
+#: model:ir.model.fields,field_description:account_payment_term_multi_discount.field_account_payment_term__display_name
+#: model:ir.model.fields,field_description:account_payment_term_multi_discount.field_account_payment_term_discount__display_name
+msgid "Display Name"
+msgstr "Nombre para Mostrar"
+
+#. module: account_payment_term_multi_discount
+#: model:ir.model.fields,help:account_payment_term_multi_discount.field_account_payment_term_discount__discount_percentage
+msgid "Early Payment Discount granted for this payment term"
+msgstr "Descuento por pronto pago otorgado para este plazo de pago"
+
+#. module: account_payment_term_multi_discount
+#. odoo-python
+#: code:addons/account_payment_term_multi_discount/models/account_payment_term.py:0
+msgid ""
+"Early Payment Discount: <b>%(amount)s</b> (%(percent)s%%) if paid before "
+"<b>%(date)s</b>"
+msgstr ""
+"Descuento por pronto pago: <b>%(amount)s</b> (%(percent)s%%) si se paga "
+"antes de <b>%(date)s</b>"
+
+#. module: account_payment_term_multi_discount
+#: model:ir.model.fields,field_description:account_payment_term_multi_discount.field_account_payment_term__discount_ids
+msgid "Early Payment Discounts"
+msgstr "Descuentos por pronto pago"
+
+#. module: account_payment_term_multi_discount
+#: model:ir.model.fields,field_description:account_payment_term_multi_discount.field_account_move__id
+#: model:ir.model.fields,field_description:account_payment_term_multi_discount.field_account_move_line__id
+#: model:ir.model.fields,field_description:account_payment_term_multi_discount.field_account_payment_register__id
+#: model:ir.model.fields,field_description:account_payment_term_multi_discount.field_account_payment_term__id
+#: model:ir.model.fields,field_description:account_payment_term_multi_discount.field_account_payment_term_discount__id
+msgid "ID"
+msgstr ""
+
+#. module: account_payment_term_multi_discount
+#: model:ir.model,name:account_payment_term_multi_discount.model_account_move
+msgid "Journal Entry"
+msgstr "Entrada de Diario"
+
+#. module: account_payment_term_multi_discount
+#: model:ir.model,name:account_payment_term_multi_discount.model_account_move_line
+msgid "Journal Item"
+msgstr "Apunte contable"
+
+#. module: account_payment_term_multi_discount
+#: model:ir.model.fields,field_description:account_payment_term_multi_discount.field_account_payment_term_discount__write_uid
+msgid "Last Updated by"
+msgstr "Última actualización por"
+
+#. module: account_payment_term_multi_discount
+#: model:ir.model.fields,field_description:account_payment_term_multi_discount.field_account_payment_term_discount__write_date
+msgid "Last Updated on"
+msgstr "Última actualización el"
+
+#. module: account_payment_term_multi_discount
+#: model:ir.model,name:account_payment_term_multi_discount.model_account_payment_register
+msgid "Pay"
+msgstr "Pagar"
+
+#. module: account_payment_term_multi_discount
+#: model:ir.model.fields,field_description:account_payment_term_multi_discount.field_account_payment_term_discount__payment_term_id
+msgid "Payment Term"
+msgstr "Plazo de pago"
+
+#. module: account_payment_term_multi_discount
+#: model:ir.model,name:account_payment_term_multi_discount.model_account_payment_term_discount
+msgid "Payment Term Discount"
+msgstr "Descuento por plazo de pago"
+
+#. module: account_payment_term_multi_discount
+#: model:ir.model,name:account_payment_term_multi_discount.model_account_payment_term
+msgid "Payment Terms"
+msgstr "Condiciones de pago"
+
+#. module: account_payment_term_multi_discount
+#. odoo-python
+#: code:addons/account_payment_term_multi_discount/models/account_payment_term.py:0
+msgid ""
+"The early payment discount date (%(discount_date)s) cannot exceed the last "
+"payment deadline (%(latest_due_date)s)."
+msgstr ""
+"La fecha de descuento por pronto pago (%(discount_date)s) no puede exceder "
+"la fecha de vencimiento de la última cuota (%(latest_due_date)s)."

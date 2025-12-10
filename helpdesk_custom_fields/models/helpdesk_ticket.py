@@ -158,7 +158,5 @@ class HelpdeskTicket(models.Model):
 
     @api.onchange('invoice_id')
     def _onchange_invoice_id(self):
-        if self.invoice_id:
-            self.product_ids = [(5, 0, 0)]
-        else:
-            self.product_ids = [(5, 0, 0)]
+        # Limpiar productos seleccionados cuando cambia la factura
+        self.product_ids = [(5, 0, 0)]

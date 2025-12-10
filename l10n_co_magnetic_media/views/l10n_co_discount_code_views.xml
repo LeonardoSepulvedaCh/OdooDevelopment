@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- ========================================== -->
+    <!-- VISTA LISTA: l10n_co.discount.code -->
+    <!-- ========================================== -->
+    <record id="view_l10n_co_discount_code_tree" model="ir.ui.view">
+        <field name="name">l10n.co.discount.code.tree</field>
+        <field name="model">l10n_co.discount.code</field>
+        <field name="arch" type="xml">
+            <list string="Códigos de Descuento">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+    
+    <!-- ========================================== -->
+    <!-- VISTA FORMULARIO: l10n_co.discount.code -->
+    <!-- ========================================== -->
+    <record id="view_l10n_co_discount_code_form" model="ir.ui.view">
+        <field name="name">l10n.co.discount.code.form</field>
+        <field name="model">l10n_co.discount.code</field>
+        <field name="arch" type="xml">
+            <form string="Código de Descuento">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <widget name="web_ribbon" title="Archivado" bg_color="text-bg-danger" invisible="active"/>
+                    </div>
+                    
+                    <group>
+                        <group>
+                            <field name="code" placeholder="Ej: 00"/>
+                            <field name="name" placeholder="Ej: Descuento por Impuesto asumido"/>
+                        </group>
+                        <group>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Información Adicional" name="additional_info">
+                            <group>
+                                <group>
+                                    <field name="display_name_complete" readonly="1" string="Nombre Completo"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <!-- ========================================== -->
+    <!-- VISTA BÚSQUEDA: l10n_co.discount.code -->
+    <!-- ========================================== -->
+    <record id="view_l10n_co_discount_code_search" model="ir.ui.view">
+        <field name="name">l10n.co.discount.code.search</field>
+        <field name="model">l10n_co.discount.code</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Códigos de Descuento">
+                <field name="code" string="Código"/>
+                <field name="name" string="Nombre"/>
+                
+                <filter string="Activos" name="active" domain="[('active', '=', True)]"/>
+                <filter string="Archivados" name="inactive" domain="[('active', '=', False)]"/>
+                
+                <separator/>
+                
+                <filter string="Código" name="group_by_code" context="{'group_by': 'code'}"/>
+            </search>
+        </field>
+    </record>
+    
+    <!-- ========================================== -->
+    <!-- ACCIÓN: l10n_co.discount.code -->
+    <!-- ========================================== -->
+    <record id="action_l10n_co_discount_code" model="ir.actions.act_window">
+        <field name="name">Códigos de Descuento</field>
+        <field name="res_model">l10n_co.discount.code</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Crear un Código de Descuento
+            </p>
+            <p>
+                Los códigos de descuento se utilizan para clasificar los diferentes tipos de descuentos
+                aplicados a los contactos en reportes de Medios Magnéticos según normativa DIAN.
+            </p>
+        </field>
+    </record>
+    
+    <!-- ========================================== -->
+    <!-- MENÚ: Contactos > Configuración > Códigos de Descuento -->
+    <!-- ========================================== -->
+    <menuitem id="menu_l10n_co_discount_code_root"
+              name="Códigos de Descuento"
+              parent="contacts.res_partner_menu_config"
+              action="action_l10n_co_discount_code"
+              sequence="90"/>
+    
+</odoo>
+

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Vista de formulario para l10n_co.document.type -->
+    <record id="view_l10n_co_document_type_form" model="ir.ui.view">
+        <field name="name">l10n.co.document.type.form</field>
+        <field name="model">l10n_co.document.type</field>
+        <field name="arch" type="xml">
+            <form string="Tipo de Documento">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                        </button>
+                    </div>
+                    
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name" placeholder="Nombre del tipo de documento"/></h1>
+                    </div>
+                    
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="document_code"/>
+                        </group>
+                        <group>
+                            <field name="sequence"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <!-- Vista de lista para l10n_co.document.type -->
+    <record id="view_l10n_co_document_type_list" model="ir.ui.view">
+        <field name="name">l10n.co.document.type.list</field>
+        <field name="model">l10n_co.document.type</field>
+        <field name="arch" type="xml">
+            <list string="Tipos de Documento" default_order="sequence, code">
+                <field name="sequence" widget="handle"/>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="document_code"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+    
+    <!-- Vista de búsqueda para l10n_co.document.type -->
+    <record id="view_l10n_co_document_type_search" model="ir.ui.view">
+        <field name="name">l10n.co.document.type.search</field>
+        <field name="model">l10n_co.document.type</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Tipo de Documento">
+                <field name="name" string="Tipo de Documento" 
+                       filter_domain="['|', '|', ('name', 'ilike', self), ('code', 'ilike', self), ('document_code', 'ilike', self)]"/>
+                <field name="code"/>
+                <field name="document_code"/>
+                <filter string="Activos" name="active" domain="[('active', '=', True)]"/>
+                <filter string="Inactivos" name="inactive" domain="[('active', '=', False)]"/>
+                <separator/>
+                <filter string="Con Código Documento" name="has_document_code" 
+                        domain="[('document_code', '!=', False)]"/>
+                <filter string="Sin Código Documento" name="no_document_code" 
+                        domain="[('document_code', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+    
+    <!-- Acción para l10n_co.document.type -->
+    <record id="action_l10n_co_document_type" model="ir.actions.act_window">
+        <field name="name">Tipos de Documento</field>
+        <field name="res_model">l10n_co.document.type</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Crea el primer tipo de documento
+            </p>
+            <p>
+                Los tipos de documento definen las diferentes formas de identificación
+                reconocidas por la DIAN en Colombia. Estos se utilizan en los reportes
+                de medios magnéticos e informes de exógenas.
+            </p>
+        </field>
+    </record>
+    
+    <!-- Menú para l10n_co.document.type -->
+    <menuitem id="menu_l10n_co_document_type"
+              name="Tipos de Documento"
+              parent="contacts.res_partner_menu_config"
+              action="action_l10n_co_document_type"
+              sequence="51"/>
+    
+</odoo>
+

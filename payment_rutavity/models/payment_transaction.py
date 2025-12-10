@@ -696,58 +696,120 @@ class PaymentTransaction(models.Model):
             if destination_account_id:
                 payment_values["destination_account_id"] = destination_account_id
 
-            # Check if invoice has early payment discount and payment amount matches
-            next_payment_values = invoice._get_invoice_next_payment_values()
-            if (
-                next_payment_values
-                and next_payment_values.get("installment_state") == "epd"
-                and self.currency_id.compare_amounts(
-                    custom_amount, next_payment_values.get("amount_due", 0)
-                )
-                == 0
+            # Check for Early Payment Discount (Proportional Logic)
+            payment_date = fields.Date.context_today(self)
+            if invoice._is_eligible_for_early_payment_discount(
+                self.currency_id, payment_date
             ):
-                # Invoice is eligible for early payment discount and amount matches
-                epd_line = next_payment_values.get("epd_line")
-                epd_discount_amount = next_payment_values.get("epd_discount_amount")
+                # 1. Calculate Original Net Amount dynamically based on date
+                term_lines = invoice.line_ids.filtered(
+                    lambda l: l.display_type == "payment_term"
+                )
 
-                if epd_line and epd_discount_amount:
-                    # Prepare data for early payment discount lines
-                    epd_aml_values_list = [
-                        {
-                            "aml": epd_line,
-                            "amount_currency": -epd_line.amount_residual_currency,
-                            "balance": -epd_line.balance,
-                        }
-                    ]
+                # Default: use what's in line (Single Discount Logic)
+                # But for Multi-Discount, we must recalculate "Original Net" based on CURRENT valid percentage
 
-                    # Get early payment discount write-off lines
-                    early_payment_values = self.env[
-                        "account.move"
-                    ]._get_invoice_counterpart_amls_for_early_payment_discount(
-                        epd_aml_values_list, epd_discount_amount
+                discount_percentage = 0.0
+                invoice_date = invoice.invoice_date or fields.Date.context_today(self)
+
+                # Check Multi-Discount first (if module installed/configured)
+                if (
+                    hasattr(invoice.invoice_payment_term_id, "discount_ids")
+                    and invoice.invoice_payment_term_id.discount_ids
+                ):
+                    possible_discounts = []
+                    for discount in invoice.invoice_payment_term_id.discount_ids:
+                        discount_date = discount._get_discount_date(invoice_date)
+                        if payment_date <= discount_date:
+                            possible_discounts.append(discount)
+                    if possible_discounts:
+                        best_discount = max(
+                            possible_discounts, key=lambda d: d.discount_percentage
+                        )
+                        discount_percentage = best_discount.discount_percentage
+                # Check Single Standard Discount
+                elif invoice.invoice_payment_term_id.early_discount:
+                    discount_percentage = (
+                        invoice.invoice_payment_term_id.discount_percentage
                     )
 
-                    # Add all write-off lines (term_lines, tax_lines, base_lines, exchange_lines)
-                    for aml_values_list in early_payment_values.values():
-                        if aml_values_list:
-                            for aml_vals in aml_values_list:
-                                # Ensure partner_id is set
-                                if (
-                                    "partner_id" not in aml_vals
-                                    or not aml_vals["partner_id"]
-                                ):
-                                    aml_vals["partner_id"] = invoice.partner_id.id
-                                payment_values["write_off_line_vals"].append(aml_vals)
+                # Calculate Dynamic Values
+                total_original_gross = sum(abs(l.amount_currency) for l in term_lines)
+                total_original_discount = 0.0
 
-                    self._log_message_on_linked_documents(
-                        _(
-                            "Added early payment discount write-off lines for invoice %(invoice)s. "
-                            "Discount amount: %(discount)s, Lines: %(lines)s",
-                            invoice=invoice.name,
-                            discount=epd_discount_amount,
-                            lines=len(payment_values["write_off_line_vals"]),
+                if discount_percentage:
+                    percentage = discount_percentage / 100.0
+                    if (
+                        invoice.invoice_payment_term_id.early_pay_discount_computation
+                        in ("excluded", "mixed")
+                    ):
+                        total_original_discount = self.currency_id.round(
+                            invoice.amount_untaxed * percentage
+                        )
+                    else:
+                        total_original_discount = self.currency_id.round(
+                            total_original_gross * percentage
+                        )
+
+                # Original Net = Gross - Discount
+                original_net_amount = total_original_gross - abs(
+                    total_original_discount
+                )
+
+                # Check if discount > 0 to avoid division by zero or invalid logic
+                if discount_percentage > 0 and not self.currency_id.is_zero(
+                    original_net_amount
+                ):
+                    # 2. Calculate Ratio (Payment / Dynamic Net)
+                    ratio = custom_amount / original_net_amount
+
+                    # 3. Prepare EPD AML Values
+                    epd_aml_values_list = []
+                    for aml in term_lines:
+                        epd_aml_values_list.append(
+                            {
+                                "aml": aml,
+                                "amount_currency": -aml.amount_residual_currency,
+                                "balance": aml.currency_id._convert(
+                                    -aml.amount_residual_currency,
+                                    aml.company_currency_id,
+                                    self.provider_id.company_id,
+                                    payment_date,
+                                ),
+                            }
+                        )
+
+                    # 4. Calculate Full Discount Balance (Dynamic)
+                    # Use the dynamically calculated total_original_discount
+                    full_discount_amount = abs(total_original_discount)
+
+                    sign = 1 if payment_values["payment_type"] == "inbound" else -1
+                    open_amount_currency = full_discount_amount * sign
+
+                    open_balance = self.currency_id._convert(
+                        open_amount_currency,
+                        self.provider_id.company_id.currency_id,
+                        self.provider_id.company_id,
+                        payment_date,
+                    )
+
+                    # 5. Get Full Write-off Lines
+                    # PASS PAYMENT_DATE IN CONTEXT so account_move override picks it up
+                    early_payment_values = (
+                        self.env["account.move"]
+                        .with_context(payment_date=payment_date)
+                        ._get_invoice_counterpart_amls_for_early_payment_discount(
+                            epd_aml_values_list, open_balance
                         )
                     )
+
+                    # 6. Scale and Add to Payment Values
+                    for aml_values_list in early_payment_values.values():
+                        for write_off_line in aml_values_list:
+                            write_off_line["amount_currency"] *= ratio
+                            write_off_line["balance"] *= ratio
+                            write_off_line["partner_id"] = invoice.partner_id.id
+                            payment_values["write_off_line_vals"].append(write_off_line)
 
             # Create and post payment
             payment = self.env["account.payment"].create(payment_values)

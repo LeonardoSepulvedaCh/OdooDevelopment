@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_contact_registration_user,contact.registration.user,model_contact_registration,base.group_user,1,1,1,0
+access_contact_registration_manager,contact.registration.manager,model_contact_registration,base.group_system,1,1,1,1
+

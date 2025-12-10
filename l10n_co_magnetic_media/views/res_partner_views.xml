@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- 
+        Vista heredada para reorganizar campos de Medios Magnéticos
+        
+        Esta vista:
+        1. Oculta la pestaña "Datos Adicionales" del módulo contacts_name_split
+        2. Crea la pestaña "Medios Magnéticos" como PRIMERA pestaña del notebook
+        3. Hace que "Medios Magnéticos" sea la pestaña ACTIVA por defecto (autofocus)
+        4. Incluye los campos de nombres y apellidos separados
+        5. Preparada para agregar más campos tributarios progresivamente
+    -->
+    <record id="view_partner_form_magnetic_media" model="ir.ui.view">
+        <field name="name">res.partner.form.magnetic.media</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            
+            <!-- Agregar el campo "Impuestos" después de "Etiquetas" en el encabezado -->
+            <xpath expr="//field[@name='category_id']" position="after">
+                <field name="l10n_co_tax_ids" 
+                       widget="many2many_tags" 
+                       options="{'no_create': True, 'no_open': True}"
+                       placeholder="Seleccione los impuestos aplicables"
+                       help="Impuestos y retenciones que se aplicarán automáticamente en facturas"/>
+            </xpath>
+            
+            <!-- Ocultar el campo "Es Persona Jurídica" -->
+            <xpath expr="//field[@name='is_legal_person']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            
+            <!-- Ocultar la pestaña "Datos Adicionales" del módulo contacts_name_split -->
+            <xpath expr="//page[@name='datos_adicionales']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            
+            <!-- Sobrescribir el atributo required de los campos que vienen de contacts_name_split -->
+            <!-- Esto es necesario porque contacts_name_split los define como required="1" estáticamente -->
+            <xpath expr="//page[@name='datos_adicionales']//field[@name='first_name']" position="attributes">
+                <attribute name="required">company_type == 'person'</attribute>
+            </xpath>
+            <xpath expr="//page[@name='datos_adicionales']//field[@name='first_surname']" position="attributes">
+                <attribute name="required">company_type == 'person'</attribute>
+            </xpath>
+            
+            <!-- Hacer que la primera pestaña (Contactos) NO sea la activa por defecto -->
+            <xpath expr="//notebook/page[1]" position="attributes">
+                <attribute name="autofocus">0</attribute>
+            </xpath>
+            
+            <!-- Agregar la pestaña "Medios Magnéticos" como PRIMERA pestaña del notebook y activa por defecto -->
+            <xpath expr="//notebook/page[1]" position="before">
+                <page string="Medios Magnéticos" name="magnetic_media" autofocus="1">
+                    
+                    <!-- Campo invisible para el dominio condicional - DEBE IR AL INICIO -->
+                    <field name="fiscal_country_codes" invisible="1"/>
+                    
+                    <!-- Información Tributaria -->
+                    <group string="Información Tributaria" name="tax_info_main_group">
+                        <group>
+                            <field name="l10n_co_tax_regime_id" 
+                                   required="1"
+                                   options="{'no_create': True, 'no_open': True}"
+                                   placeholder="Seleccione el régimen tributario"/>
+                            <field name="l10n_co_economic_activity_id" 
+                                   options="{'no_create': True, 'no_open': True}"
+                                   placeholder="Seleccione la actividad económica"/>
+                        </group>
+                        <group>
+                            <field name="l10n_co_document_type_id" 
+                                   required="1"
+                                   options="{'no_create': True, 'no_open': True}"
+                                   placeholder="Seleccione el tipo de documento"/>
+                        </group>
+                    </group>
+                    
+                    <!-- Nombres y Apellidos Cliente / Representante -->
+                    <group string="Cliente / Representante" name="names_group">
+                        <group>
+                            <field name="first_name" 
+                                   placeholder="Primer Nombre" 
+                                   required="company_type == 'person'"
+                                   readonly="company_type == 'company'"
+                                   help="Obligatorio para personas naturales. Para empresas, este campo es opcional y de solo lectura."/>
+                            <field name="second_name" 
+                                   placeholder="Segundo Nombre"
+                                   readonly="company_type == 'company'"
+                                   help="Campo opcional. Para empresas, este campo es de solo lectura."/>
+                            <field name="first_surname" 
+                                   placeholder="Primer Apellido" 
+                                   required="company_type == 'person'"
+                                   readonly="company_type == 'company'"
+                                   help="Obligatorio para personas naturales. Para empresas, este campo es opcional y de solo lectura."/>
+                            <field name="second_surname" 
+                                   placeholder="Segundo Apellido"
+                                   readonly="company_type == 'company'"
+                                   help="Campo opcional. Para empresas, este campo es de solo lectura."/>
+                        </group>
+
+                        <!-- Tipo de Entidad, Nacionalidad y Tipo Extranjero -->
+                        <group>
+                            <field name="l10n_co_entity_type_id" 
+                                   options="{'no_create': True, 'no_open': True}"
+                                   placeholder="Seleccione el tipo de entidad"/>
+                            <field name="l10n_co_nationality_id" 
+                                   options="{'no_create': True, 'no_open': True}"
+                                   placeholder="Seleccione la nacionalidad"/>
+                            <field name="l10n_co_foreign_type_id" 
+                                   options="{'no_create': True, 'no_open': True}"
+                                   placeholder="Seleccione el tipo de extranjero"/>
+                            <field name="l10n_co_resident" 
+                                   placeholder="Seleccione si es residente"/>
+                        </group>
+                        
+                    </group>
+                    
+                    <!-- Separador: Información FE -->
+                    <separator string="Información FE"/>
+                    
+                    <!-- Información de Facturación Electrónica -->
+                    <group>
+                        <field name="l10n_co_fiscal_regime_id" 
+                               options="{'no_create': True, 'no_open': True}"
+                               placeholder="Seleccione el régimen fiscal"/>
+                        <field name="l10n_co_edi_payment_option_id" 
+                               options="{'no_create': True, 'no_open': True}"
+                               placeholder="Seleccione el medio de pago"/>
+                        <field name="l10n_co_discount_code_id" 
+                               options="{'no_create': True, 'no_open': True}"
+                               placeholder="Seleccione el código de descuento"/>
+                    </group>
+                    
+                    <!-- Separador: Información Fiscal -->
+                    <separator string="Información Fiscal"/>
+                    
+                    <!-- Posición Fiscal y Obligaciones (Campos nativos de Odoo + l10n_co_edi) 
+                    Inicialmente estaban en la pestaña "Ventas y compras", SE DEBEN REEMPLAZAR Y AGREGAR EN LA PANTALLA MEDIOS MAGNETICOS -->
+                    <group name="fiscal_position_group">
+                        <group>
+                            <field name="property_account_position_id" 
+                                    string="Posición fiscal"
+                                    options="{'no_create': True, 'no_open': True}"
+                                    placeholder="Seleccione la posición fiscal"/>
+                        </group>
+                        <group>
+                            <!-- Estos campos se moverán aquí desde su posición original -->
+                        </group>
+                    </group>
+                    
+                    
+                </page>
+            </xpath>
+            
+            <!-- Ocultar la sección "Información Fiscal" de la pestaña "Ventas y compras" -->
+            <xpath expr="//group[@name='fiscal_information']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            
+            <!-- REEMPLAZAR el campo Obligaciones desde su ubicación original y ocultarlo -->
+            <xpath expr="//field[@name='property_account_position_id']/following-sibling::field[@name='l10n_co_edi_obligation_type_ids']" position="replace"/>
+            
+            <!-- AGREGAR el campo Obligaciones en nuestra pestaña Medios Magnéticos -->
+            <xpath expr="//group[@name='fiscal_position_group']/group[2]" position="inside">
+                <field name="l10n_co_edi_obligation_type_ids" 
+                       string="Obligaciones y Responsabilidades"
+                       options="{'no_create_edit': True, 'no_create': True, 'no_open': True}" 
+                       widget="many2many_tags"
+                       placeholder="Seleccione las obligaciones"
+                       help="Obligaciones y responsabilidades tributarias del contacto según DIAN"/>
+            </xpath>
+            
+            <!-- REEMPLAZAR y AGREGAR Gran Contribuyente -->
+            <xpath expr="//field[@name='property_account_position_id']/following-sibling::field[@name='l10n_co_edi_large_taxpayer']" position="replace"/>
+            <xpath expr="//group[@name='fiscal_position_group']/group[2]" position="inside">
+                <field name="l10n_co_edi_large_taxpayer" string="Gran Contribuyente"/>
+            </xpath>
+            
+            <!-- REEMPLAZAR y AGREGAR Régimen Fiscal -->
+            <xpath expr="//field[@name='property_account_position_id']/following-sibling::field[@name='l10n_co_edi_fiscal_regimen']" position="replace"/>
+            <xpath expr="//group[@name='fiscal_position_group']/group[2]" position="inside">
+                <field name="l10n_co_edi_fiscal_regimen" 
+                       string="Régimen Fiscal"
+                       help="Régimen fiscal del contacto según facturación electrónica DIAN"/>
+            </xpath>
+            
+            <!-- REEMPLAZAR y AGREGAR Nombre comercial -->
+            <xpath expr="//field[@name='property_account_position_id']/following-sibling::field[@name='l10n_co_edi_commercial_name']" position="replace"/>
+            <xpath expr="//group[@name='fiscal_position_group']/group[2]" position="inside">
+                <field name="l10n_co_edi_commercial_name" 
+                       string="Nombre comercial"
+                       placeholder="Nombre comercial del contacto"/>
+            </xpath>
+            
+        </field>
+    </record>
+
+</odoo>
+

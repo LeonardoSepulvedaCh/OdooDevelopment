@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vista de formulario para usuarios ZK -->
+    <record id="view_zk_user_form" model="ir.ui.view">
+        <field name="name">zk.users.form</field>
+        <field name="model">zk.users</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_sync_to_device" string="Sincronizar al Dispositivo" type="object" class="oe_highlight" icon="fa-refresh"/>
+                </header>
+                <sheet>
+                    <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_1920'}"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Nombre del usuario"/>
+                        </h1>
+                    </div>
+                    <group cols="2">
+                        <group string="Información del usuario">
+                            <field name="device_id" readonly="1" class="oe_inline"/>
+                            <field name="employee_id" class="oe_inline"/>
+                            <field name="privilege" string="Tipo de usuario" widget="radio" options="{'horizontal': true}"/>
+                            <field name="active" widget="boolean_toggle"/>
+                            <field name="user_id" class="oe_inline"/>
+                        </group>
+                        <group string="Datos de acceso">
+                            <field name="password"/>
+                            <field name="group_id"/>
+                            <field name="card"/>
+                        </group>
+                    </group>
+                    <group cols="2">
+                        <group string="Históricos y estadísticas">
+                            <field name="create_date"/>
+                            <field name="last_attendance_date"/>
+                            <field name="total_attendances"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vista de lista para usuarios ZK -->
+    <record id="view_zk_user_list" model="ir.ui.view">
+        <field name="name">zk.users.list</field>
+        <field name="model">zk.users</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="employee_id"/>
+                <field name="device_id"/>
+                <field name="privilege" string="Tipo de usuario" widget="badge" decoration-info="privilege == 'admin'" decoration-success="privilege == 'user'"/>
+                <field name="user_id"/>
+                <field name="create_date"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Vista kanban para usuarios ZK -->
+    <record id="view_zk_user_kanban" model="ir.ui.view">
+        <field name="name">zk.users.kanban</field>
+        <field name="model">zk.users</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" sample="1">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="employee_id"/>
+                <field name="device_id"/>
+                <field name="privilege"/>
+                <field name="user_id"/>
+                <field name="group_id"/>
+                <field name="active"/>
+                <field name="image_1920"/>
+                <field name="create_date"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_card oe_kanban_global_click zk_user_kanban_card">
+                            <!-- Header con foto y nombre -->
+                            <div class="d-flex align-items-start mb-3 zk_user_header">
+                                <div class="me-3 zk_avatar_container">
+                                    <field name="image_1920" widget="image" 
+                                           options="{'size': [80, 80], 'preview_image': 'image_1920'}"/>
+                                </div>
+                                <div class="flex-grow-1 zk_user_info">
+                                    <h4 class="mb-2">
+                                        <field name="name"/>
+                                    </h4>
+                                    <div class="mb-2 zk_info_item">
+                                        <i class="fa fa-hdd-o" title="Dispositivo" aria-hidden="true"/>
+                                        <field name="device_id"/>
+                                    </div>
+                                    <div class="mb-2 zk_info_item" t-if="record.employee_id.raw_value">
+                                        <i class="fa fa-id-badge" title="Empleado" aria-hidden="true"/>
+                                        <field name="employee_id"/>
+                                    </div>
+                                    <div class="zk_badges">
+                                        <span t-attf-class="badge zk_badge #{record.privilege.raw_value == 'admin' ? 'zk_badge_admin' : 'zk_badge_user'}">
+                                            <t t-if="record.privilege.raw_value == 'admin'">
+                                                <i class="fa fa-star" aria-hidden="true"/> Admin
+                                            </t>
+                                            <t t-else="">
+                                                <i class="fa fa-user" aria-hidden="true"/> Usuario
+                                            </t>
+                                        </span>
+                                        <span t-attf-class="badge zk_badge ms-2 #{record.active.raw_value ? 'zk_badge_active' : 'zk_badge_inactive'}">
+                                            <i t-attf-class="fa #{record.active.raw_value ? 'fa-check-circle' : 'fa-times-circle'}" aria-hidden="true"/>
+                                            <t t-if="record.active.raw_value">Activo</t>
+                                            <t t-else="">Inactivo</t>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Información adicional en panel inferior -->
+                            <div class="zk_user_details">
+                                <div class="zk_detail_row">
+                                    <span class="zk_detail_label">
+                                        <i class="fa fa-hashtag" aria-hidden="true"/> ID Usuario
+                                    </span>
+                                    <span class="zk_detail_value">
+                                        <field name="user_id"/>
+                                    </span>
+                                </div>
+                                <div class="zk_detail_row">
+                                    <span class="zk_detail_label">
+                                        <i class="fa fa-calendar" aria-hidden="true"/> Fecha creación
+                                    </span>
+                                    <span class="zk_detail_value">
+                                        <field name="create_date" widget="date"/>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Vista de búsqueda para usuarios ZK -->
+    <record id="view_zk_user_search" model="ir.ui.view">
+        <field name="name">zk.users.search</field>
+        <field name="model">zk.users</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" string="Nombre" filter_domain="[('name', 'ilike', self)]"/>
+                <field name="employee_id" string="Empleado"/>
+                <field name="user_id" string="ID Usuario"/>
+                <field name="device_id" string="Dispositivo"/>
+                <filter string="Administradores" name="filter_admin" domain="[('privilege', '=', 'admin')]"/>
+                <filter string="Usuarios" name="filter_user" domain="[('privilege', '=', 'user')]"/>
+                <filter string="Activos" name="filter_active" domain="[('active', '=', True)]"/>
+                <filter string="Inactivos" name="filter_inactive" domain="[('active', '=', False)]"/>
+                <separator/>
+                <filter string="Con empleado vinculado" name="filter_with_employee" domain="[('employee_id', '!=', False)]"/>
+                <filter string="Sin empleado vinculado" name="filter_without_employee" domain="[('employee_id', '=', False)]"/>
+                <group>
+                    <filter string="Dispositivo" name="group_device" context="{'group_by': 'device_id'}"/>
+                    <filter string="Empleado" name="group_employee" context="{'group_by': 'employee_id'}"/>
+                    <filter string="Tipo de usuario" name="group_privilege" context="{'group_by': 'privilege'}"/>
+                    <filter string="Fecha de creación" name="group_create_date" context="{'group_by': 'create_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Acción para usuarios ZK -->
+    <record id="action_zk_users" model="ir.actions.act_window">
+        <field name="name">Usuarios ZK</field>
+        <field name="res_model">zk.users</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No hay usuarios ZK registrados
+            </p>
+            <p>
+                Los usuarios se importan automáticamente desde los dispositivos ZK conectados.
+            </p>
+        </field>
+    </record>
+</odoo>

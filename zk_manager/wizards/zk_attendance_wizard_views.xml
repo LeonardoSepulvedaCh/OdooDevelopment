@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_zk_attendance_wizard_form" model="ir.ui.view">
+        <field name="name">zk.attendance.wizard.form</field>
+        <field name="model">zk.attendance.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Obtener Registros de Asistencia">
+                <sheet>
+                    <field name="state" invisible="1"/>
+                    
+                    <!-- Estado: Listo -->
+                    <div invisible="state != 'draft'">
+                        <div class="text-center mb32">
+                            <i class="fa fa-cloud-download fa-3x text-primary mb16" title="Descargar" aria-hidden="true"/>
+                            <h3>Importar Asistencias</h3>
+                        </div>
+                        <group>
+                            <field name="device_id" readonly="1"/>
+                        </group>
+                        <div class="mt16 text-muted">
+                            <p><i class="fa fa-plug text-primary" title="Conectar" aria-hidden="true"/> Conectar al dispositivo biométrico</p>
+                            <p><i class="fa fa-refresh text-primary" title="Sincronizar" aria-hidden="true"/> Descargar registros de asistencia</p>
+                            <p><i class="fa fa-filter text-primary" title="Filtrar" aria-hidden="true"/> Importar solo registros nuevos</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Estado: Procesando -->
+                    <div invisible="state != 'loading'">
+                        <div class="text-center mb32">
+                            <i class="fa fa-spinner fa-pulse fa-3x text-primary mb16" title="Cargando" aria-hidden="true"/>
+                            <h3>Procesando...</h3>
+                        </div>
+                        <div class="progress" style="height: 3px;">
+                            <div class="progress-bar" 
+                                 role="progressbar" 
+                                 aria-valuenow="100"
+                                 aria-valuemin="0"
+                                 aria-valuemax="100"
+                                 style="width: 100%"/>
+                        </div>
+                        <p class="text-center text-muted mt16">
+                            <i class="fa fa-hdd-o" title="Dispositivo" aria-hidden="true"/> 
+                            <small>Obteniendo datos del dispositivo biométrico...</small>
+                        </p>
+                    </div>
+                    
+                    <!-- Estado: Completado -->
+                    <div invisible="state != 'done'">
+                        <div class="text-center mb32">
+                            <i class="fa fa-check-circle fa-3x text-success mb16" title="Éxito" aria-hidden="true"/>
+                            <h3 class="text-success">Completado</h3>
+                        </div>
+                        <group>
+                            <group>
+                                <label for="records_count" string="Registros importados"/>
+                                <h2 class="text-primary">
+                                    <field name="records_count" readonly="1" class="oe_inline"/>
+                                </h2>
+                            </group>
+                        </group>
+                        <div class="mt16">
+                            <field name="message" readonly="1" class="oe_inline"/>
+                        </div>
+                    </div>
+                </sheet>
+                <footer>
+                    <button string="Iniciar Importación" 
+                            name="action_get_attendance" 
+                            type="object" 
+                            class="btn-primary"
+                            icon="fa-play"
+                            invisible="state != 'draft'"/>
+                    <button string="Cerrar" 
+                            special="cancel" 
+                            class="btn-secondary"
+                            icon="fa-times"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

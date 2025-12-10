@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    
+    <!-- Códigos de Descuento para Medios Magnéticos (Colombia) -->
+    
+    <record id="l10n_co_discount_code_00" model="l10n_co.discount.code">
+        <field name="code">00</field>
+        <field name="name">Descuento por Impuesto asumido</field>
+    </record>
+    
+    <record id="l10n_co_discount_code_01" model="l10n_co.discount.code">
+        <field name="code">01</field>
+        <field name="name">Pague uno lleve otro</field>
+    </record>
+    
+    <record id="l10n_co_discount_code_02" model="l10n_co.discount.code">
+        <field name="code">02</field>
+        <field name="name">Descuentos contractuales</field>
+    </record>
+    
+    <record id="l10n_co_discount_code_03" model="l10n_co.discount.code">
+        <field name="code">03</field>
+        <field name="name">Descuento por pronto pago</field>
+    </record>
+    
+    <record id="l10n_co_discount_code_04" model="l10n_co.discount.code">
+        <field name="code">04</field>
+        <field name="name">Envío gratis</field>
+    </record>
+    
+    <record id="l10n_co_discount_code_05" model="l10n_co.discount.code">
+        <field name="code">05</field>
+        <field name="name">Descuentos específicos por inventarios</field>
+    </record>
+    
+    <record id="l10n_co_discount_code_06" model="l10n_co.discount.code">
+        <field name="code">06</field>
+        <field name="name">Descuento por monto de compras</field>
+    </record>
+    
+    <record id="l10n_co_discount_code_07" model="l10n_co.discount.code">
+        <field name="code">07</field>
+        <field name="name">Descuento de temporada</field>
+    </record>
+    
+    <record id="l10n_co_discount_code_08" model="l10n_co.discount.code">
+        <field name="code">08</field>
+        <field name="name">Descuento por actualización de productos / servicios</field>
+    </record>
+    
+    <record id="l10n_co_discount_code_09" model="l10n_co.discount.code">
+        <field name="code">09</field>
+        <field name="name">Descuento general</field>
+    </record>
+    
+    <record id="l10n_co_discount_code_10" model="l10n_co.discount.code">
+        <field name="code">10</field>
+        <field name="name">Descuento por volumen</field>
+    </record>
+    
+    <record id="l10n_co_discount_code_11" model="l10n_co.discount.code">
+        <field name="code">11</field>
+        <field name="name">Otro descuento</field>
+    </record>
+    
+</odoo>
+

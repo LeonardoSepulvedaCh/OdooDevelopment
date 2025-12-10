@@ -1,7 +1,7 @@
 {
     'name': 'Contactos - Cliente POS',
     'version': '1.0',
-    'category': 'Milan/POS',
+    'category': 'Rutavity/Point of Sale',
     'summary': 'Campo adicional para seleccionar determinar si el cliente es visible en el POS',
     'description': 'Campo adicional para seleccionar determinar si el cliente es visible en el POS',
     'author': '@LeonardoSepulvedaCh',

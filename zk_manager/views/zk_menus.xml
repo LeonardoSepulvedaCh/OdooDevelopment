@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_zk_manager_root" 
+              name="ZK Manager" 
+              sequence="10" 
+              web_icon="zk_manager,static/description/icon.png"/>
+    
+    <menuitem id="menu_zk_devices" 
+              name="Dispositivos" 
+              parent="menu_zk_manager_root" 
+              action="action_zk_devices" 
+              sequence="10"/>
+    
+    <menuitem id="menu_zk_users" 
+              name="Usuarios" 
+              parent="menu_zk_manager_root" 
+              action="action_zk_users" 
+              sequence="20"/>
+    
+    <menuitem id="menu_zk_attendance" 
+              name="Asistencia" 
+              parent="menu_zk_manager_root" 
+              action="action_zk_attendance" 
+              sequence="30"/>
+</odoo>

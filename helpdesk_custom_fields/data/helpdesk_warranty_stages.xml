@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Etapas predefinidas para equipos de garantías -->
+        
+        <record id="warranty_stage_new" model="helpdesk.stage">
+            <field name="name">Nuevo</field>
+            <field name="sequence">0</field>
+            <field name="fold" eval="False"/>
+        </record>
+        
+        <record id="warranty_stage_pending_review" model="helpdesk.stage">
+            <field name="name">Pendiente de Revisión</field>
+            <field name="sequence">1</field>
+            <field name="fold" eval="False"/>
+        </record>
+        
+        <record id="warranty_stage_waiting_payment" model="helpdesk.stage">
+            <field name="name">En espera de pago</field>
+            <field name="sequence">2</field>
+            <field name="fold" eval="False"/>
+        </record>
+        
+        <record id="warranty_stage_dispatch" model="helpdesk.stage">
+            <field name="name">Por Realizar (Despacho)</field>
+            <field name="sequence">3</field>
+            <field name="fold" eval="False"/>
+        </record>
+        
+        <record id="warranty_stage_resolved" model="helpdesk.stage">
+            <field name="name">Resuelto</field>
+            <field name="sequence">4</field>
+            <field name="fold" eval="True"/>
+        </record>
+        
+        <record id="warranty_stage_cancelled" model="helpdesk.stage">
+            <field name="name">Cancelado</field>
+            <field name="sequence">5</field>
+            <field name="fold" eval="True"/>
+        </record>
+        
+        <record id="warranty_stage_rejected" model="helpdesk.stage">
+            <field name="name">Rechazado</field>
+            <field name="sequence">6</field>
+            <field name="fold" eval="True"/>
+        </record>
+        
+    </data>
+</odoo>
+

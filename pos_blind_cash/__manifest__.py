@@ -1,7 +1,7 @@
 {
     'name': 'POS - Cierre de caja ciego',
     'version': '1.0.0',
-    'category': 'Milan/POS',
+    'category': 'Rutavity/Point of Sale',
     'summary': 'Cierre de caja ciego',
     'description': """
     Este módulo permite ocultar el resumen de cierre de caja en el POS. Mostrando unicamente el campo para ingresar el monto de cierre de caja.

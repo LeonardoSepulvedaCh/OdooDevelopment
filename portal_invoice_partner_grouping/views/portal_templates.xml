@@ -93,7 +93,7 @@
                                             type="checkbox" 
                                             name="invoice_checkbox"
                                             t-att-value="invoice.id"
-                                            t-att-data-amount="invoice.amount_residual"
+                                            t-att-data-amount="invoice_data.get('amount_due') or invoice.amount_residual"
                                             t-att-data-currency-id="invoice.currency_id.id"
                                             t-att-data-currency-symbol="invoice.currency_id.symbol"
                                             class="form-check-input invoice-checkbox"/>
@@ -222,7 +222,7 @@
                                                     type="checkbox" 
                                                     name="invoice_checkbox"
                                                     t-att-value="invoice.id"
-                                                    t-att-data-amount="invoice.amount_residual"
+                                                    t-att-data-amount="invoice_data.get('amount_due') or invoice.amount_residual"
                                                     t-att-data-currency-id="invoice.currency_id.id"
                                                     t-att-data-currency-symbol="invoice.currency_id.symbol"
                                                     t-att-data-partner-id="partner_id"
@@ -367,7 +367,7 @@
                                 name="invoice_checkbox"
                                 t-att-id="'invoice_checkbox_' + str(invoice.id)"
                                 t-att-value="invoice.id"
-                                t-att-data-amount="invoice.amount_residual"
+                                t-att-data-amount="invoice_data.get('amount_due') or invoice.amount_residual"
                                 t-att-data-currency-id="invoice.currency_id.id"
                                 t-att-data-currency-symbol="invoice.currency_id.symbol"
                                 t-att-data-partner-id="partner_id_attr or ''"
@@ -508,4 +508,3 @@
     </template>
 
 </odoo>
-

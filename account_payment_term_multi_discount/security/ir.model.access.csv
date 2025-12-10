@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_account_payment_term_discount,account.payment.term.discount,model_account_payment_term_discount,account.group_account_user,1,1,1,1
+access_account_payment_term_discount_readonly,account.payment.term.discount,model_account_payment_term_discount,account.group_account_readonly,1,0,0,0
+access_account_payment_term_discount_portal,account.payment.term.discount portal,model_account_payment_term_discount,base.group_portal,1,0,0,0

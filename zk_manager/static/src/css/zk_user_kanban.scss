@@ -1,0 +1,96 @@
+.zk_user_kanban_card {
+  position: relative;
+
+  .zk_settings_icon {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+
+    i {
+      font-size: 18px;
+      opacity: 0.7;
+    }
+  }
+
+  .zk_user_header {
+    .zk_user_info {
+      padding-top: 5px;
+
+      h4 {
+        font-weight: 600;
+        font-size: 16px;
+        margin: 0;
+      }
+
+      .zk_info_item {
+        font-size: 13px;
+
+        i {
+          margin-right: 4px;
+        }
+      }
+
+      .zk_badges {
+        margin-top: 8px;
+
+        .zk_badge {
+          font-weight: 600;
+          padding: 4px 12px;
+          border-radius: 12px;
+          font-size: 11px;
+
+          i {
+            margin-right: 4px;
+          }
+
+          &.zk_badge_admin {
+            background-color: #fbbf24;
+          }
+
+          &.zk_badge_user {
+            background-color: #34d399;
+          }
+
+          &.zk_badge_active {
+            background-color: #34d399;
+          }
+
+          &.zk_badge_inactive {
+            background-color: #ef4444;
+          }
+        }
+      }
+    }
+  }
+
+  .zk_user_details {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 8px;
+    padding: 12px;
+    margin-top: 12px;
+
+    .zk_detail_row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      &:not(:last-child) {
+        margin-bottom: 8px;
+      }
+
+      .zk_detail_label {
+        font-size: 12px;
+
+        i {
+          margin-right: 4px;
+        }
+      }
+
+      .zk_detail_value {
+        font-weight: 600;
+        font-size: 13px;
+      }
+    }
+  }
+}

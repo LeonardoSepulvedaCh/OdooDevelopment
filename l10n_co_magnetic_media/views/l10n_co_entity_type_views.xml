@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Vista de lista para l10n_co.entity.type -->
+    <record id="view_l10n_co_entity_type_list" model="ir.ui.view">
+        <field name="name">l10n.co.entity.type.list</field>
+        <field name="model">l10n_co.entity.type</field>
+        <field name="arch" type="xml">
+            <list string="Tipos de Entidad" default_order="code">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+    
+    <!-- Vista de formulario para l10n_co.entity.type -->
+    <record id="view_l10n_co_entity_type_form" model="ir.ui.view">
+        <field name="name">l10n.co.entity.type.form</field>
+        <field name="model">l10n_co.entity.type</field>
+        <field name="arch" type="xml">
+            <form string="Tipo de Entidad">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <widget name="web_ribbon" title="Archivado" bg_color="text-bg-danger" invisible="active"/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code" placeholder="Ej: 1"/>
+                            <field name="name" placeholder="Nombre del tipo de entidad"/>
+                        </group>
+                        <group>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="display_name_complete" readonly="1" string="Nombre Completo (Vista)"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <!-- Vista de búsqueda para l10n_co.entity.type -->
+    <record id="view_l10n_co_entity_type_search" model="ir.ui.view">
+        <field name="name">l10n.co.entity.type.search</field>
+        <field name="model">l10n_co.entity.type</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Tipos de Entidad">
+                <field name="code" string="Código"
+                       filter_domain="[('code', 'ilike', self)]"/>
+                <field name="name" string="Nombre"
+                       filter_domain="[('name', 'ilike', self)]"/>
+                <separator/>
+                <filter string="Activos" name="active" 
+                        domain="[('active', '=', True)]"/>
+                <filter string="Inactivos" name="inactive" 
+                        domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+    
+    <!-- Acción de ventana para l10n_co.entity.type -->
+    <record id="action_l10n_co_entity_type" model="ir.actions.act_window">
+        <field name="name">Tipos de Entidad</field>
+        <field name="res_model">l10n_co.entity.type</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Crea el primer tipo de entidad
+            </p>
+            <p>
+                Los tipos de entidad clasifican a los contactos como Persona Natural (1) 
+                o Persona Jurídica (2) según la normativa colombiana.
+            </p>
+        </field>
+    </record>
+    
+    <!-- Menú para l10n_co.entity.type -->
+    <menuitem id="menu_l10n_co_entity_type_root"
+              name="Tipos de Entidad"
+              parent="contacts.res_partner_menu_config"
+              action="action_l10n_co_entity_type"
+              sequence="40"/>
+
+</odoo>
+

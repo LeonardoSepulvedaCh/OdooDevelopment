@@ -1,7 +1,7 @@
 {
     'name': 'POS - Reporte de cierre de caja',
-    'version': '19.0.0.0.0',
-    'category': 'Milan/POS',
+    'version': '1.0.0',
+    'category': 'Rutavity/Point of Sale',
     'summary': 'Genera un informe PDF al cerrar la caja en el POS',
     'description': """
 Este módulo permite generar un informe detallado en PDF al cerrar la caja en el Punto de Venta (POS).
@@ -11,7 +11,7 @@ Incluye:
 - Desglose por denominación de billetes y monedas
 - Cantidad de pagos por transferencia o Bouchers (Recibos)
 """,
-    'author': 'Leonardo Sepúlveda',
+    'author': '@LeonardoSepulvedaCh',
     'license': 'OPL-1',
     'depends': ['point_of_sale'],
     'data': [

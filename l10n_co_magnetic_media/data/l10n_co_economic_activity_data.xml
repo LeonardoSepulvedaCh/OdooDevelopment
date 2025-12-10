@@ -1,0 +1,3054 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Actividades Económicas - Códigos CIIU Colombia -->
+    <!-- Total de registros: 508 -->
+
+    <record id="l10n_co_economic_activity_0010" model="l10n_co.economic.activity">
+        <field name="code">0010</field>
+        <field name="name">Asalariados</field>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0020" model="l10n_co.economic.activity">
+        <field name="code">0020</field>
+        <field name="name">Pensionado</field>
+        <field name="sequence">20</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0081" model="l10n_co.economic.activity">
+        <field name="code">0081</field>
+        <field name="name">Personas Naturales sin Actividad Económica</field>
+        <field name="sequence">30</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0082" model="l10n_co.economic.activity">
+        <field name="code">0082</field>
+        <field name="name">Personas Naturales Subsidiadas por Terceros</field>
+        <field name="sequence">40</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0090" model="l10n_co.economic.activity">
+        <field name="code">0090</field>
+        <field name="name">Rentistas de Capital, solo para personas naturales.</field>
+        <field name="sequence">50</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0111" model="l10n_co.economic.activity">
+        <field name="code">0111</field>
+        <field name="name">Cultivo de cereales (excepto arroz), legumbres y semillas oleaginosas.</field>
+        <field name="sequence">60</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0112" model="l10n_co.economic.activity">
+        <field name="code">0112</field>
+        <field name="name">Cultivo de arroz.</field>
+        <field name="sequence">70</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0113" model="l10n_co.economic.activity">
+        <field name="code">0113</field>
+        <field name="name">Cultivo de hortalizas, raíces y tubérculos.</field>
+        <field name="sequence">80</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0114" model="l10n_co.economic.activity">
+        <field name="code">0114</field>
+        <field name="name">Cultivo de tabaco.</field>
+        <field name="sequence">90</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0115" model="l10n_co.economic.activity">
+        <field name="code">0115</field>
+        <field name="name">Cultivo de plantas textiles.</field>
+        <field name="sequence">100</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0119" model="l10n_co.economic.activity">
+        <field name="code">0119</field>
+        <field name="name">Otros cultivos transitorios n.c.p.</field>
+        <field name="sequence">110</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0121" model="l10n_co.economic.activity">
+        <field name="code">0121</field>
+        <field name="name">Cultivo de frutas tropicales y subtropicales.</field>
+        <field name="sequence">120</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0122" model="l10n_co.economic.activity">
+        <field name="code">0122</field>
+        <field name="name">Cultivo de plátano y banano.</field>
+        <field name="sequence">130</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0123" model="l10n_co.economic.activity">
+        <field name="code">0123</field>
+        <field name="name">Cultivo de café.</field>
+        <field name="sequence">140</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0124" model="l10n_co.economic.activity">
+        <field name="code">0124</field>
+        <field name="name">Cultivo de caña de azúcar.</field>
+        <field name="sequence">150</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0125" model="l10n_co.economic.activity">
+        <field name="code">0125</field>
+        <field name="name">Cultivo de flor de corte.</field>
+        <field name="sequence">160</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0126" model="l10n_co.economic.activity">
+        <field name="code">0126</field>
+        <field name="name">Cultivo de palma para aceite (palma africana) y otros frutos oleaginosos.</field>
+        <field name="sequence">170</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0127" model="l10n_co.economic.activity">
+        <field name="code">0127</field>
+        <field name="name">Cultivo de plantas con las que se preparan bebidas.</field>
+        <field name="sequence">180</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0128" model="l10n_co.economic.activity">
+        <field name="code">0128</field>
+        <field name="name">Cultivo de especias y de plantas aromáticas y medicinales.</field>
+        <field name="sequence">190</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0129" model="l10n_co.economic.activity">
+        <field name="code">0129</field>
+        <field name="name">Otros cultivos permanentes n.c.p.</field>
+        <field name="sequence">200</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0130" model="l10n_co.economic.activity">
+        <field name="code">0130</field>
+        <field name="name">Propagación de plantas (actividades de los viveros, excepto viveros forestales).</field>
+        <field name="sequence">210</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0141" model="l10n_co.economic.activity">
+        <field name="code">0141</field>
+        <field name="name">Cría de ganado bovino y bufalino.</field>
+        <field name="sequence">220</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0142" model="l10n_co.economic.activity">
+        <field name="code">0142</field>
+        <field name="name">Cría de caballos y otros equinos.</field>
+        <field name="sequence">230</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0143" model="l10n_co.economic.activity">
+        <field name="code">0143</field>
+        <field name="name">Cría de ovejas y cabras.</field>
+        <field name="sequence">240</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0144" model="l10n_co.economic.activity">
+        <field name="code">0144</field>
+        <field name="name">Cría de ganado porcino.</field>
+        <field name="sequence">250</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0145" model="l10n_co.economic.activity">
+        <field name="code">0145</field>
+        <field name="name">Cría de aves de corral.</field>
+        <field name="sequence">260</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0149" model="l10n_co.economic.activity">
+        <field name="code">0149</field>
+        <field name="name">Cría de otros animales n.c.p.</field>
+        <field name="sequence">270</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0150" model="l10n_co.economic.activity">
+        <field name="code">0150</field>
+        <field name="name">Explotación mixta (agrícola y pecuaria).</field>
+        <field name="sequence">280</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0161" model="l10n_co.economic.activity">
+        <field name="code">0161</field>
+        <field name="name">Actividades de apoyo a la agricultura.</field>
+        <field name="sequence">290</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0162" model="l10n_co.economic.activity">
+        <field name="code">0162</field>
+        <field name="name">Actividades de apoyo a la ganadería.</field>
+        <field name="sequence">300</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0163" model="l10n_co.economic.activity">
+        <field name="code">0163</field>
+        <field name="name">Actividades posteriores a la cosecha.</field>
+        <field name="sequence">310</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0164" model="l10n_co.economic.activity">
+        <field name="code">0164</field>
+        <field name="name">Tratamiento de semillas para propagación.</field>
+        <field name="sequence">320</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0170" model="l10n_co.economic.activity">
+        <field name="code">0170</field>
+        <field name="name">Caza ordinaria y mediante trampas y actividades de servicios conexas.</field>
+        <field name="sequence">330</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0210" model="l10n_co.economic.activity">
+        <field name="code">0210</field>
+        <field name="name">Silvicultura y otras actividades forestales.</field>
+        <field name="sequence">340</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0220" model="l10n_co.economic.activity">
+        <field name="code">0220</field>
+        <field name="name">Extracción de madera.</field>
+        <field name="sequence">350</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0230" model="l10n_co.economic.activity">
+        <field name="code">0230</field>
+        <field name="name">Recolección de productos forestales diferentes a la madera.</field>
+        <field name="sequence">360</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0240" model="l10n_co.economic.activity">
+        <field name="code">0240</field>
+        <field name="name">Servicios de apoyo a la silvicultura.</field>
+        <field name="sequence">370</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0311" model="l10n_co.economic.activity">
+        <field name="code">0311</field>
+        <field name="name">Pesca marítima.</field>
+        <field name="sequence">380</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0312" model="l10n_co.economic.activity">
+        <field name="code">0312</field>
+        <field name="name">Pesca de agua dulce.</field>
+        <field name="sequence">390</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0321" model="l10n_co.economic.activity">
+        <field name="code">0321</field>
+        <field name="name">Acuicultura marítima.</field>
+        <field name="sequence">400</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0322" model="l10n_co.economic.activity">
+        <field name="code">0322</field>
+        <field name="name">Acuicultura de agua dulce.</field>
+        <field name="sequence">410</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0510" model="l10n_co.economic.activity">
+        <field name="code">0510</field>
+        <field name="name">Extracción de hulla (carbón de piedra).</field>
+        <field name="sequence">420</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0520" model="l10n_co.economic.activity">
+        <field name="code">0520</field>
+        <field name="name">Extracción de carbón lignito.</field>
+        <field name="sequence">430</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0610" model="l10n_co.economic.activity">
+        <field name="code">0610</field>
+        <field name="name">Extracción de petróleo crudo.</field>
+        <field name="sequence">440</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0620" model="l10n_co.economic.activity">
+        <field name="code">0620</field>
+        <field name="name">Extracción de gas natural.</field>
+        <field name="sequence">450</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0710" model="l10n_co.economic.activity">
+        <field name="code">0710</field>
+        <field name="name">Extracción de minerales de hierro.</field>
+        <field name="sequence">460</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0721" model="l10n_co.economic.activity">
+        <field name="code">0721</field>
+        <field name="name">Extracción de minerales de uranio y de torio.</field>
+        <field name="sequence">470</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0722" model="l10n_co.economic.activity">
+        <field name="code">0722</field>
+        <field name="name">Extracción de oro y otros metales preciosos.</field>
+        <field name="sequence">480</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0723" model="l10n_co.economic.activity">
+        <field name="code">0723</field>
+        <field name="name">Extracción de minerales de níquel.</field>
+        <field name="sequence">490</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0729" model="l10n_co.economic.activity">
+        <field name="code">0729</field>
+        <field name="name">Extracción de otros minerales metalíferos no ferrosos n.c.p.</field>
+        <field name="sequence">500</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0811" model="l10n_co.economic.activity">
+        <field name="code">0811</field>
+        <field name="name">Extracción de piedra, arena, arcillas comunes, yeso y anhidrita.</field>
+        <field name="sequence">510</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0812" model="l10n_co.economic.activity">
+        <field name="code">0812</field>
+        <field name="name">Extracción de arcillas de uso industrial, caliza, caolín y bentonitas.</field>
+        <field name="sequence">520</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0891" model="l10n_co.economic.activity">
+        <field name="code">0891</field>
+        <field name="name">Extracción de minerales para la fabricación de abonos y productos químicos.</field>
+        <field name="sequence">530</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0892" model="l10n_co.economic.activity">
+        <field name="code">0892</field>
+        <field name="name">Extracción de halita (sal).</field>
+        <field name="sequence">540</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0899" model="l10n_co.economic.activity">
+        <field name="code">0899</field>
+        <field name="name">Extracción de otros minerales no metálicos n.c.p.</field>
+        <field name="sequence">550</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0910" model="l10n_co.economic.activity">
+        <field name="code">0910</field>
+        <field name="name">Actividades de apoyo para la extracción de petróleo y de gas natural.</field>
+        <field name="sequence">560</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_0990" model="l10n_co.economic.activity">
+        <field name="code">0990</field>
+        <field name="name">Actividades de apoyo para otras actividades de explotación de minas y canteras.</field>
+        <field name="sequence">570</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1011" model="l10n_co.economic.activity">
+        <field name="code">1011</field>
+        <field name="name">Procesamiento y conservación de carne y productos cárnicos.</field>
+        <field name="sequence">580</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1012" model="l10n_co.economic.activity">
+        <field name="code">1012</field>
+        <field name="name">Procesamiento y conservación de pescados, crustáceos y moluscos.</field>
+        <field name="sequence">590</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1020" model="l10n_co.economic.activity">
+        <field name="code">1020</field>
+        <field name="name">Procesamiento y conservación de frutas, legumbres, hortalizas y tubérculos.</field>
+        <field name="sequence">600</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1031" model="l10n_co.economic.activity">
+        <field name="code">1031</field>
+        <field name="name">Extracción de aceites de origen vegetal crudo</field>
+        <field name="sequence">610</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1032" model="l10n_co.economic.activity">
+        <field name="code">1032</field>
+        <field name="name">Elaboración de aceites y grasas de origen vegetal refinados</field>
+        <field name="sequence">620</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1033" model="l10n_co.economic.activity">
+        <field name="code">1033</field>
+        <field name="name">Elaboración de acedites y grasas de origen animal</field>
+        <field name="sequence">630</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1040" model="l10n_co.economic.activity">
+        <field name="code">1040</field>
+        <field name="name">Elaboración de productos lácteos.</field>
+        <field name="sequence">640</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1051" model="l10n_co.economic.activity">
+        <field name="code">1051</field>
+        <field name="name">Elaboración de productos de molinería.</field>
+        <field name="sequence">650</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1052" model="l10n_co.economic.activity">
+        <field name="code">1052</field>
+        <field name="name">Elaboración de almidones y productos derivados del almidón.</field>
+        <field name="sequence">660</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1061" model="l10n_co.economic.activity">
+        <field name="code">1061</field>
+        <field name="name">Trilla de café.</field>
+        <field name="sequence">670</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1062" model="l10n_co.economic.activity">
+        <field name="code">1062</field>
+        <field name="name">Descafeinado, tostión y molienda del café.</field>
+        <field name="sequence">680</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1063" model="l10n_co.economic.activity">
+        <field name="code">1063</field>
+        <field name="name">Otros derivados del café.</field>
+        <field name="sequence">690</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1071" model="l10n_co.economic.activity">
+        <field name="code">1071</field>
+        <field name="name">Elaboración y refinación de azúcar.</field>
+        <field name="sequence">700</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1072" model="l10n_co.economic.activity">
+        <field name="code">1072</field>
+        <field name="name">Elaboración de panela.</field>
+        <field name="sequence">710</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1081" model="l10n_co.economic.activity">
+        <field name="code">1081</field>
+        <field name="name">Elaboración de productos de panadería.</field>
+        <field name="sequence">720</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1082" model="l10n_co.economic.activity">
+        <field name="code">1082</field>
+        <field name="name">Elaboración de cacao, chocolate y productos de confitería.</field>
+        <field name="sequence">730</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1083" model="l10n_co.economic.activity">
+        <field name="code">1083</field>
+        <field name="name">Elaboración de macarrones, fideos, alcuzcuz y productos farináceos similares,</field>
+        <field name="sequence">740</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1084" model="l10n_co.economic.activity">
+        <field name="code">1084</field>
+        <field name="name">Elaboración de comidas y platos preparados.</field>
+        <field name="sequence">750</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1089" model="l10n_co.economic.activity">
+        <field name="code">1089</field>
+        <field name="name">Elaboración de otros productos alimenticios n.c.p.</field>
+        <field name="sequence">760</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1090" model="l10n_co.economic.activity">
+        <field name="code">1090</field>
+        <field name="name">Elaboración de alimentos preparados para animales.</field>
+        <field name="sequence">770</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1101" model="l10n_co.economic.activity">
+        <field name="code">1101</field>
+        <field name="name">Destilación, rectificación y mezcla de bebidas alcohólicas.</field>
+        <field name="sequence">780</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1102" model="l10n_co.economic.activity">
+        <field name="code">1102</field>
+        <field name="name">Elaboración de bebidas fermentadas no destiladas.</field>
+        <field name="sequence">790</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1103" model="l10n_co.economic.activity">
+        <field name="code">1103</field>
+        <field name="name">Producción de malta, elaboración de cervezas y otras bebidas malteadas.</field>
+        <field name="sequence">800</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1104" model="l10n_co.economic.activity">
+        <field name="code">1104</field>
+        <field name="name">Elaboración de bebidas no alcohólicas, producción de aguas minerales y de otras aguas embotelladas.</field>
+        <field name="sequence">810</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1200" model="l10n_co.economic.activity">
+        <field name="code">1200</field>
+        <field name="name">Elaboración de productos de tabaco.</field>
+        <field name="sequence">820</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1311" model="l10n_co.economic.activity">
+        <field name="code">1311</field>
+        <field name="name">Preparación e hilatura de fibras textiles.</field>
+        <field name="sequence">830</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1312" model="l10n_co.economic.activity">
+        <field name="code">1312</field>
+        <field name="name">Tejeduría de productos textiles.</field>
+        <field name="sequence">840</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1313" model="l10n_co.economic.activity">
+        <field name="code">1313</field>
+        <field name="name">Acabado de productos textiles.</field>
+        <field name="sequence">850</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1391" model="l10n_co.economic.activity">
+        <field name="code">1391</field>
+        <field name="name">Fabricación de tejidos de punto y ganchillo.</field>
+        <field name="sequence">860</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1392" model="l10n_co.economic.activity">
+        <field name="code">1392</field>
+        <field name="name">Confección de artículos con materiales textiles, excepto prendas de vestir.</field>
+        <field name="sequence">870</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1393" model="l10n_co.economic.activity">
+        <field name="code">1393</field>
+        <field name="name">Fabricación de tapetes y alfombras para pisos.</field>
+        <field name="sequence">880</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1394" model="l10n_co.economic.activity">
+        <field name="code">1394</field>
+        <field name="name">Fabricación de cuerdas, cordeles, cables, bramantes y redes.</field>
+        <field name="sequence">890</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1399" model="l10n_co.economic.activity">
+        <field name="code">1399</field>
+        <field name="name">Fabricación de otros artículos textiles n.c.p.</field>
+        <field name="sequence">900</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1410" model="l10n_co.economic.activity">
+        <field name="code">1410</field>
+        <field name="name">Confección de prendas de vestir, excepto prendas de piel.</field>
+        <field name="sequence">910</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1420" model="l10n_co.economic.activity">
+        <field name="code">1420</field>
+        <field name="name">Fabricación de artículos de piel.</field>
+        <field name="sequence">920</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1430" model="l10n_co.economic.activity">
+        <field name="code">1430</field>
+        <field name="name">Fabricación de artículos de punto y ganchillo.</field>
+        <field name="sequence">930</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1511" model="l10n_co.economic.activity">
+        <field name="code">1511</field>
+        <field name="name">Curtido y recurtido de cueros; recurtido y teñido de pieles.</field>
+        <field name="sequence">940</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1512" model="l10n_co.economic.activity">
+        <field name="code">1512</field>
+        <field name="name">Fabricación de artículos de viaje, bolsos de mano y artículos similares elaborados en cuero, y fabricación de artículos de talabartería y guarnicionería.</field>
+        <field name="sequence">950</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1513" model="l10n_co.economic.activity">
+        <field name="code">1513</field>
+        <field name="name">Fabricación de artículos de viaje, bolsos de mano y artículos similares; artículos de talabartería y guarnicionería elaborados en otros materiales.</field>
+        <field name="sequence">960</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1521" model="l10n_co.economic.activity">
+        <field name="code">1521</field>
+        <field name="name">Fabricación de calzado de cuero y piel, con cualquier tipo de suela.</field>
+        <field name="sequence">970</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1522" model="l10n_co.economic.activity">
+        <field name="code">1522</field>
+        <field name="name">Fabricación de otros tipos de calzado, excepto calzado de cuero y piel.</field>
+        <field name="sequence">980</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1523" model="l10n_co.economic.activity">
+        <field name="code">1523</field>
+        <field name="name">Fabricación de partes del calzado.</field>
+        <field name="sequence">990</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1610" model="l10n_co.economic.activity">
+        <field name="code">1610</field>
+        <field name="name">Aserrado, acepillado e impregnación de la madera.</field>
+        <field name="sequence">1000</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1620" model="l10n_co.economic.activity">
+        <field name="code">1620</field>
+        <field name="name">Fabricación de hojas de madera para enchapado; fabricación de tableros contrachapados, tableros laminados, tableros de partículas y otros tableros y paneles.</field>
+        <field name="sequence">1010</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1630" model="l10n_co.economic.activity">
+        <field name="code">1630</field>
+        <field name="name">Fabricación de partes y piezas de madera, de carpintería y ebanistería para la construcción.</field>
+        <field name="sequence">1020</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1640" model="l10n_co.economic.activity">
+        <field name="code">1640</field>
+        <field name="name">Fabricación de recipientes de madera.</field>
+        <field name="sequence">1030</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1690" model="l10n_co.economic.activity">
+        <field name="code">1690</field>
+        <field name="name">Fabricación de otros productos de madera; fabricación de artículos de corcho, cestería y espartería.</field>
+        <field name="sequence">1040</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1701" model="l10n_co.economic.activity">
+        <field name="code">1701</field>
+        <field name="name">Fabricación de pulpas (pastas) celulósicas; papel y cartón.</field>
+        <field name="sequence">1050</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1702" model="l10n_co.economic.activity">
+        <field name="code">1702</field>
+        <field name="name">Fabricación de papel y cartón ondulado (corrugado); fabricación de envases, empaques y de embalajes de papel y cartón.</field>
+        <field name="sequence">1060</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1709" model="l10n_co.economic.activity">
+        <field name="code">1709</field>
+        <field name="name">Fabricación de otros artículos de papel y cartón.</field>
+        <field name="sequence">1070</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1811" model="l10n_co.economic.activity">
+        <field name="code">1811</field>
+        <field name="name">Actividades de impresión.</field>
+        <field name="sequence">1080</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1812" model="l10n_co.economic.activity">
+        <field name="code">1812</field>
+        <field name="name">Actividades de servicios relacionados con la impresión.</field>
+        <field name="sequence">1090</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1820" model="l10n_co.economic.activity">
+        <field name="code">1820</field>
+        <field name="name">Producción de copias a partir de grabaciones originales.</field>
+        <field name="sequence">1100</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1910" model="l10n_co.economic.activity">
+        <field name="code">1910</field>
+        <field name="name">Fabricación de productos de hornos de coque.</field>
+        <field name="sequence">1110</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1921" model="l10n_co.economic.activity">
+        <field name="code">1921</field>
+        <field name="name">Fabricación de productos de la refinación del petróleo.</field>
+        <field name="sequence">1120</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_1922" model="l10n_co.economic.activity">
+        <field name="code">1922</field>
+        <field name="name">Actividad de mezcla de combustibles.</field>
+        <field name="sequence">1130</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2011" model="l10n_co.economic.activity">
+        <field name="code">2011</field>
+        <field name="name">Fabricación de sustancias y productos químicos básicos.</field>
+        <field name="sequence">1140</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2012" model="l10n_co.economic.activity">
+        <field name="code">2012</field>
+        <field name="name">Fabricación de abonos y compuestos inorgánicos nitrogenados.</field>
+        <field name="sequence">1150</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2013" model="l10n_co.economic.activity">
+        <field name="code">2013</field>
+        <field name="name">Fabricación de plásticos en formas primarias.</field>
+        <field name="sequence">1160</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2014" model="l10n_co.economic.activity">
+        <field name="code">2014</field>
+        <field name="name">Fabricación de caucho sintético en formas primarias.</field>
+        <field name="sequence">1170</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2021" model="l10n_co.economic.activity">
+        <field name="code">2021</field>
+        <field name="name">Fabricación de plaguicidas y otros productos químicos de uso agropecuario.</field>
+        <field name="sequence">1180</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2022" model="l10n_co.economic.activity">
+        <field name="code">2022</field>
+        <field name="name">Fabricación de pinturas, barnices y revestimientos similares, tintas para impresión y masillas.</field>
+        <field name="sequence">1190</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2023" model="l10n_co.economic.activity">
+        <field name="code">2023</field>
+        <field name="name">Fabricación de jabones y detergentes, preparados para limpiar y pulir; perfumes y preparados de tocador.</field>
+        <field name="sequence">1200</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2029" model="l10n_co.economic.activity">
+        <field name="code">2029</field>
+        <field name="name">Fabricación de otros productos químicos n.c.p.</field>
+        <field name="sequence">1210</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2030" model="l10n_co.economic.activity">
+        <field name="code">2030</field>
+        <field name="name">Fabricación de fibras sintéticas y artificiales.</field>
+        <field name="sequence">1220</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2100" model="l10n_co.economic.activity">
+        <field name="code">2100</field>
+        <field name="name">Fabricación de productos farmacéuticos, sustancias químicas medicinales y productos botánicos de uso farmacéutico.</field>
+        <field name="sequence">1230</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2211" model="l10n_co.economic.activity">
+        <field name="code">2211</field>
+        <field name="name">Fabricación de llantas y neumáticos de caucho</field>
+        <field name="sequence">1240</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2212" model="l10n_co.economic.activity">
+        <field name="code">2212</field>
+        <field name="name">Reencauche de llantas usadas</field>
+        <field name="sequence">1250</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2219" model="l10n_co.economic.activity">
+        <field name="code">2219</field>
+        <field name="name">Fabricación de formas básicas de caucho y otros productos de caucho n.c.p.</field>
+        <field name="sequence">1260</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2221" model="l10n_co.economic.activity">
+        <field name="code">2221</field>
+        <field name="name">Fabricación de formas básicas de plástico.</field>
+        <field name="sequence">1270</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2229" model="l10n_co.economic.activity">
+        <field name="code">2229</field>
+        <field name="name">Fabricación de artículos de plástico n.c.p.</field>
+        <field name="sequence">1280</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2310" model="l10n_co.economic.activity">
+        <field name="code">2310</field>
+        <field name="name">Fabricación de vidrio y productos de vidrio.</field>
+        <field name="sequence">1290</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2391" model="l10n_co.economic.activity">
+        <field name="code">2391</field>
+        <field name="name">Fabricación de productos refractarios.</field>
+        <field name="sequence">1300</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2392" model="l10n_co.economic.activity">
+        <field name="code">2392</field>
+        <field name="name">Fabricación de materiales de arcilla para la construcción.</field>
+        <field name="sequence">1310</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2393" model="l10n_co.economic.activity">
+        <field name="code">2393</field>
+        <field name="name">Fabricación de otros productos de cerámica y porcelana.</field>
+        <field name="sequence">1320</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2394" model="l10n_co.economic.activity">
+        <field name="code">2394</field>
+        <field name="name">Fabricación de cemento, cal y yeso.</field>
+        <field name="sequence">1330</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2395" model="l10n_co.economic.activity">
+        <field name="code">2395</field>
+        <field name="name">Fabricación de artículos de hormigón, cemento y yeso.</field>
+        <field name="sequence">1340</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2396" model="l10n_co.economic.activity">
+        <field name="code">2396</field>
+        <field name="name">Corte, tallado y acabado de la piedra.</field>
+        <field name="sequence">1350</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2399" model="l10n_co.economic.activity">
+        <field name="code">2399</field>
+        <field name="name">Fabricación de otros productos minerales no metálicos n.c.p.</field>
+        <field name="sequence">1360</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2410" model="l10n_co.economic.activity">
+        <field name="code">2410</field>
+        <field name="name">Industrias básicas de hierro y de acero.</field>
+        <field name="sequence">1370</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2421" model="l10n_co.economic.activity">
+        <field name="code">2421</field>
+        <field name="name">Industrias básicas de metales preciosos.</field>
+        <field name="sequence">1380</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2429" model="l10n_co.economic.activity">
+        <field name="code">2429</field>
+        <field name="name">Industrias básicas de otros metales no ferrosos.</field>
+        <field name="sequence">1390</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2431" model="l10n_co.economic.activity">
+        <field name="code">2431</field>
+        <field name="name">Fundición de hierro y de acero.</field>
+        <field name="sequence">1400</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2432" model="l10n_co.economic.activity">
+        <field name="code">2432</field>
+        <field name="name">Fundición de metales no ferrosos.</field>
+        <field name="sequence">1410</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2511" model="l10n_co.economic.activity">
+        <field name="code">2511</field>
+        <field name="name">Fabricación de productos metálicos para uso estructural.</field>
+        <field name="sequence">1420</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2512" model="l10n_co.economic.activity">
+        <field name="code">2512</field>
+        <field name="name">Fabricación de tanques, depósitos y recipientes de metal, excepto los utilizados para el envase o transporte de mercancías.</field>
+        <field name="sequence">1430</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2513" model="l10n_co.economic.activity">
+        <field name="code">2513</field>
+        <field name="name">Fabricación de generadores de vapor, excepto calderas de agua caliente paracalefacción central.</field>
+        <field name="sequence">1440</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2520" model="l10n_co.economic.activity">
+        <field name="code">2520</field>
+        <field name="name">Fabricación de armas y municiones.</field>
+        <field name="sequence">1450</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2591" model="l10n_co.economic.activity">
+        <field name="code">2591</field>
+        <field name="name">Forja, prensado, estampado y laminado de metal; pulvimetalurgia.</field>
+        <field name="sequence">1460</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2592" model="l10n_co.economic.activity">
+        <field name="code">2592</field>
+        <field name="name">Tratamiento y revestimiento de metales; mecanizado.</field>
+        <field name="sequence">1470</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2593" model="l10n_co.economic.activity">
+        <field name="code">2593</field>
+        <field name="name">Fabricación de artículos de cuchillería, herramientas de mano y artículos de ferretería.</field>
+        <field name="sequence">1480</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2599" model="l10n_co.economic.activity">
+        <field name="code">2599</field>
+        <field name="name">Fabricación de otros productos elaborados de metal n.c.p.</field>
+        <field name="sequence">1490</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2610" model="l10n_co.economic.activity">
+        <field name="code">2610</field>
+        <field name="name">Fabricación de componentes y tableros electrónicos.</field>
+        <field name="sequence">1500</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2620" model="l10n_co.economic.activity">
+        <field name="code">2620</field>
+        <field name="name">Fabricación de computadoras y de equipo periférico.</field>
+        <field name="sequence">1510</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2630" model="l10n_co.economic.activity">
+        <field name="code">2630</field>
+        <field name="name">Fabricación de equipos de comunicación.</field>
+        <field name="sequence">1520</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2640" model="l10n_co.economic.activity">
+        <field name="code">2640</field>
+        <field name="name">Fabricación de aparatos electrónicos de consumo.</field>
+        <field name="sequence">1530</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2651" model="l10n_co.economic.activity">
+        <field name="code">2651</field>
+        <field name="name">Fabricación de equipo de medición, prueba, navegación y control.</field>
+        <field name="sequence">1540</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2652" model="l10n_co.economic.activity">
+        <field name="code">2652</field>
+        <field name="name">Fabricación de relojes.</field>
+        <field name="sequence">1550</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2660" model="l10n_co.economic.activity">
+        <field name="code">2660</field>
+        <field name="name">Fabricación de equipo de irradiación y equipo electrónico de uso médico y terapéutico.</field>
+        <field name="sequence">1560</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2670" model="l10n_co.economic.activity">
+        <field name="code">2670</field>
+        <field name="name">Fabricación de instrumentos ópticos y equipo fotográfico.</field>
+        <field name="sequence">1570</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2680" model="l10n_co.economic.activity">
+        <field name="code">2680</field>
+        <field name="name">Fabricación de medios magnéticos y ópticos para almacenamiento de datos.</field>
+        <field name="sequence">1580</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2711" model="l10n_co.economic.activity">
+        <field name="code">2711</field>
+        <field name="name">Fabricación de motores, generadores y transformadores eléctricos.</field>
+        <field name="sequence">1590</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2712" model="l10n_co.economic.activity">
+        <field name="code">2712</field>
+        <field name="name">Fabricación de aparatos de distribución y control de la energía eléctrica.</field>
+        <field name="sequence">1600</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2720" model="l10n_co.economic.activity">
+        <field name="code">2720</field>
+        <field name="name">Fabricación de pilas, baterías y acumuladores eléctricos.</field>
+        <field name="sequence">1610</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2731" model="l10n_co.economic.activity">
+        <field name="code">2731</field>
+        <field name="name">Fabricación de hilos y cables eléctricos y de fibra óptica.</field>
+        <field name="sequence">1620</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2732" model="l10n_co.economic.activity">
+        <field name="code">2732</field>
+        <field name="name">Fabricación de dispositivos de cableado.</field>
+        <field name="sequence">1630</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2740" model="l10n_co.economic.activity">
+        <field name="code">2740</field>
+        <field name="name">Fabricación de equipos eléctricos de iluminación.</field>
+        <field name="sequence">1640</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2750" model="l10n_co.economic.activity">
+        <field name="code">2750</field>
+        <field name="name">Fabricación de aparatos de uso doméstico.</field>
+        <field name="sequence">1650</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2790" model="l10n_co.economic.activity">
+        <field name="code">2790</field>
+        <field name="name">Fabricación de otros tipos de equipo eléctrico n.c.p.</field>
+        <field name="sequence">1660</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2811" model="l10n_co.economic.activity">
+        <field name="code">2811</field>
+        <field name="name">Fabricación de motores, turbinas, y partes para motores de combustión interna.</field>
+        <field name="sequence">1670</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2812" model="l10n_co.economic.activity">
+        <field name="code">2812</field>
+        <field name="name">Fabricación de equipos de potencia hidráulica y neumática.</field>
+        <field name="sequence">1680</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2813" model="l10n_co.economic.activity">
+        <field name="code">2813</field>
+        <field name="name">Fabricación de otras bombas, compresores, grifos y válvulas.</field>
+        <field name="sequence">1690</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2814" model="l10n_co.economic.activity">
+        <field name="code">2814</field>
+        <field name="name">Fabricación de cojinetes, engranajes, trenes de engranajes y piezas de transmisión.</field>
+        <field name="sequence">1700</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2815" model="l10n_co.economic.activity">
+        <field name="code">2815</field>
+        <field name="name">Fabricación de hornos, hogares y quemadores industriales.</field>
+        <field name="sequence">1710</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2816" model="l10n_co.economic.activity">
+        <field name="code">2816</field>
+        <field name="name">Fabricación de equipo de elevación y manipulación.</field>
+        <field name="sequence">1720</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2817" model="l10n_co.economic.activity">
+        <field name="code">2817</field>
+        <field name="name">Fabricación de maquinaria y equipo de oficina (excepto computadoras y equipo periférico).</field>
+        <field name="sequence">1730</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2818" model="l10n_co.economic.activity">
+        <field name="code">2818</field>
+        <field name="name">Fabricación de herramientas manuales con motor.</field>
+        <field name="sequence">1740</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2819" model="l10n_co.economic.activity">
+        <field name="code">2819</field>
+        <field name="name">Fabricación de otros tipos de maquinaria y equipo de uso general n.c.p.</field>
+        <field name="sequence">1750</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2821" model="l10n_co.economic.activity">
+        <field name="code">2821</field>
+        <field name="name">Fabricación de maquinaria agropecuaria y forestal.</field>
+        <field name="sequence">1760</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2822" model="l10n_co.economic.activity">
+        <field name="code">2822</field>
+        <field name="name">Fabricación de máquinas formadoras de metal y de máquinas herramienta.</field>
+        <field name="sequence">1770</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2823" model="l10n_co.economic.activity">
+        <field name="code">2823</field>
+        <field name="name">Fabricación de maquinaria para la metalurgia.</field>
+        <field name="sequence">1780</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2824" model="l10n_co.economic.activity">
+        <field name="code">2824</field>
+        <field name="name">Fabricación de maquinaria para explotación de minas y canteras y para obras de construcción.</field>
+        <field name="sequence">1790</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2825" model="l10n_co.economic.activity">
+        <field name="code">2825</field>
+        <field name="name">Fabricación de maquinaria para la elaboración de alimentos, bebidas y tabaco.</field>
+        <field name="sequence">1800</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2826" model="l10n_co.economic.activity">
+        <field name="code">2826</field>
+        <field name="name">Fabricación de maquinaria para la elaboración de productos textiles, prendas de vestir y cueros.</field>
+        <field name="sequence">1810</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2829" model="l10n_co.economic.activity">
+        <field name="code">2829</field>
+        <field name="name">Fabricación de otros tipos de maquinaria y equipo de uso especial n.c.p.</field>
+        <field name="sequence">1820</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2910" model="l10n_co.economic.activity">
+        <field name="code">2910</field>
+        <field name="name">Fabricación de vehículos automotores y sus motores.</field>
+        <field name="sequence">1830</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2920" model="l10n_co.economic.activity">
+        <field name="code">2920</field>
+        <field name="name">Fabricación de carrocerías para vehículos automotores; fabricación de remolques y semirremolques.</field>
+        <field name="sequence">1840</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_2930" model="l10n_co.economic.activity">
+        <field name="code">2930</field>
+        <field name="name">Fabricación de partes, piezas (autopartes) y accesorios (lujos) para vehículos automotores.</field>
+        <field name="sequence">1850</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_3011" model="l10n_co.economic.activity">
+        <field name="code">3011</field>
+        <field name="name">Construcción de barcos y de estructuras flotantes.</field>
+        <field name="sequence">1860</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_3012" model="l10n_co.economic.activity">
+        <field name="code">3012</field>
+        <field name="name">Construcción de embarcaciones de recreo y deporte.</field>
+        <field name="sequence">1870</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_302" model="l10n_co.economic.activity">
+        <field name="code">302</field>
+        <field name="name">Fabricación de locomotoras y de material rodante</field>
+        <field name="sequence">1880</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_3020" model="l10n_co.economic.activity">
+        <field name="code">3020</field>
+        <field name="name">Fabricación de locomotoras y de material rodante para ferrocarriles.</field>
+        <field name="sequence">1890</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_3030" model="l10n_co.economic.activity">
+        <field name="code">3030</field>
+        <field name="name">Fabricación de aeronaves, naves espaciales y de maquinaria conexa.</field>
+        <field name="sequence">1900</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_3040" model="l10n_co.economic.activity">
+        <field name="code">3040</field>
+        <field name="name">Fabricación de vehículos militares de combate.</field>
+        <field name="sequence">1910</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_3091" model="l10n_co.economic.activity">
+        <field name="code">3091</field>
+        <field name="name">Fabricación de motocicletas.</field>
+        <field name="sequence">1920</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_3092" model="l10n_co.economic.activity">
+        <field name="code">3092</field>
+        <field name="name">Fabricación de bicicletas y de sillas de ruedas para personas con discapacidad.</field>
+        <field name="sequence">1930</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_3099" model="l10n_co.economic.activity">
+        <field name="code">3099</field>
+        <field name="name">Fabricación de otros tipos de equipo de transporte n.c.p.</field>
+        <field name="sequence">1940</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_3110" model="l10n_co.economic.activity">
+        <field name="code">3110</field>
+        <field name="name">Fabricación de muebles.</field>
+        <field name="sequence">1950</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_3120" model="l10n_co.economic.activity">
+        <field name="code">3120</field>
+        <field name="name">Fabricación de colchones y somieres.</field>
+        <field name="sequence">1960</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_3210" model="l10n_co.economic.activity">
+        <field name="code">3210</field>
+        <field name="name">Fabricación de joyas, bisutería y artículos conexos.</field>
+        <field name="sequence">1970</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_3220" model="l10n_co.economic.activity">
+        <field name="code">3220</field>
+        <field name="name">Fabricación de instrumentos musicales.</field>
+        <field name="sequence">1980</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_3230" model="l10n_co.economic.activity">
+        <field name="code">3230</field>
+        <field name="name">Fabricación de artículos y equipo para la práctica del deporte.</field>
+        <field name="sequence">1990</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_3240" model="l10n_co.economic.activity">
+        <field name="code">3240</field>
+        <field name="name">Fabricación de juegos, juguetes y rompecabezas.</field>
+        <field name="sequence">2000</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_3250" model="l10n_co.economic.activity">
+        <field name="code">3250</field>
+        <field name="name">Fabricación de instrumentos, aparatos y materiales médicos y odontológicos (incluido mobiliario).</field>
+        <field name="sequence">2010</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_3290" model="l10n_co.economic.activity">
+        <field name="code">3290</field>
+        <field name="name">Otras industrias manufactureras n.c.p.</field>
+        <field name="sequence">2020</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_3311" model="l10n_co.economic.activity">
+        <field name="code">3311</field>
+        <field name="name">Mantenimiento y reparación especializado de productos elaborados en metal.</field>
+        <field name="sequence">2030</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_3312" model="l10n_co.economic.activity">
+        <field name="code">3312</field>
+        <field name="name">Mantenimiento y reparación especializado de maquinaria y equipo.</field>
+        <field name="sequence">2040</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_3313" model="l10n_co.economic.activity">
+        <field name="code">3313</field>
+        <field name="name">Mantenimiento y reparación especializado de equipo electrónico y óptico.</field>
+        <field name="sequence">2050</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_3314" model="l10n_co.economic.activity">
+        <field name="code">3314</field>
+        <field name="name">Mantenimiento y reparación especializado de equipo eléctrico.</field>
+        <field name="sequence">2060</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_3315" model="l10n_co.economic.activity">
+        <field name="code">3315</field>
+        <field name="name">Mantenimiento y reparación especializado de equipo de transporte, excepto los vehículos automotores, motocicletas y bicicletas.</field>
+        <field name="sequence">2070</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_3319" model="l10n_co.economic.activity">
+        <field name="code">3319</field>
+        <field name="name">Mantenimiento y reparación de otros tipos de equipos y sus componentes n.c.p.</field>
+        <field name="sequence">2080</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_3320" model="l10n_co.economic.activity">
+        <field name="code">3320</field>
+        <field name="name">Instalación especializada de maquinaria y equipo industrial.</field>
+        <field name="sequence">2090</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_3511" model="l10n_co.economic.activity">
+        <field name="code">3511</field>
+        <field name="name">Generación de energía eléctrica.</field>
+        <field name="sequence">2100</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_3512" model="l10n_co.economic.activity">
+        <field name="code">3512</field>
+        <field name="name">Transmisión de energía eléctrica.</field>
+        <field name="sequence">2110</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_3513" model="l10n_co.economic.activity">
+        <field name="code">3513</field>
+        <field name="name">Distribución de energía eléctrica.</field>
+        <field name="sequence">2120</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_3514" model="l10n_co.economic.activity">
+        <field name="code">3514</field>
+        <field name="name">Comercialización de energía eléctrica.</field>
+        <field name="sequence">2130</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_3520" model="l10n_co.economic.activity">
+        <field name="code">3520</field>
+        <field name="name">Producción de gas; distribución de combustibles gaseosos por tuberías.</field>
+        <field name="sequence">2140</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_3530" model="l10n_co.economic.activity">
+        <field name="code">3530</field>
+        <field name="name">Suministro de vapor y aire acondicionado.</field>
+        <field name="sequence">2150</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_3600" model="l10n_co.economic.activity">
+        <field name="code">3600</field>
+        <field name="name">Captación, tratamiento y distribución de agua.</field>
+        <field name="sequence">2160</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_3700" model="l10n_co.economic.activity">
+        <field name="code">3700</field>
+        <field name="name">Evacuación y tratamiento de aguas residuales.</field>
+        <field name="sequence">2170</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_3811" model="l10n_co.economic.activity">
+        <field name="code">3811</field>
+        <field name="name">Recolección de desechos no peligrosos.</field>
+        <field name="sequence">2180</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_3812" model="l10n_co.economic.activity">
+        <field name="code">3812</field>
+        <field name="name">Recolección de desechos peligrosos.</field>
+        <field name="sequence">2190</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_3821" model="l10n_co.economic.activity">
+        <field name="code">3821</field>
+        <field name="name">Tratamiento y disposición de desechos no peligrosos.</field>
+        <field name="sequence">2200</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_3822" model="l10n_co.economic.activity">
+        <field name="code">3822</field>
+        <field name="name">Tratamiento y disposición de desechos peligrosos.</field>
+        <field name="sequence">2210</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_3830" model="l10n_co.economic.activity">
+        <field name="code">3830</field>
+        <field name="name">Recuperación de materiales.</field>
+        <field name="sequence">2220</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_3900" model="l10n_co.economic.activity">
+        <field name="code">3900</field>
+        <field name="name">Actividades de saneamiento ambiental y otros servicios de gestión de desechos.</field>
+        <field name="sequence">2230</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4111" model="l10n_co.economic.activity">
+        <field name="code">4111</field>
+        <field name="name">Construcción de edificios residenciales.</field>
+        <field name="sequence">2240</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4112" model="l10n_co.economic.activity">
+        <field name="code">4112</field>
+        <field name="name">Construcción de edificios no residenciales.</field>
+        <field name="sequence">2250</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4210" model="l10n_co.economic.activity">
+        <field name="code">4210</field>
+        <field name="name">Construcción de carreteras y vías de ferrocarril.</field>
+        <field name="sequence">2260</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4220" model="l10n_co.economic.activity">
+        <field name="code">4220</field>
+        <field name="name">Construcción de proyectos de servicio público.</field>
+        <field name="sequence">2270</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4290" model="l10n_co.economic.activity">
+        <field name="code">4290</field>
+        <field name="name">Construcción de otras obras de ingeniería civil.</field>
+        <field name="sequence">2280</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4311" model="l10n_co.economic.activity">
+        <field name="code">4311</field>
+        <field name="name">Demolición.</field>
+        <field name="sequence">2290</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4312" model="l10n_co.economic.activity">
+        <field name="code">4312</field>
+        <field name="name">Preparación del terreno.</field>
+        <field name="sequence">2300</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4321" model="l10n_co.economic.activity">
+        <field name="code">4321</field>
+        <field name="name">Instalaciones eléctricas.</field>
+        <field name="sequence">2310</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4322" model="l10n_co.economic.activity">
+        <field name="code">4322</field>
+        <field name="name">Instalaciones de fontanería, calefacción y aire acondicionado.</field>
+        <field name="sequence">2320</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4329" model="l10n_co.economic.activity">
+        <field name="code">4329</field>
+        <field name="name">Otras instalaciones especializadas.</field>
+        <field name="sequence">2330</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4330" model="l10n_co.economic.activity">
+        <field name="code">4330</field>
+        <field name="name">Terminación y acabado de edificios y obras de ingeniería civil.</field>
+        <field name="sequence">2340</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4390" model="l10n_co.economic.activity">
+        <field name="code">4390</field>
+        <field name="name">Otras actividades especializadas para la construcción de edificios y obras de ingeniería civil.</field>
+        <field name="sequence">2350</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4511" model="l10n_co.economic.activity">
+        <field name="code">4511</field>
+        <field name="name">Comercio de vehículos automotores nuevos.</field>
+        <field name="sequence">2360</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4512" model="l10n_co.economic.activity">
+        <field name="code">4512</field>
+        <field name="name">Comercio de vehículos automotores usados.</field>
+        <field name="sequence">2370</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4520" model="l10n_co.economic.activity">
+        <field name="code">4520</field>
+        <field name="name">Mantenimiento y reparación de vehículos automotores.</field>
+        <field name="sequence">2380</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4530" model="l10n_co.economic.activity">
+        <field name="code">4530</field>
+        <field name="name">Comercio de partes, piezas (autopartes) y accesorios (lujos) para vehículos automotores.</field>
+        <field name="sequence">2390</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4541" model="l10n_co.economic.activity">
+        <field name="code">4541</field>
+        <field name="name">Comercio de motocicletas y de sus partes, piezas y accesorios.</field>
+        <field name="sequence">2400</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4542" model="l10n_co.economic.activity">
+        <field name="code">4542</field>
+        <field name="name">Mantenimiento y reparación de motocicletas y de sus partes y piezas.</field>
+        <field name="sequence">2410</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4610" model="l10n_co.economic.activity">
+        <field name="code">4610</field>
+        <field name="name">Comercio al por mayor a cambio de una retribución o por contrata.</field>
+        <field name="sequence">2420</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4620" model="l10n_co.economic.activity">
+        <field name="code">4620</field>
+        <field name="name">Comercio al por mayor de materias primas agropecuarias; animales vivos.</field>
+        <field name="sequence">2430</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4631" model="l10n_co.economic.activity">
+        <field name="code">4631</field>
+        <field name="name">Comercio al por mayor de productos alimenticios.</field>
+        <field name="sequence">2440</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4632" model="l10n_co.economic.activity">
+        <field name="code">4632</field>
+        <field name="name">Comercio al por mayor de bebidas y tabaco.</field>
+        <field name="sequence">2450</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4641" model="l10n_co.economic.activity">
+        <field name="code">4641</field>
+        <field name="name">Comercio al por mayor de productos textiles, productos confeccionados para uso doméstico.</field>
+        <field name="sequence">2460</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4642" model="l10n_co.economic.activity">
+        <field name="code">4642</field>
+        <field name="name">Comercio al por mayor de prendas de vestir.</field>
+        <field name="sequence">2470</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4643" model="l10n_co.economic.activity">
+        <field name="code">4643</field>
+        <field name="name">Comercio al por mayor de calzado.</field>
+        <field name="sequence">2480</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4644" model="l10n_co.economic.activity">
+        <field name="code">4644</field>
+        <field name="name">Comercio al por mayor de aparatos y equipo de uso doméstico.</field>
+        <field name="sequence">2490</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4645" model="l10n_co.economic.activity">
+        <field name="code">4645</field>
+        <field name="name">Comercio al por mayor de productos farmacéuticos, medicinales, cosméticos y de tocador.</field>
+        <field name="sequence">2500</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4649" model="l10n_co.economic.activity">
+        <field name="code">4649</field>
+        <field name="name">Comercio al por mayor de otros utensilios domésticos n.c.p.</field>
+        <field name="sequence">2510</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4651" model="l10n_co.economic.activity">
+        <field name="code">4651</field>
+        <field name="name">Comercio al por mayor de computadores, equipo periférico y programas de informática.</field>
+        <field name="sequence">2520</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4652" model="l10n_co.economic.activity">
+        <field name="code">4652</field>
+        <field name="name">Comercio al por mayor de equipo, partes y piezas electrónicos y de telecomunicaciones.</field>
+        <field name="sequence">2530</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4653" model="l10n_co.economic.activity">
+        <field name="code">4653</field>
+        <field name="name">Comercio al por mayor de maquinaria y equipo agropecuarios.</field>
+        <field name="sequence">2540</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4659" model="l10n_co.economic.activity">
+        <field name="code">4659</field>
+        <field name="name">Comercio al por mayor de otros tipos de maquinaria y equipo n.c.p.</field>
+        <field name="sequence">2550</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4661" model="l10n_co.economic.activity">
+        <field name="code">4661</field>
+        <field name="name">Comercio al por mayor de combustibles sólidos, líquidos, gaseosos y productos conexos.</field>
+        <field name="sequence">2560</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4662" model="l10n_co.economic.activity">
+        <field name="code">4662</field>
+        <field name="name">Comercio al por mayor de metales y productos metalíferos.</field>
+        <field name="sequence">2570</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4663" model="l10n_co.economic.activity">
+        <field name="code">4663</field>
+        <field name="name">Comercio al por mayor de materiales de construcción, artículos de ferretería, pinturas, productos de vidrio, equipo y materiales de fontanería y calefacción.</field>
+        <field name="sequence">2580</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4664" model="l10n_co.economic.activity">
+        <field name="code">4664</field>
+        <field name="name">Comercio al por mayor de productos químicos básicos, cauchos y plásticos en formas primarias y productos químicos de uso agropecuario.</field>
+        <field name="sequence">2590</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4665" model="l10n_co.economic.activity">
+        <field name="code">4665</field>
+        <field name="name">Comercio al por mayor de desperdicios, desechos y chatarra.</field>
+        <field name="sequence">2600</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4669" model="l10n_co.economic.activity">
+        <field name="code">4669</field>
+        <field name="name">Comercio al por mayor de otros productos n.c.p.</field>
+        <field name="sequence">2610</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4690" model="l10n_co.economic.activity">
+        <field name="code">4690</field>
+        <field name="name">Comercio al por mayor no especializado.</field>
+        <field name="sequence">2620</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4711" model="l10n_co.economic.activity">
+        <field name="code">4711</field>
+        <field name="name">Comercio al por menor en establecimientos no especializados con surtido compuesto principalmente por alimentos, bebidas o tabaco.</field>
+        <field name="sequence">2630</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4719" model="l10n_co.economic.activity">
+        <field name="code">4719</field>
+        <field name="name">Comercio al por menor en establecimientos no especializados, con surtido compuesto principalmente por productos diferentes de alimentos (víveres en general), bebidas y tabaco.</field>
+        <field name="sequence">2640</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4721" model="l10n_co.economic.activity">
+        <field name="code">4721</field>
+        <field name="name">Comercio al por menor de productos agrícolas para el consumo en establecimientos especializados.</field>
+        <field name="sequence">2650</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4722" model="l10n_co.economic.activity">
+        <field name="code">4722</field>
+        <field name="name">Comercio al por menor de leche, productos lácteos y huevos, en establecimientos especializados.</field>
+        <field name="sequence">2660</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4723" model="l10n_co.economic.activity">
+        <field name="code">4723</field>
+        <field name="name">Comercio al por menor de carnes (incluye aves de corral), productos cárnicos, pescados y productos de mar, en establecimientos especializados.</field>
+        <field name="sequence">2670</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4724" model="l10n_co.economic.activity">
+        <field name="code">4724</field>
+        <field name="name">Comercio al por menor de bebidas y productos del tabaco, en establecimientos especializados.</field>
+        <field name="sequence">2680</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4729" model="l10n_co.economic.activity">
+        <field name="code">4729</field>
+        <field name="name">Comercio al por menor de otros productos alimenticios n.c.p., en establecimientos especializados.</field>
+        <field name="sequence">2690</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4731" model="l10n_co.economic.activity">
+        <field name="code">4731</field>
+        <field name="name">Comercio al por menor de combustible para automotores.</field>
+        <field name="sequence">2700</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4732" model="l10n_co.economic.activity">
+        <field name="code">4732</field>
+        <field name="name">Comercio al por menor de lubricantes (aceites, grasas), aditivos y productos de limpieza para vehículos automotores.</field>
+        <field name="sequence">2710</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4741" model="l10n_co.economic.activity">
+        <field name="code">4741</field>
+        <field name="name">Comercio al por menor de computadores, equipos periféricos, programas de informática y equipos de telecomunicaciones en establecimientos especializados.</field>
+        <field name="sequence">2720</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4742" model="l10n_co.economic.activity">
+        <field name="code">4742</field>
+        <field name="name">Comercio al por menor de equipos y aparatos de sonido y de video, en establecimientos especializados.</field>
+        <field name="sequence">2730</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4751" model="l10n_co.economic.activity">
+        <field name="code">4751</field>
+        <field name="name">Comercio al por menor de productos textiles en establecimientos especializados.</field>
+        <field name="sequence">2740</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4752" model="l10n_co.economic.activity">
+        <field name="code">4752</field>
+        <field name="name">Comercio al por menor de artículos de ferretería, pinturas y productos de vidrio en establecimientos especializados.</field>
+        <field name="sequence">2750</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4753" model="l10n_co.economic.activity">
+        <field name="code">4753</field>
+        <field name="name">Comercio al por menor de tapices, alfombras y cubrimientos para paredes y pisos en establecimientos especializados.</field>
+        <field name="sequence">2760</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4754" model="l10n_co.economic.activity">
+        <field name="code">4754</field>
+        <field name="name">Comercio al por menor de electrodomésticos y gasodomésticos de uso doméstico, muebles y equipos de iluminación.</field>
+        <field name="sequence">2770</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4755" model="l10n_co.economic.activity">
+        <field name="code">4755</field>
+        <field name="name">Comercio al por menor de artículos y utensilios de uso doméstico.</field>
+        <field name="sequence">2780</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4759" model="l10n_co.economic.activity">
+        <field name="code">4759</field>
+        <field name="name">Comercio al por menor de otros artículos domésticos en establecimientos especializados.</field>
+        <field name="sequence">2790</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4761" model="l10n_co.economic.activity">
+        <field name="code">4761</field>
+        <field name="name">Comercio al por menor de libros, periódicos, materiales y artículos de papelería y escritorio, en establecimientos especializados.</field>
+        <field name="sequence">2800</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4762" model="l10n_co.economic.activity">
+        <field name="code">4762</field>
+        <field name="name">Comercio al por menor de artículos deportivos, en establecimientos especializados.</field>
+        <field name="sequence">2810</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4769" model="l10n_co.economic.activity">
+        <field name="code">4769</field>
+        <field name="name">Comercio al por menor de otros artículos culturales y de entretenimiento n.c.p. en establecimientos especializados.</field>
+        <field name="sequence">2820</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4771" model="l10n_co.economic.activity">
+        <field name="code">4771</field>
+        <field name="name">Comercio al por menor de prendas de vestir y sus accesorios (incluye artículos de piel) en establecimientos especializados.</field>
+        <field name="sequence">2830</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4772" model="l10n_co.economic.activity">
+        <field name="code">4772</field>
+        <field name="name">Comercio al por menor de todo tipo de calzado y artículos de cuero y sucedáneos del cuero en establecimientos especializados.</field>
+        <field name="sequence">2840</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4773" model="l10n_co.economic.activity">
+        <field name="code">4773</field>
+        <field name="name">Comercio al por menor de productos farmacéuticos y medicinales, cosméticos y artículos de tocador en establecimientos especializados.</field>
+        <field name="sequence">2850</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4774" model="l10n_co.economic.activity">
+        <field name="code">4774</field>
+        <field name="name">Comercio al por menor de otros productos nuevos en establecimientos especializados.</field>
+        <field name="sequence">2860</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4775" model="l10n_co.economic.activity">
+        <field name="code">4775</field>
+        <field name="name">Comercio al por menor de artículos de segunda mano.</field>
+        <field name="sequence">2870</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4781" model="l10n_co.economic.activity">
+        <field name="code">4781</field>
+        <field name="name">Comercio al por menor de alimentos, bebidas y tabaco, en puestos de venta móviles.</field>
+        <field name="sequence">2880</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4782" model="l10n_co.economic.activity">
+        <field name="code">4782</field>
+        <field name="name">Comercio al por menor de productos textiles, prendas de vestir y calzado, en puestos de venta móviles.</field>
+        <field name="sequence">2890</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4789" model="l10n_co.economic.activity">
+        <field name="code">4789</field>
+        <field name="name">Comercio al por menor de otros productos en puestos de venta móviles.</field>
+        <field name="sequence">2900</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4791" model="l10n_co.economic.activity">
+        <field name="code">4791</field>
+        <field name="name">Comercio al por menor realizado a través de internet.</field>
+        <field name="sequence">2910</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4792" model="l10n_co.economic.activity">
+        <field name="code">4792</field>
+        <field name="name">Comercio al por menor realizado a través de casas de venta o por correo.</field>
+        <field name="sequence">2920</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4799" model="l10n_co.economic.activity">
+        <field name="code">4799</field>
+        <field name="name">Otros tipos de comercio al por menor no realizado en establecimientos, puestos de venta o mercados.</field>
+        <field name="sequence">2930</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4911" model="l10n_co.economic.activity">
+        <field name="code">4911</field>
+        <field name="name">Transporte férreo de pasajeros.</field>
+        <field name="sequence">2940</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4912" model="l10n_co.economic.activity">
+        <field name="code">4912</field>
+        <field name="name">Transporte férreo de carga.</field>
+        <field name="sequence">2950</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4921" model="l10n_co.economic.activity">
+        <field name="code">4921</field>
+        <field name="name">Transporte de pasajeros.</field>
+        <field name="sequence">2960</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4922" model="l10n_co.economic.activity">
+        <field name="code">4922</field>
+        <field name="name">Transporte mixto.</field>
+        <field name="sequence">2970</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4923" model="l10n_co.economic.activity">
+        <field name="code">4923</field>
+        <field name="name">Transporte de carga por carretera.</field>
+        <field name="sequence">2980</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_4930" model="l10n_co.economic.activity">
+        <field name="code">4930</field>
+        <field name="name">Transporte por tuberías.</field>
+        <field name="sequence">2990</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_5011" model="l10n_co.economic.activity">
+        <field name="code">5011</field>
+        <field name="name">Transporte de pasajeros marítimo y de cabotaje.</field>
+        <field name="sequence">3000</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_5012" model="l10n_co.economic.activity">
+        <field name="code">5012</field>
+        <field name="name">Transporte de carga marítimo y de cabotaje.</field>
+        <field name="sequence">3010</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_5021" model="l10n_co.economic.activity">
+        <field name="code">5021</field>
+        <field name="name">Transporte fluvial de pasajeros.</field>
+        <field name="sequence">3020</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_5022" model="l10n_co.economic.activity">
+        <field name="code">5022</field>
+        <field name="name">Transporte fluvial de carga.</field>
+        <field name="sequence">3030</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_5111" model="l10n_co.economic.activity">
+        <field name="code">5111</field>
+        <field name="name">Transporte aéreo nacional de pasajeros.</field>
+        <field name="sequence">3040</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_5112" model="l10n_co.economic.activity">
+        <field name="code">5112</field>
+        <field name="name">Transporte aéreo internacional de pasajeros.</field>
+        <field name="sequence">3050</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_5121" model="l10n_co.economic.activity">
+        <field name="code">5121</field>
+        <field name="name">Transporte aéreo nacional de carga.</field>
+        <field name="sequence">3060</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_5122" model="l10n_co.economic.activity">
+        <field name="code">5122</field>
+        <field name="name">Transporte aéreo internacional de carga.</field>
+        <field name="sequence">3070</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_5210" model="l10n_co.economic.activity">
+        <field name="code">5210</field>
+        <field name="name">Almacenamiento y depósito.</field>
+        <field name="sequence">3080</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_5221" model="l10n_co.economic.activity">
+        <field name="code">5221</field>
+        <field name="name">Actividades de estaciones, vías y servicios complementarios para el transporte terrestre.</field>
+        <field name="sequence">3090</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_5222" model="l10n_co.economic.activity">
+        <field name="code">5222</field>
+        <field name="name">Actividades de puertos y servicios complementarios para el transporte acuático.</field>
+        <field name="sequence">3100</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_5223" model="l10n_co.economic.activity">
+        <field name="code">5223</field>
+        <field name="name">Actividades de aeropuertos, servicios de navegación aérea y demás actividades conexas al transporte aéreo.</field>
+        <field name="sequence">3110</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_5224" model="l10n_co.economic.activity">
+        <field name="code">5224</field>
+        <field name="name">Manipulación de carga.</field>
+        <field name="sequence">3120</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_5229" model="l10n_co.economic.activity">
+        <field name="code">5229</field>
+        <field name="name">Otras actividades complementarias al transporte.</field>
+        <field name="sequence">3130</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_5310" model="l10n_co.economic.activity">
+        <field name="code">5310</field>
+        <field name="name">Actividades postales nacionales.</field>
+        <field name="sequence">3140</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_5320" model="l10n_co.economic.activity">
+        <field name="code">5320</field>
+        <field name="name">Actividades de mensajería.</field>
+        <field name="sequence">3150</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_5511" model="l10n_co.economic.activity">
+        <field name="code">5511</field>
+        <field name="name">Alojamiento en hoteles.</field>
+        <field name="sequence">3160</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_5512" model="l10n_co.economic.activity">
+        <field name="code">5512</field>
+        <field name="name">Alojamiento en apartahoteles.</field>
+        <field name="sequence">3170</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_5513" model="l10n_co.economic.activity">
+        <field name="code">5513</field>
+        <field name="name">Alojamiento en centros vacacionales.</field>
+        <field name="sequence">3180</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_5514" model="l10n_co.economic.activity">
+        <field name="code">5514</field>
+        <field name="name">Alojamiento rural.</field>
+        <field name="sequence">3190</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_5519" model="l10n_co.economic.activity">
+        <field name="code">5519</field>
+        <field name="name">Otros tipos de alojamientos para visitantes.</field>
+        <field name="sequence">3200</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_5520" model="l10n_co.economic.activity">
+        <field name="code">5520</field>
+        <field name="name">Actividades de zonas de camping y parques para vehículos recreacionales.</field>
+        <field name="sequence">3210</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_5530" model="l10n_co.economic.activity">
+        <field name="code">5530</field>
+        <field name="name">Servicio por horas</field>
+        <field name="sequence">3220</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_5590" model="l10n_co.economic.activity">
+        <field name="code">5590</field>
+        <field name="name">Otros tipos de alojamiento n.c.p.</field>
+        <field name="sequence">3230</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_5611" model="l10n_co.economic.activity">
+        <field name="code">5611</field>
+        <field name="name">Expendio a la mesa de comidas preparadas.</field>
+        <field name="sequence">3240</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_5612" model="l10n_co.economic.activity">
+        <field name="code">5612</field>
+        <field name="name">Expendio por autoservicio de comidas preparadas.</field>
+        <field name="sequence">3250</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_5613" model="l10n_co.economic.activity">
+        <field name="code">5613</field>
+        <field name="name">Expendio de comidas preparadas en cafeterías.</field>
+        <field name="sequence">3260</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_5619" model="l10n_co.economic.activity">
+        <field name="code">5619</field>
+        <field name="name">Otros tipos de expendio de comidas preparadas n.c.p.</field>
+        <field name="sequence">3270</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_5621" model="l10n_co.economic.activity">
+        <field name="code">5621</field>
+        <field name="name">Catering para eventos.</field>
+        <field name="sequence">3280</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_5629" model="l10n_co.economic.activity">
+        <field name="code">5629</field>
+        <field name="name">Actividades de otros servicios de comidas.</field>
+        <field name="sequence">3290</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_5630" model="l10n_co.economic.activity">
+        <field name="code">5630</field>
+        <field name="name">Expendio de bebidas alcohólicas para el consumo dentro del establecimiento.</field>
+        <field name="sequence">3300</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_5811" model="l10n_co.economic.activity">
+        <field name="code">5811</field>
+        <field name="name">Edición de libros.</field>
+        <field name="sequence">3310</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_5812" model="l10n_co.economic.activity">
+        <field name="code">5812</field>
+        <field name="name">Edición de directorios y listas de correo.</field>
+        <field name="sequence">3320</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_5813" model="l10n_co.economic.activity">
+        <field name="code">5813</field>
+        <field name="name">Edición de periódicos, revistas y otras publicaciones periódicas.</field>
+        <field name="sequence">3330</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_5819" model="l10n_co.economic.activity">
+        <field name="code">5819</field>
+        <field name="name">Otros trabajos de edición.</field>
+        <field name="sequence">3340</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_5820" model="l10n_co.economic.activity">
+        <field name="code">5820</field>
+        <field name="name">Edición de programas de informática (software).</field>
+        <field name="sequence">3350</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_5911" model="l10n_co.economic.activity">
+        <field name="code">5911</field>
+        <field name="name">Actividades de producción de películas cinematográficas, videos, programas, anuncios y comerciales de televisión.</field>
+        <field name="sequence">3360</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_5912" model="l10n_co.economic.activity">
+        <field name="code">5912</field>
+        <field name="name">Actividades de posproducción de películas cinematográficas, videos, programas, anuncios y comerciales de televisión.</field>
+        <field name="sequence">3370</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_5913" model="l10n_co.economic.activity">
+        <field name="code">5913</field>
+        <field name="name">Actividades de distribución de películas cinematográficas, videos, programas, anuncios y comerciales de televisión.</field>
+        <field name="sequence">3380</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_5914" model="l10n_co.economic.activity">
+        <field name="code">5914</field>
+        <field name="name">Actividades de exhibición de películas cinematográficas y videos.</field>
+        <field name="sequence">3390</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_5920" model="l10n_co.economic.activity">
+        <field name="code">5920</field>
+        <field name="name">Actividades de grabación de sonido y edición de música.</field>
+        <field name="sequence">3400</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_6010" model="l10n_co.economic.activity">
+        <field name="code">6010</field>
+        <field name="name">Actividades de programación y transmisión en el servicio de radiodifusión sonora.</field>
+        <field name="sequence">3410</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_6020" model="l10n_co.economic.activity">
+        <field name="code">6020</field>
+        <field name="name">Actividades de programación y transmisión de televisión.</field>
+        <field name="sequence">3420</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_6110" model="l10n_co.economic.activity">
+        <field name="code">6110</field>
+        <field name="name">Actividades de telecomunicaciones alámbricas.</field>
+        <field name="sequence">3430</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_6120" model="l10n_co.economic.activity">
+        <field name="code">6120</field>
+        <field name="name">Actividades de telecomunicaciones inalámbricas.</field>
+        <field name="sequence">3440</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_6130" model="l10n_co.economic.activity">
+        <field name="code">6130</field>
+        <field name="name">Actividades de telecomunicación satelital.</field>
+        <field name="sequence">3450</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_6190" model="l10n_co.economic.activity">
+        <field name="code">6190</field>
+        <field name="name">Otras actividades de telecomunicaciones.</field>
+        <field name="sequence">3460</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_6201" model="l10n_co.economic.activity">
+        <field name="code">6201</field>
+        <field name="name">Actividades de desarrollo de sistemas informáticos (planificación, análisis, diseño, programación, pruebas).</field>
+        <field name="sequence">3470</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_6202" model="l10n_co.economic.activity">
+        <field name="code">6202</field>
+        <field name="name">Actividades de consultoría informática y actividades de administración de instalaciones informáticas.</field>
+        <field name="sequence">3480</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_6209" model="l10n_co.economic.activity">
+        <field name="code">6209</field>
+        <field name="name">Otras actividades de tecnologías de información y actividades de serviciosinformáticos.</field>
+        <field name="sequence">3490</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_6311" model="l10n_co.economic.activity">
+        <field name="code">6311</field>
+        <field name="name">Procesamiento de datos, alojamiento (hosting) y actividades relacionadas.</field>
+        <field name="sequence">3500</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_6312" model="l10n_co.economic.activity">
+        <field name="code">6312</field>
+        <field name="name">Portales web.</field>
+        <field name="sequence">3510</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_6391" model="l10n_co.economic.activity">
+        <field name="code">6391</field>
+        <field name="name">Actividades de agencias de noticias.</field>
+        <field name="sequence">3520</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_6399" model="l10n_co.economic.activity">
+        <field name="code">6399</field>
+        <field name="name">Otras actividades de servicio de información n.c.p.</field>
+        <field name="sequence">3530</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_6411" model="l10n_co.economic.activity">
+        <field name="code">6411</field>
+        <field name="name">Banco Central.</field>
+        <field name="sequence">3540</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_6412" model="l10n_co.economic.activity">
+        <field name="code">6412</field>
+        <field name="name">Bancos comerciales.</field>
+        <field name="sequence">3550</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_6421" model="l10n_co.economic.activity">
+        <field name="code">6421</field>
+        <field name="name">Actividades de las corporaciones financieras.</field>
+        <field name="sequence">3560</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_6422" model="l10n_co.economic.activity">
+        <field name="code">6422</field>
+        <field name="name">Actividades de las compañías de financiamiento.</field>
+        <field name="sequence">3570</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_6423" model="l10n_co.economic.activity">
+        <field name="code">6423</field>
+        <field name="name">Banca de segundo piso.</field>
+        <field name="sequence">3580</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_6424" model="l10n_co.economic.activity">
+        <field name="code">6424</field>
+        <field name="name">Actividades de las cooperativas financieras.</field>
+        <field name="sequence">3590</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_6431" model="l10n_co.economic.activity">
+        <field name="code">6431</field>
+        <field name="name">Fideicomisos, fondos y entidades financieras similares.</field>
+        <field name="sequence">3600</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_6432" model="l10n_co.economic.activity">
+        <field name="code">6432</field>
+        <field name="name">Fondos de cesantías.</field>
+        <field name="sequence">3610</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_6491" model="l10n_co.economic.activity">
+        <field name="code">6491</field>
+        <field name="name">Leasing financiero (arrendamiento financiero).</field>
+        <field name="sequence">3620</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_6492" model="l10n_co.economic.activity">
+        <field name="code">6492</field>
+        <field name="name">Actividades financieras de fondos de empleados y otras formas asociativas del sector solidario.</field>
+        <field name="sequence">3630</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_6493" model="l10n_co.economic.activity">
+        <field name="code">6493</field>
+        <field name="name">Actividades de compra de cartera o factoring.</field>
+        <field name="sequence">3640</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_6494" model="l10n_co.economic.activity">
+        <field name="code">6494</field>
+        <field name="name">Otras actividades de distribución de fondos.</field>
+        <field name="sequence">3650</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_6495" model="l10n_co.economic.activity">
+        <field name="code">6495</field>
+        <field name="name">Instituciones especiales oficiales.</field>
+        <field name="sequence">3660</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_6499" model="l10n_co.economic.activity">
+        <field name="code">6499</field>
+        <field name="name">Otras actividades de servicio financiero, excepto las de seguros y pensiones n.c.p.</field>
+        <field name="sequence">3670</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_6511" model="l10n_co.economic.activity">
+        <field name="code">6511</field>
+        <field name="name">Seguros generales.</field>
+        <field name="sequence">3680</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_6512" model="l10n_co.economic.activity">
+        <field name="code">6512</field>
+        <field name="name">Seguros de vida.</field>
+        <field name="sequence">3690</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_6513" model="l10n_co.economic.activity">
+        <field name="code">6513</field>
+        <field name="name">Reaseguros.</field>
+        <field name="sequence">3700</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_6514" model="l10n_co.economic.activity">
+        <field name="code">6514</field>
+        <field name="name">Capitalización.</field>
+        <field name="sequence">3710</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_6515" model="l10n_co.economic.activity">
+        <field name="code">6515</field>
+        <field name="name">Seguros de Salud.</field>
+        <field name="sequence">3720</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_6521" model="l10n_co.economic.activity">
+        <field name="code">6521</field>
+        <field name="name">Servicios de seguros sociales de salud.</field>
+        <field name="sequence">3730</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_6522" model="l10n_co.economic.activity">
+        <field name="code">6522</field>
+        <field name="name">Servicios de seguros sociales de riesgos profesionales.</field>
+        <field name="sequence">3740</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_6523" model="l10n_co.economic.activity">
+        <field name="code">6523</field>
+        <field name="name">Servicios de seguros sociales en riesgos familia.</field>
+        <field name="sequence">3750</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_6531" model="l10n_co.economic.activity">
+        <field name="code">6531</field>
+        <field name="name">Régimen de prima media con prestación definida (RPM).</field>
+        <field name="sequence">3760</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_6532" model="l10n_co.economic.activity">
+        <field name="code">6532</field>
+        <field name="name">Régimen de ahorro individual (RAI).</field>
+        <field name="sequence">3770</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_6611" model="l10n_co.economic.activity">
+        <field name="code">6611</field>
+        <field name="name">Administración de mercados financieros.</field>
+        <field name="sequence">3780</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_6612" model="l10n_co.economic.activity">
+        <field name="code">6612</field>
+        <field name="name">Corretaje de valores y de contratos de productos básicos.</field>
+        <field name="sequence">3790</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_6613" model="l10n_co.economic.activity">
+        <field name="code">6613</field>
+        <field name="name">Otras actividades relacionadas con el mercado de valores.</field>
+        <field name="sequence">3800</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_6614" model="l10n_co.economic.activity">
+        <field name="code">6614</field>
+        <field name="name">Actividades de las casas de cambio.</field>
+        <field name="sequence">3810</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_6615" model="l10n_co.economic.activity">
+        <field name="code">6615</field>
+        <field name="name">Actividades de los profesionales de compra y venta de divisas.</field>
+        <field name="sequence">3820</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_6619" model="l10n_co.economic.activity">
+        <field name="code">6619</field>
+        <field name="name">Otras actividades auxiliares de las actividades de servicios financieros n.c.p.</field>
+        <field name="sequence">3830</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_6621" model="l10n_co.economic.activity">
+        <field name="code">6621</field>
+        <field name="name">Actividades de agentes y corredores de seguros</field>
+        <field name="sequence">3840</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_6629" model="l10n_co.economic.activity">
+        <field name="code">6629</field>
+        <field name="name">Evaluación de riesgos y daños, y otras actividades de servicios auxiliares</field>
+        <field name="sequence">3850</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_6630" model="l10n_co.economic.activity">
+        <field name="code">6630</field>
+        <field name="name">Actividades de administración de fondos.</field>
+        <field name="sequence">3860</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_6810" model="l10n_co.economic.activity">
+        <field name="code">6810</field>
+        <field name="name">Actividades inmobiliarias realizadas con bienes propios o arrendados.</field>
+        <field name="sequence">3870</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_6820" model="l10n_co.economic.activity">
+        <field name="code">6820</field>
+        <field name="name">Actividades inmobiliarias realizadas a cambio de una retribución o por contrata.</field>
+        <field name="sequence">3880</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_6910" model="l10n_co.economic.activity">
+        <field name="code">6910</field>
+        <field name="name">Actividades jurídicas.</field>
+        <field name="sequence">3890</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_6920" model="l10n_co.economic.activity">
+        <field name="code">6920</field>
+        <field name="name">Actividades de contabilidad, teneduría de libros, auditoría financiera y asesoría tributaria.</field>
+        <field name="sequence">3900</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_7010" model="l10n_co.economic.activity">
+        <field name="code">7010</field>
+        <field name="name">Actividades de administración empresarial.</field>
+        <field name="sequence">3910</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_7020" model="l10n_co.economic.activity">
+        <field name="code">7020</field>
+        <field name="name">Actividades de consultaría de gestión.</field>
+        <field name="sequence">3920</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_7110" model="l10n_co.economic.activity">
+        <field name="code">7110</field>
+        <field name="name">Actividades de arquitectura e ingeniería y otras actividades conexas de consultoría técnica.</field>
+        <field name="sequence">3930</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_7111" model="l10n_co.economic.activity">
+        <field name="code">7111</field>
+        <field name="name">Actividades de arquitectura.</field>
+        <field name="sequence">3940</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_7112" model="l10n_co.economic.activity">
+        <field name="code">7112</field>
+        <field name="name">Actividades de ingeniería y otras actividades conexas de consultoría técnica.</field>
+        <field name="sequence">3950</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_7120" model="l10n_co.economic.activity">
+        <field name="code">7120</field>
+        <field name="name">Ensayos y análisis técnicos.</field>
+        <field name="sequence">3960</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_7210" model="l10n_co.economic.activity">
+        <field name="code">7210</field>
+        <field name="name">Investigaciones y desarrollo experimental en el campo de las ciencias naturales y la ingeniería.</field>
+        <field name="sequence">3970</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_7220" model="l10n_co.economic.activity">
+        <field name="code">7220</field>
+        <field name="name">Investigaciones y desarrollo experimental en el campo de las ciencias sociales y las humanidades.</field>
+        <field name="sequence">3980</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_7310" model="l10n_co.economic.activity">
+        <field name="code">7310</field>
+        <field name="name">Publicidad.</field>
+        <field name="sequence">3990</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_7320" model="l10n_co.economic.activity">
+        <field name="code">7320</field>
+        <field name="name">Estudios de mercado y realización de encuestas de opinión pública.</field>
+        <field name="sequence">4000</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_7410" model="l10n_co.economic.activity">
+        <field name="code">7410</field>
+        <field name="name">Actividades especializadas de diseño.</field>
+        <field name="sequence">4010</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_7420" model="l10n_co.economic.activity">
+        <field name="code">7420</field>
+        <field name="name">Actividades de fotografía.</field>
+        <field name="sequence">4020</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_7490" model="l10n_co.economic.activity">
+        <field name="code">7490</field>
+        <field name="name">Otras actividades profesionales, científicas y técnicas n.c.p.</field>
+        <field name="sequence">4030</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_7500" model="l10n_co.economic.activity">
+        <field name="code">7500</field>
+        <field name="name">Actividades veterinarias.</field>
+        <field name="sequence">4040</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_7710" model="l10n_co.economic.activity">
+        <field name="code">7710</field>
+        <field name="name">Alquiler y arrendamiento de vehículos automotores.</field>
+        <field name="sequence">4050</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_7721" model="l10n_co.economic.activity">
+        <field name="code">7721</field>
+        <field name="name">Alquiler y arrendamiento de equipo recreativo y deportivo.</field>
+        <field name="sequence">4060</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_7722" model="l10n_co.economic.activity">
+        <field name="code">7722</field>
+        <field name="name">Alquiler de videos y discos.</field>
+        <field name="sequence">4070</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_7729" model="l10n_co.economic.activity">
+        <field name="code">7729</field>
+        <field name="name">Alquiler y arrendamiento de otros efectos personales y enseres domésticos n.c.p.</field>
+        <field name="sequence">4080</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_7730" model="l10n_co.economic.activity">
+        <field name="code">7730</field>
+        <field name="name">Alquiler y arrendamiento de otros tipos de maquinaria, equipo y bienes tangibles n.c.p.</field>
+        <field name="sequence">4090</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_7740" model="l10n_co.economic.activity">
+        <field name="code">7740</field>
+        <field name="name">Arrendamiento de propiedad intelectual y productos similares, excepto obras protegidas por derechos de autor.</field>
+        <field name="sequence">4100</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_7810" model="l10n_co.economic.activity">
+        <field name="code">7810</field>
+        <field name="name">Actividades de agencias de empleo.</field>
+        <field name="sequence">4110</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_7820" model="l10n_co.economic.activity">
+        <field name="code">7820</field>
+        <field name="name">Actividades de agencias de empleo temporal.</field>
+        <field name="sequence">4120</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_7830" model="l10n_co.economic.activity">
+        <field name="code">7830</field>
+        <field name="name">Otras actividades de suministro de recurso humano.</field>
+        <field name="sequence">4130</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_7911" model="l10n_co.economic.activity">
+        <field name="code">7911</field>
+        <field name="name">Actividades de las agencias de viaje.</field>
+        <field name="sequence">4140</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_7912" model="l10n_co.economic.activity">
+        <field name="code">7912</field>
+        <field name="name">Actividades de operadores turísticos.</field>
+        <field name="sequence">4150</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_7990" model="l10n_co.economic.activity">
+        <field name="code">7990</field>
+        <field name="name">Otros servicios de reserva y actividades relacionadas.</field>
+        <field name="sequence">4160</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8010" model="l10n_co.economic.activity">
+        <field name="code">8010</field>
+        <field name="name">Actividades de seguridad privada.</field>
+        <field name="sequence">4170</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8020" model="l10n_co.economic.activity">
+        <field name="code">8020</field>
+        <field name="name">Actividades de servicios de sistemas de seguridad.</field>
+        <field name="sequence">4180</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8030" model="l10n_co.economic.activity">
+        <field name="code">8030</field>
+        <field name="name">Actividades de detectives e investigadores privados.</field>
+        <field name="sequence">4190</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8110" model="l10n_co.economic.activity">
+        <field name="code">8110</field>
+        <field name="name">Actividades combinadas de apoyo a instalaciones.</field>
+        <field name="sequence">4200</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8121" model="l10n_co.economic.activity">
+        <field name="code">8121</field>
+        <field name="name">Limpieza general interior de edificios.</field>
+        <field name="sequence">4210</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8129" model="l10n_co.economic.activity">
+        <field name="code">8129</field>
+        <field name="name">Otras actividades de limpieza de edificios e instalaciones industriales.</field>
+        <field name="sequence">4220</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8130" model="l10n_co.economic.activity">
+        <field name="code">8130</field>
+        <field name="name">Actividades de paisajismo y servicios de mantenimiento conexos.</field>
+        <field name="sequence">4230</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8211" model="l10n_co.economic.activity">
+        <field name="code">8211</field>
+        <field name="name">Actividades combinadas de servicios administrativos de oficina</field>
+        <field name="sequence">4240</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8219" model="l10n_co.economic.activity">
+        <field name="code">8219</field>
+        <field name="name">Fotocopiado, preparación de documentos y otras actividades especializadas de apoyo a oficina.</field>
+        <field name="sequence">4250</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8220" model="l10n_co.economic.activity">
+        <field name="code">8220</field>
+        <field name="name">Actividades de centros de llamadas (Call center).</field>
+        <field name="sequence">4260</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8230" model="l10n_co.economic.activity">
+        <field name="code">8230</field>
+        <field name="name">Organización de convenciones y eventos comerciales.</field>
+        <field name="sequence">4270</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8291" model="l10n_co.economic.activity">
+        <field name="code">8291</field>
+        <field name="name">Actividades de agencias de cobranza y oficinas de calificación crediticia.</field>
+        <field name="sequence">4280</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8292" model="l10n_co.economic.activity">
+        <field name="code">8292</field>
+        <field name="name">Actividades de envase y empaque.</field>
+        <field name="sequence">4290</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8299" model="l10n_co.economic.activity">
+        <field name="code">8299</field>
+        <field name="name">Otras actividades de servicio de apoyo a las empresas n.c.p.</field>
+        <field name="sequence">4300</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8411" model="l10n_co.economic.activity">
+        <field name="code">8411</field>
+        <field name="name">Actividades legislativas de la administración pública.</field>
+        <field name="sequence">4310</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8412" model="l10n_co.economic.activity">
+        <field name="code">8412</field>
+        <field name="name">Actividades ejecutivas de la administración pública.</field>
+        <field name="sequence">4320</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8413" model="l10n_co.economic.activity">
+        <field name="code">8413</field>
+        <field name="name">Regulación de las actividades de organismos que prestan servicios de salud, educativos, culturales.y otros servicios sociales, excepto servicios de seguridad social.</field>
+        <field name="sequence">4330</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8414" model="l10n_co.economic.activity">
+        <field name="code">8414</field>
+        <field name="name">Actividades reguladoras y facilitadoras de la actividad económica.</field>
+        <field name="sequence">4340</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8415" model="l10n_co.economic.activity">
+        <field name="code">8415</field>
+        <field name="name">Actividades de los otros órganos de control.</field>
+        <field name="sequence">4350</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8421" model="l10n_co.economic.activity">
+        <field name="code">8421</field>
+        <field name="name">Relaciones exteriores.</field>
+        <field name="sequence">4360</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8422" model="l10n_co.economic.activity">
+        <field name="code">8422</field>
+        <field name="name">Actividades de defensa.</field>
+        <field name="sequence">4370</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8423" model="l10n_co.economic.activity">
+        <field name="code">8423</field>
+        <field name="name">Orden público y actividades de seguridad.</field>
+        <field name="sequence">4380</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8424" model="l10n_co.economic.activity">
+        <field name="code">8424</field>
+        <field name="name">Administración de justicia.</field>
+        <field name="sequence">4390</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8430" model="l10n_co.economic.activity">
+        <field name="code">8430</field>
+        <field name="name">Actividades de planes de seguridad social de afiliación obligatoria.</field>
+        <field name="sequence">4400</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8511" model="l10n_co.economic.activity">
+        <field name="code">8511</field>
+        <field name="name">Educación de la primera infancia.</field>
+        <field name="sequence">4410</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8512" model="l10n_co.economic.activity">
+        <field name="code">8512</field>
+        <field name="name">Educación preescolar.</field>
+        <field name="sequence">4420</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8513" model="l10n_co.economic.activity">
+        <field name="code">8513</field>
+        <field name="name">Educación básica primaria.</field>
+        <field name="sequence">4430</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8521" model="l10n_co.economic.activity">
+        <field name="code">8521</field>
+        <field name="name">Educación básica secundaria.</field>
+        <field name="sequence">4440</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8522" model="l10n_co.economic.activity">
+        <field name="code">8522</field>
+        <field name="name">Educación media académica.</field>
+        <field name="sequence">4450</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8523" model="l10n_co.economic.activity">
+        <field name="code">8523</field>
+        <field name="name">Educación media técnica y de formación laboral.</field>
+        <field name="sequence">4460</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8530" model="l10n_co.economic.activity">
+        <field name="code">8530</field>
+        <field name="name">Establecimientos que combinan diferentes niveles de educación.</field>
+        <field name="sequence">4470</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8541" model="l10n_co.economic.activity">
+        <field name="code">8541</field>
+        <field name="name">Educación técnica profesional.</field>
+        <field name="sequence">4480</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8542" model="l10n_co.economic.activity">
+        <field name="code">8542</field>
+        <field name="name">Educación tecnológica.</field>
+        <field name="sequence">4490</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8543" model="l10n_co.economic.activity">
+        <field name="code">8543</field>
+        <field name="name">Educación de instituciones universitarias o de escuelas tecnológicas.</field>
+        <field name="sequence">4500</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8544" model="l10n_co.economic.activity">
+        <field name="code">8544</field>
+        <field name="name">Educación de universidades.</field>
+        <field name="sequence">4510</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8551" model="l10n_co.economic.activity">
+        <field name="code">8551</field>
+        <field name="name">Formación académica no formal.</field>
+        <field name="sequence">4520</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8552" model="l10n_co.economic.activity">
+        <field name="code">8552</field>
+        <field name="name">Enseñanza deportiva y recreativa.</field>
+        <field name="sequence">4530</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8553" model="l10n_co.economic.activity">
+        <field name="code">8553</field>
+        <field name="name">Enseñanza cultural.</field>
+        <field name="sequence">4540</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8559" model="l10n_co.economic.activity">
+        <field name="code">8559</field>
+        <field name="name">Otros tipos de educación n.c.p.</field>
+        <field name="sequence">4550</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8560" model="l10n_co.economic.activity">
+        <field name="code">8560</field>
+        <field name="name">Actividades de apoyo a la educación.</field>
+        <field name="sequence">4560</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8610" model="l10n_co.economic.activity">
+        <field name="code">8610</field>
+        <field name="name">Actividades de hospitales y clínicas, con internación.</field>
+        <field name="sequence">4570</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8621" model="l10n_co.economic.activity">
+        <field name="code">8621</field>
+        <field name="name">Actividades de la práctica médica, sin internación.</field>
+        <field name="sequence">4580</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8622" model="l10n_co.economic.activity">
+        <field name="code">8622</field>
+        <field name="name">Actividades de la práctica odontológica.</field>
+        <field name="sequence">4590</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8691" model="l10n_co.economic.activity">
+        <field name="code">8691</field>
+        <field name="name">Actividades de apoyo diagnóstico.</field>
+        <field name="sequence">4600</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8692" model="l10n_co.economic.activity">
+        <field name="code">8692</field>
+        <field name="name">Actividades de apoyo terapéutico.</field>
+        <field name="sequence">4610</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8699" model="l10n_co.economic.activity">
+        <field name="code">8699</field>
+        <field name="name">Otras actividades de atención de la salud humana.</field>
+        <field name="sequence">4620</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8710" model="l10n_co.economic.activity">
+        <field name="code">8710</field>
+        <field name="name">Actividades de atención residencial medicalizada de tipo general.</field>
+        <field name="sequence">4630</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8720" model="l10n_co.economic.activity">
+        <field name="code">8720</field>
+        <field name="name">Actividades de atención residencial, para el cuidado de pacientes con retardo mental, enfermedad mental y consumo de sustancias psicoactivas.</field>
+        <field name="sequence">4640</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8730" model="l10n_co.economic.activity">
+        <field name="code">8730</field>
+        <field name="name">Actividades de atención en instituciones para el cuidado de personas mayores y/o discapacitadas.</field>
+        <field name="sequence">4650</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8790" model="l10n_co.economic.activity">
+        <field name="code">8790</field>
+        <field name="name">Otras actividades de atención en instituciones con alojamiento</field>
+        <field name="sequence">4660</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8810" model="l10n_co.economic.activity">
+        <field name="code">8810</field>
+        <field name="name">Actividades de asistencia social sin alojamiento para personas mayores y discapacitadas.</field>
+        <field name="sequence">4670</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8890" model="l10n_co.economic.activity">
+        <field name="code">8890</field>
+        <field name="name">Otras actividades de asistencia social sin alojamiento.</field>
+        <field name="sequence">4680</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8891" model="l10n_co.economic.activity">
+        <field name="code">8891</field>
+        <field name="name">Actividades de guarderías para niños y niñas.</field>
+        <field name="sequence">4690</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_8899" model="l10n_co.economic.activity">
+        <field name="code">8899</field>
+        <field name="name">Otras Actividades de asistencia social sin alojamiento. C.P.</field>
+        <field name="sequence">4700</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_9001" model="l10n_co.economic.activity">
+        <field name="code">9001</field>
+        <field name="name">Creación literaria.</field>
+        <field name="sequence">4710</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_9002" model="l10n_co.economic.activity">
+        <field name="code">9002</field>
+        <field name="name">Creación musical.</field>
+        <field name="sequence">4720</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_9003" model="l10n_co.economic.activity">
+        <field name="code">9003</field>
+        <field name="name">Creación teatral.</field>
+        <field name="sequence">4730</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_9004" model="l10n_co.economic.activity">
+        <field name="code">9004</field>
+        <field name="name">Creación audiovisual.</field>
+        <field name="sequence">4740</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_9005" model="l10n_co.economic.activity">
+        <field name="code">9005</field>
+        <field name="name">Artes plásticas y visuales.</field>
+        <field name="sequence">4750</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_9006" model="l10n_co.economic.activity">
+        <field name="code">9006</field>
+        <field name="name">Actividades teatrales.</field>
+        <field name="sequence">4760</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_9007" model="l10n_co.economic.activity">
+        <field name="code">9007</field>
+        <field name="name">Actividades de espectáculos musicales en vivo.</field>
+        <field name="sequence">4770</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_9008" model="l10n_co.economic.activity">
+        <field name="code">9008</field>
+        <field name="name">Otras actividades de espectáculos en vivo.</field>
+        <field name="sequence">4780</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_9101" model="l10n_co.economic.activity">
+        <field name="code">9101</field>
+        <field name="name">Actividades de bibliotecas y archivos.</field>
+        <field name="sequence">4790</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_9102" model="l10n_co.economic.activity">
+        <field name="code">9102</field>
+        <field name="name">Actividades y funcionamiento de museos, conservación de edificios y sitios históricos.</field>
+        <field name="sequence">4800</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_9103" model="l10n_co.economic.activity">
+        <field name="code">9103</field>
+        <field name="name">Actividades de jardines botánicos, zoológicos y reservas naturales.</field>
+        <field name="sequence">4810</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_9200" model="l10n_co.economic.activity">
+        <field name="code">9200</field>
+        <field name="name">Actividades de juegos de azar y apuestas.</field>
+        <field name="sequence">4820</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_9311" model="l10n_co.economic.activity">
+        <field name="code">9311</field>
+        <field name="name">Gestión de instalaciones deportivas.</field>
+        <field name="sequence">4830</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_9312" model="l10n_co.economic.activity">
+        <field name="code">9312</field>
+        <field name="name">Actividades de clubes deportivos.</field>
+        <field name="sequence">4840</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_9319" model="l10n_co.economic.activity">
+        <field name="code">9319</field>
+        <field name="name">Otras actividades deportivas.</field>
+        <field name="sequence">4850</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_9321" model="l10n_co.economic.activity">
+        <field name="code">9321</field>
+        <field name="name">Actividades de parques de atracciones y parques temáticos.</field>
+        <field name="sequence">4860</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_9329" model="l10n_co.economic.activity">
+        <field name="code">9329</field>
+        <field name="name">Otras actividades recreativas y de esparcimiento n.c.p.</field>
+        <field name="sequence">4870</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_9411" model="l10n_co.economic.activity">
+        <field name="code">9411</field>
+        <field name="name">Actividades de asociaciones empresariales y de empleadores</field>
+        <field name="sequence">4880</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_9412" model="l10n_co.economic.activity">
+        <field name="code">9412</field>
+        <field name="name">Actividades de asociaciones profesionales</field>
+        <field name="sequence">4890</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_9420" model="l10n_co.economic.activity">
+        <field name="code">9420</field>
+        <field name="name">Actividades de sindicatos de empleados.</field>
+        <field name="sequence">4900</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_9491" model="l10n_co.economic.activity">
+        <field name="code">9491</field>
+        <field name="name">Actividades de asociaciones religiosas.</field>
+        <field name="sequence">4910</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_9492" model="l10n_co.economic.activity">
+        <field name="code">9492</field>
+        <field name="name">Actividades de asociaciones políticas.</field>
+        <field name="sequence">4920</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_9499" model="l10n_co.economic.activity">
+        <field name="code">9499</field>
+        <field name="name">Actividades de otras asociaciones n.c.p.</field>
+        <field name="sequence">4930</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_9511" model="l10n_co.economic.activity">
+        <field name="code">9511</field>
+        <field name="name">Mantenimiento y reparación de computadores y de equipo periférico.</field>
+        <field name="sequence">4940</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_9512" model="l10n_co.economic.activity">
+        <field name="code">9512</field>
+        <field name="name">Mantenimiento y reparación de equipos de comunicación.</field>
+        <field name="sequence">4950</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_9521" model="l10n_co.economic.activity">
+        <field name="code">9521</field>
+        <field name="name">Mantenimiento y reparación de aparatos electrónicos de consumo.</field>
+        <field name="sequence">4960</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_9522" model="l10n_co.economic.activity">
+        <field name="code">9522</field>
+        <field name="name">Mantenimiento y reparación de aparatos y equipos domésticos y de jardinería.</field>
+        <field name="sequence">4970</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_9523" model="l10n_co.economic.activity">
+        <field name="code">9523</field>
+        <field name="name">Reparación de calzado y artículos de cuero.</field>
+        <field name="sequence">4980</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_9524" model="l10n_co.economic.activity">
+        <field name="code">9524</field>
+        <field name="name">Reparación de muebles y accesorios para el hogar.</field>
+        <field name="sequence">4990</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_9529" model="l10n_co.economic.activity">
+        <field name="code">9529</field>
+        <field name="name">Mantenimiento y reparación de otros efectos personales y enseres domésticos.</field>
+        <field name="sequence">5000</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_9601" model="l10n_co.economic.activity">
+        <field name="code">9601</field>
+        <field name="name">Lavado y limpieza, incluso la limpieza en seco, de productos textiles y de piel.</field>
+        <field name="sequence">5010</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_9602" model="l10n_co.economic.activity">
+        <field name="code">9602</field>
+        <field name="name">Peluquería y otros tratamientos de belleza.</field>
+        <field name="sequence">5020</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_9603" model="l10n_co.economic.activity">
+        <field name="code">9603</field>
+        <field name="name">Pompas fúnebres y actividades relacionadas.</field>
+        <field name="sequence">5030</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_9609" model="l10n_co.economic.activity">
+        <field name="code">9609</field>
+        <field name="name">Otras actividades de servicios personales n.c.p.</field>
+        <field name="sequence">5040</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_9700" model="l10n_co.economic.activity">
+        <field name="code">9700</field>
+        <field name="name">Actividades de los hogares individuales como empleadores de personal doméstico.</field>
+        <field name="sequence">5050</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_9810" model="l10n_co.economic.activity">
+        <field name="code">9810</field>
+        <field name="name">Actividades no diferenciadas de los hogares individuales como productores de bienes para uso propio.</field>
+        <field name="sequence">5060</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_9820" model="l10n_co.economic.activity">
+        <field name="code">9820</field>
+        <field name="name">Actividades no diferenciadas de los hogares individuales como productores de servicios para uso propio.</field>
+        <field name="sequence">5070</field>
+    </record>
+
+    <record id="l10n_co_economic_activity_9900" model="l10n_co.economic.activity">
+        <field name="code">9900</field>
+        <field name="name">Actividades de organizaciones y entidades extraterritoriales.</field>
+        <field name="sequence">5080</field>
+    </record>
+
+</odoo>

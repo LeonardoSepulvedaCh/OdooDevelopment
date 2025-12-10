@@ -62,12 +62,13 @@
             </th>
         </xpath>
         
-        <!-- Reemplazar la celda de fecha de vencimiento para agregar la columna de prórroga después -->
+        <!-- Reemplazar TODAS las celdas de fecha de vencimiento para usar effective_due_date -->
         <xpath expr="//td[.//span[@t-field='invoice.invoice_date_due']]" position="replace">
-            <!-- Columna original de Due Date -->
-            <td class='d-none d-md-table-cell'
-                t-att-class="'text-danger' if invoice.invoice_date_due and invoice.invoice_date_due &lt; datetime.date.today() and invoice.payment_state in ['not_paid', 'partial'] else ''">
-                <span t-field="invoice.invoice_date_due"/>
+            <!-- Columna original de Due Date - USA EFFECTIVE_DUE_DATE para determinar si está vencida -->
+            <td class='d-none d-md-table-cell'>
+                <t t-set="due_date_to_check" t-value="invoice.effective_due_date or invoice.invoice_date_due"/>
+                <span t-att-class="'text-danger' if due_date_to_check and due_date_to_check &lt; datetime.date.today() and invoice.payment_state in ['not_paid', 'partial'] else ''"
+                      t-field="invoice.invoice_date_due"/>
             </td>
             <!-- Nueva columna de Prórroga -->
             <td name="extended_due_date_cell" class='d-none d-md-table-cell text-center'>

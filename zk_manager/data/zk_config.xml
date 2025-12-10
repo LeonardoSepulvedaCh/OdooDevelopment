@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Configuración para optimizar el rendimiento de ZK Manager -->
+        <record id="zk_attendance_batch_size" model="ir.config_parameter">
+            <field name="key">zk_manager.attendance_batch_size</field>
+            <field name="value">100</field>
+        </record>
+        
+        <record id="zk_attendance_timeout" model="ir.config_parameter">
+            <field name="key">zk_manager.attendance_timeout</field>
+            <field name="value">30</field>
+        </record>
+        
+        <record id="zk_device_timeout" model="ir.config_parameter">
+            <field name="key">zk_manager.device_timeout</field>
+            <field name="value">5</field>
+        </record>
+    </data>
+</odoo> 

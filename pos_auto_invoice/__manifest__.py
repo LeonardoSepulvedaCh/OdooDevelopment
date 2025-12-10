@@ -1,7 +1,7 @@
 {
     'name': 'POS - Facturación Automática por Venta',
     'version': '1.0.0',
-    'category': 'Milan/POS',
+    'category': 'Rutavity/Point of Sale',
     'summary': 'Facturación Automática por Venta',
     'description': 'Agregar una opción en la configuración del POS para que se la opcion de facturar, siempre este activada.',
     'author': '@LeonardoSepulvedaCh',

@@ -1,7 +1,7 @@
 {
     'name': 'POS - Cliente Predeterminado',
     'version': '1.0.0',
-    'category': 'Milan/POS',
+    'category': 'Rutavity/Point of Sale',
     'summary': 'Cliente Predeterminado en el POS',
     'description': 'Elegir un cliente que se mostrará por defecto en el POS al seleccionar un cliente',
     'author': '@LeonardoSepulvedaCh',

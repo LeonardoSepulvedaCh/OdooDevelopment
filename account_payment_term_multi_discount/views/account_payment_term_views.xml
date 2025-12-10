@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_payment_term_form_inherit_multi_discount" model="ir.ui.view">
+        <field name="name">account.payment.term.form.inherit.multi.discount</field>
+        <field name="model">account.payment.term</field>
+        <field name="inherit_id" ref="account.view_payment_term_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('o_field_highlight')]" position="after">
+                    <field name="discount_ids" widget="one2many" class="w-50" invisible="not early_discount">
+                        <list editable="bottom">
+                            <field name="discount_percentage"/>
+                            <field name="discount_days" string="Before"/>
+                            <field name="delay_type"/>
+                        </list>
+                    </field>
+            </xpath>
+            <xpath expr="//field[@name='discount_percentage']" position="attributes">
+                <attribute name="invisible">not early_discount or discount_ids</attribute>
+            </xpath>
+            <xpath expr="//field[@name='discount_days']" position="attributes">
+                <attribute name="invisible">not early_discount or discount_ids</attribute>
+            </xpath>
+            <xpath expr="//span[@invisible='not early_discount']" position="attributes">
+                <attribute name="invisible">not early_discount or discount_ids</attribute>
+            </xpath>
+            <xpath expr="//span[@invisible='not early_discount']" position="attributes">
+                <attribute name="invisible">not early_discount or discount_ids</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

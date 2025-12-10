@@ -1,7 +1,7 @@
 {
     'name': 'POS - Recibo Personalizado',
     'version': '1.0.0',
-    'category': 'Milan/POS',
+    'category': 'Rutavity/Point of Sale',
     'summary': 'Personalización completa del recibo de venta del POS',
     'description': '''
         Módulo para personalizar completamente el recibo de venta del Punto de Venta (POS) de Odoo.

@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vista de formulario para dispositivos ZK -->
+    <record id="view_zk_device_form" model="ir.ui.view">
+        <field name="name">zk.devices.form</field>
+        <field name="model">zk.devices</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_connect" string="Conectar" type="object" class="oe_highlight" icon="fa-plug"/>
+                    <button name="get_users" string="Obtener Usuarios" type="object" class="oe_highlight" icon="fa-users"/>
+                    <button name="action_get_attendance" string="Obtener Asistencia" type="object" class="oe_highlight" icon="fa-calendar-check-o"/>
+                    <button name="action_clear_attendance" string="Limpiar Asistencias del Dispositivo" type="object" class="btn-danger" icon="fa-trash" confirm="¿Está seguro de que desea eliminar todos los registros de asistencia del dispositivo biométrico? Esta acción no se puede deshacer."/>
+                    <field name="status" widget="statusbar" statusbar_visible="connected,disconnected"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <label for="name" string="Nombre del dispositivo"/>
+                            <field name="name" placeholder="Nombre del dispositivo"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="ip" placeholder="192.168.1.100" help="IP del dispositivo biométrico"/>
+                            <field name="port" help="Puerto de conexión TCP del dispositivo biométrico"/>
+                            <field name="device_model" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="password" password="True" placeholder="Dejar vacío si no tiene contraseña"/>
+                            <field name="status" widget="badge" decoration-success="status == 'connected'" decoration-danger="status == 'disconnected'"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Usuarios del Dispositivo" name="users">
+                            <field name="users" readonly="1">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="privilege" string="Tipo de usuario"/>
+                                    <field name="user_id"/>
+                                    <field name="create_date"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Registros de Asistencia" name="attendance">
+                            <field name="attendance_records" readonly="1">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="user_id"/>
+                                    <field name="datetime_formatted_device"/>
+                                    <field name="status"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vista de lista para dispositivos ZK -->
+    <record id="view_zk_device_list" model="ir.ui.view">
+        <field name="name">zk.devices.list</field>
+        <field name="model">zk.devices</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="device_model"/>
+                <field name="ip"/>
+                <field name="port"/>
+                <field name="status" widget="badge" decoration-success="status == 'connected'" decoration-danger="status == 'disconnected'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Vista kanban para dispositivos ZK -->
+    <record id="view_zk_device_kanban" model="ir.ui.view">
+        <field name="name">zk.devices.kanban</field>
+        <field name="model">zk.devices</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" sample="1">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="ip"/>
+                <field name="port"/>
+                <field name="device_model"/>
+                <field name="status"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="o_kanban_card_header mb-3">
+                                <div class="o_kanban_card_header_title">
+                                    <div class="o_primary">
+                                        <i class="fa fa-hdd-o me-2" title="Dispositivo" aria-hidden="true"/>
+                                        <strong><field name="name"/></strong>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_card_header_right" style="position: absolute; top: 10px; right: 10px;">
+                                    <field name="status" widget="badge" decoration-success="status == 'connected'" decoration-danger="status == 'disconnected'"/>
+                                </div>
+                            </div>
+                            <hr class="mt-0 mb-3"/>
+                            
+                            <div class="o_kanban_card_body mb-3">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <i class="fa fa-microchip text-muted me-2" title="Modelo" aria-hidden="true"/>
+                                        <span class="text-muted">Modelo</span>
+                                    </div>
+                                    <div class="col-6">
+                                        <field name="device_model"/>
+                                    </div>
+                                </div>
+                                <div class="row mt8">
+                                    <div class="col-6">
+                                        <i class="fa fa-wifi text-muted me-2" title="Dirección IP" aria-hidden="true"/>
+                                        <span class="text-muted">IP</span>
+                                    </div>
+                                    <div class="col-6">
+                                        <field name="ip"/>
+                                    </div>
+                                </div>
+                                <div class="row mt8">
+                                    <div class="col-6">
+                                        <i class="fa fa-exchange text-muted me-2" title="Puerto" aria-hidden="true"/>
+                                        <span class="text-muted">Puerto</span>
+                                    </div>
+                                    <div class="col-6">
+                                        <field name="port"/>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <hr class="mt-3 mb-0"/>
+                            <div class="o_kanban_card_footer mt-3">
+                                <div class="row mb-2">
+                                    <div class="col-12">
+                                        <button name="action_connect" type="object" class="btn btn-sm btn-primary me-1" t-if="record.status.raw_value == 'disconnected'">
+                                            <i class="fa fa-plug" aria-hidden="true"/> Conectar
+                                        </button>
+                                        <button name="action_get_attendance" type="object" class="btn btn-sm btn-success me-1">
+                                            <i class="fa fa-calendar-check-o" aria-hidden="true"/> Asistencia
+                                        </button>
+                                        <button name="get_users" type="object" class="btn btn-sm btn-info me-1">
+                                            <i class="fa fa-users" aria-hidden="true"/> Usuarios
+                                        </button>
+                                        <button name="action_clear_attendance" type="object" class="btn btn-sm btn-danger" confirm="¿Está seguro de que desea eliminar todos los registros de asistencia del dispositivo biométrico? Esta acción no se puede deshacer.">
+                                            <i class="fa fa-trash" aria-hidden="true"/> Limpiar Dispositivo
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Acción para dispositivos ZK -->
+    <record id="action_zk_devices" model="ir.actions.act_window">
+        <field name="name">Dispositivos ZK</field>
+        <field name="res_model">zk.devices</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Crea tu primer dispositivo ZK
+            </p>
+            <p>
+                Configura los dispositivos de huella dactilar ZKTECO para gestionar usuarios.
+            </p>
+        </field>
+    </record>
+</odoo>

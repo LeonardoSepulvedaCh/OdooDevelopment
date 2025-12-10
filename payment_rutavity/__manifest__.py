@@ -1,6 +1,6 @@
 {
     "name": "Rutavity - Payment Gateway",
-    "version": "1.0.0",
+    "version": "1.2.0",
     "category": "Rutavity/Payment",
     "sequence": 350,
     "summary": "Rutavity Payment Gateway",
@@ -12,6 +12,8 @@
         "account_payment",
         "contacts_name_split",
         "portal_invoice_partner_grouping",
+        "account_payment_term_multi_discount",
+        "account_invoice_due_date_extension",
     ],
     "data": [
         # Security

@@ -23,63 +23,84 @@ class HelpdeskTicket(models.Model):
                     'El campo "Factura" es obligatorio para tickets del equipo de garantías.'
                 )
     
-    # Validar que solo usuarios autorizados puedan mover tickets entre etapas
+    # Validar que solo usuarios autorizados puedan mover tickets entre etapas. Validación de permisos: Usuarios básicos solo pueden mover de "Nuevo" a "Pendiente de Revisión". Gestores pueden mover a cualquier etapa.
     @api.constrains('stage_id')
     def _check_user_can_move_ticket(self):
-        """
-        Validación de permisos para mover tickets entre etapas:
-        - Usuarios básicos: solo pueden mover de "Nuevo" a "Pendiente de Revisión"
-        - Gestores: pueden mover a cualquier etapa
-        """
         for ticket in self:
             if not ticket.stage_id:
                 continue
-                
-            current_user = self.env.user
             
-            # Verificar si el usuario es gestor (tiene permisos completos)
-            has_permission = current_user.has_group('helpdesk_custom_fields.group_helpdesk_custom_manager')
-            
-            # Si el usuario es gestor, puede mover a cualquier etapa
-            if has_permission:
+            if ticket._user_is_manager():
                 continue
             
-            # Obtener los nombres de las etapas desde los parámetros del sistema
-            config_params = self.env['ir.config_parameter'].sudo()
-            stage_new_name = config_params.get_param('helpdesk_custom_fields.stage_new_name', default='Nuevo')
-            stage_pending_review_name = config_params.get_param('helpdesk_custom_fields.stage_pending_review_name', default='Pendiente de Revisión')
-            stage_dispatch_name = config_params.get_param('helpdesk_custom_fields.stage_dispatch_name', default='Por Realizar (Despacho)')
-            stage_rejected_name = config_params.get_param('helpdesk_custom_fields.stage_rejected_name', default='Rechazado')
-            stage_closed_name = config_params.get_param('helpdesk_custom_fields.stage_closed_name', default='Resuelto')
-            
-            current_stage_name = ticket.stage_id.name
-            
-            # Obtener la etapa anterior del ticket (si existe)
-            old_stage_name = None
-            if ticket.id:
-                old_ticket = self.browse(ticket.id)
-                if old_ticket.exists() and old_ticket.stage_id:
-                    # Usar _origin para obtener el valor anterior del registro
-                    old_stage_name = ticket._origin.stage_id.name if ticket._origin.stage_id else None
-            
-            # Si el usuario NO tiene permisos, solo puede mover de "Nuevo" a "Pendiente de Revisión"
-            allowed_transition = (old_stage_name == stage_new_name and current_stage_name == stage_pending_review_name)
-            
-            # También permitir que el ticket permanezca en "Nuevo" o "Pendiente de Revisión" sin restricciones
-            is_allowed_stage = current_stage_name in [stage_new_name, stage_pending_review_name]
-            
-            # Etapas restringidas que requieren permisos
-            restricted_stages = [stage_dispatch_name, stage_rejected_name, stage_closed_name]
-            is_restricted_stage = current_stage_name in restricted_stages
-            
-            # Validar si el usuario está intentando mover a una etapa restringida
-            if is_restricted_stage or (not is_allowed_stage and not allowed_transition):
-                raise UserError(
-                    f'No tienes permisos para mover tickets a la etapa "{current_stage_name}". '
-                    'Los usuarios sin permisos especiales solo pueden mover tickets de '
-                    f'"{stage_new_name}" a "{stage_pending_review_name}". '
-                    'Contacta al administrador del sistema para obtener los permisos necesarios.'
-                )
+            ticket._validate_stage_transition()
+    
+    # Verificar si el usuario actual es gestor
+    def _user_is_manager(self):
+        return self.env.user.has_group('helpdesk_custom_fields.group_helpdesk_custom_manager')
+    
+    # Validar que la transición de etapa sea permitida para usuarios sin permisos de gestor
+    def _validate_stage_transition(self):
+        stage_config = self._get_stage_validation_config()
+        current_stage_name = self.stage_id.name
+        old_stage_name = self._get_previous_stage_name()
+        
+        if self._is_transition_allowed(old_stage_name, current_stage_name, stage_config):
+            return
+        
+        self._raise_stage_transition_error(current_stage_name, stage_config)
+    
+    # Obtener la configuración de nombres de etapas del sistema
+    def _get_stage_validation_config(self):
+        config_params = self.env['ir.config_parameter'].sudo()
+        
+        return {
+            'new': config_params.get_param('helpdesk_custom_fields.stage_new_name', default='Nuevo'),
+            'pending_review': config_params.get_param('helpdesk_custom_fields.stage_pending_review_name', default='Pendiente de Revisión'),
+            'dispatch': config_params.get_param('helpdesk_custom_fields.stage_dispatch_name', default='Por Realizar (Despacho)'),
+            'rejected': config_params.get_param('helpdesk_custom_fields.stage_rejected_name', default='Rechazado'),
+            'closed': config_params.get_param('helpdesk_custom_fields.stage_closed_name', default='Resuelto'),
+        }
+    
+    # Obtener el nombre de la etapa anterior del ticket (antes del cambio actual)
+    def _get_previous_stage_name(self):
+        if not self.id:
+            return None
+        
+        if not self._origin.stage_id:
+            return None
+        
+        return self._origin.stage_id.name
+    
+    # Verificar si la transición de etapa es permitida para usuarios sin permisos especiales
+    def _is_transition_allowed(self, old_stage_name, current_stage_name, stage_config):
+        # Transición permitida: de "Nuevo" a "Pendiente de Revisión"
+        allowed_transition = (
+            old_stage_name == stage_config['new'] and 
+            current_stage_name == stage_config['pending_review']
+        )
+        
+        # Etapas permitidas sin restricciones
+        allowed_stages = [stage_config['new'], stage_config['pending_review']]
+        is_in_allowed_stage = current_stage_name in allowed_stages
+        
+        # Etapas restringidas
+        restricted_stages = [stage_config['dispatch'], stage_config['rejected'], stage_config['closed']]
+        is_restricted_stage = current_stage_name in restricted_stages
+        
+        # La transición es válida si:
+        # 1. Es una transición permitida, O
+        # 2. El ticket está en una etapa permitida Y NO es una etapa restringida
+        return allowed_transition or (is_in_allowed_stage and not is_restricted_stage)
+    
+    # Lanzar error cuando la transición de etapa no es permitida
+    def _raise_stage_transition_error(self, current_stage_name, stage_config):
+        raise UserError(
+            f'No tienes permisos para mover tickets a la etapa "{current_stage_name}". '
+            'Los usuarios sin permisos especiales solo pueden mover tickets de '
+            f'"{stage_config["new"]}" a "{stage_config["pending_review"]}". '
+            'Contacta al administrador del sistema para obtener los permisos necesarios.'
+        )
     
     # Validar que exista un acta de garantía antes de finalizar el ticket
     @api.constrains('stage_id')

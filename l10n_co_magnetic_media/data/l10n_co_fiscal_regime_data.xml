@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Regímenes Fiscales - Colombia (Facturación Electrónica) -->
+    <!-- Total de registros: 2 -->
+    
+    <record id="l10n_co_fiscal_regime_48" model="l10n_co.fiscal.regime">
+        <field name="code">48</field>
+        <field name="name">Impuesto sobre las ventas - IVA</field>
+        <field name="vigencia_desde">2019-10-07</field>
+        <!-- vigencia_hasta vacío = activo indefinidamente -->
+    </record>
+    
+    <record id="l10n_co_fiscal_regime_49" model="l10n_co.fiscal.regime">
+        <field name="code">49</field>
+        <field name="name">No responsable de IVA</field>
+        <field name="vigencia_desde">2019-10-07</field>
+        <!-- vigencia_hasta vacío = activo indefinidamente -->
+    </record>
+
+</odoo>
+

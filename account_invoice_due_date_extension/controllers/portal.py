@@ -4,20 +4,10 @@ from odoo.addons.portal_invoice_partner_grouping.controllers.portal import Porta
 
 
 class PortalAccountExtension(PortalAccountInherit):
-    """
-    Sobrescribe el controlador del portal para considerar las prórrogas
-    al determinar qué facturas están vencidas.
-    """
+    """Extiende el controlador del portal para considerar prórrogas."""
     
     def _get_overdue_invoices_domain(self, partner_id=None):
-        """
-        Sobrescribe el dominio de facturas vencidas para usar effective_due_date
-        en lugar de invoice_date_due.
-        
-        Este método es usado por el portal para determinar qué facturas mostrar
-        como vencidas. Al usar effective_due_date, las facturas con prórroga
-        aprobada no aparecerán como vencidas hasta que pase la fecha extendida.
-        """
+        """Retorna dominio de facturas vencidas usando effective_due_date."""
         return [
             ('state', 'not in', ('cancel', 'draft')),
             ('move_type', 'in', ('out_invoice', 'out_receipt')),
