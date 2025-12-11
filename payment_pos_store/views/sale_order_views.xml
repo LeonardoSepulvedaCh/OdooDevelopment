@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Add pos_config_ids field to sale order form view -->
+    <record id="view_order_form_pos_config" model="ir.ui.view">
+        <field name="name">sale.order.form.pos.config</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="arch" type="xml">
+            <!-- Add pos_config_ids field in the Other Info tab -->
+            <xpath expr="//page[@name='other_information']//group[@name='sales_person']"
+                position="inside">
+                <field name="pos_config_ids" widget="many2many_tags" />
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -10,11 +10,6 @@ class HelpdeskTicket(models.Model):
         readonly=True
     )
 
-    card_code = fields.Char(
-        string='Código del cliente',
-        help='Código del cliente'
-    )
-
     client_type = fields.Selection(
         [('wholesaler', 'Mayorista'),
          ('end_consumer', 'Consumidor Final'),
@@ -37,12 +32,7 @@ class HelpdeskTicket(models.Model):
 
     serie = fields.Selection(
         [('pqrs', 'PQRS'),
-         ('ticket_cuc', 'Ticket Cucuta'),
-         ('ticket_med', 'Ticket Medellín'),
-         ('ticket_bog', 'Ticket Bogotá'),
-         ('ticket_bga', 'Ticket Bucaramanga'),
-         ('ticket_baq', 'Ticket Barranquilla'),
-         ('ticket_cal', 'Ticket Cali'),
+         ('ticket', 'Ticket'),
          ('other', 'Otro')],
         string='Serie'
     )
@@ -74,15 +64,29 @@ class HelpdeskTicket(models.Model):
         help='Productos disponibles en las líneas de la factura seleccionada'
     )
     
-    # Productos asociados al ticket
-    product_ids = fields.Many2many(
+    # Producto asociado al ticket (solo uno)
+    product_id = fields.Many2one(
         'product.product',
-        'helpdesk_ticket_product_rel',
-        'ticket_id',
-        'product_id',
-        string='Productos asociados',
-        help='Productos relacionados con este ticket de garantía',
+        string='Producto',
+        help='Producto relacionado con este ticket de garantía',
         tracking=True
+    )
+    
+    # Cantidad del producto
+    product_qty = fields.Float(
+        string='Cantidad',
+        default=1.0,
+        digits='Product Unit of Measure',
+        help='Cantidad del producto en garantía (no debe exceder la cantidad facturada)',
+        tracking=True
+    )
+    
+    # Cantidad disponible del producto en la factura
+    product_qty_available = fields.Float(
+        string='Cantidad disponible en factura',
+        compute='_compute_product_qty_available',
+        store=False,
+        help='Cantidad disponible del producto seleccionado en la factura'
     )
     
     attachment_ids = fields.Many2many(
@@ -140,23 +144,20 @@ class HelpdeskTicket(models.Model):
     # Mapeo de series a códigos de secuencia
     _SERIE_SEQUENCE_MAP = {
         'pqrs': 'helpdesk.ticket.pqrs',
-        'ticket_cuc': 'helpdesk.ticket.cuc',
-        'ticket_med': 'helpdesk.ticket.med',
-        'ticket_bog': 'helpdesk.ticket.bog',
-        'ticket_bga': 'helpdesk.ticket.bga',
-        'ticket_baq': 'helpdesk.ticket.baq',
-        'ticket_cal': 'helpdesk.ticket.cal',
+        'ticket': 'helpdesk.ticket.ticket',
         'other': 'helpdesk.ticket.other',
     }
 
-    @api.onchange('partner_id')
-    def _onchange_partner_id(self):
-        if self.partner_id and self.partner_id.card_code:
-            self.card_code = self.partner_id.card_code
-        elif not self.partner_id:
-            self.card_code = False
-
     @api.onchange('invoice_id')
     def _onchange_invoice_id(self):
-        # Limpiar productos seleccionados cuando cambia la factura
-        self.product_ids = [(5, 0, 0)]
+        # Limpiar producto seleccionado cuando cambia la factura
+        self.product_id = False
+        self.product_qty = 1.0
+    
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        # Resetear cantidad al cambiar de producto
+        if self.product_id:
+            self.product_qty = 1.0
+        else:
+            self.product_qty = 0.0

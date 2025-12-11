@@ -30,7 +30,7 @@
                         </tr>
                         <tr>
                             <td class="field-label">NIT:</td>
-                            <td colspan="3"><span t-out="o.partner_id.vat or o.card_code or ''"/></td>
+                            <td colspan="3"><span t-out="o.partner_id.vat or ''"/></td>
                             <td class="field-label">Estado:</td>
                             <td><span t-out="o.stage_id.name or ''"/></td>
                         </tr>

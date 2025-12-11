@@ -1,0 +1,319 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_pos_store
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-11-21 21:43+0000\n"
+"PO-Revision-Date: 2025-11-21 21:43+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: payment_pos_store
+#: model_terms:ir.ui.view,arch_db:payment_pos_store.express_inline_form
+msgid ""
+"<i class=\"fa fa-comment text-primary me-2\"/>\n"
+"                            Observations (Optional)"
+msgstr ""
+"<i class=\"fa fa-comment text-primary me-2\"/>\n"
+"                            Observaciones (Opcional)"
+
+#. module: payment_pos_store
+#: model_terms:ir.ui.view,arch_db:payment_pos_store.pos_store_payment_form
+msgid ""
+"<i class=\"fa fa-comment text-primary me-2\"/>\n"
+"                        <span>Observations (Optional)</span>"
+msgstr ""
+"<i class=\"fa fa-comment text-primary me-2\"/>\n"
+"                        <span>Observaciones (Opcional)</span>"
+
+#. module: payment_pos_store
+#: model_terms:ir.ui.view,arch_db:payment_pos_store.express_inline_form
+msgid ""
+"<i class=\"fa fa-user text-primary me-2\"/>\n"
+"                            Salesperson <span class=\"text-danger\">*</span>"
+msgstr ""
+"<i class=\"fa fa-user text-primary me-2\"/>\n"
+"                        <span>Vendedor <span class=\"text-danger\">*</span></span>"
+
+#. module: payment_pos_store
+#: model_terms:ir.ui.view,arch_db:payment_pos_store.pos_store_payment_form
+msgid ""
+"<i class=\"fa fa-user text-primary me-2\"/>\n"
+"                        <span>Salesperson <span class=\"text-danger\">*</span></span>"
+msgstr ""
+"<i class=\"fa fa-user text-primary me-2\"/>\n"
+"                        <span>Vendedor <span class=\"text-danger\">*</span></span>"
+
+#. module: payment_pos_store
+#: model_terms:ir.ui.view,arch_db:payment_pos_store.express_inline_form
+#: model_terms:ir.ui.view,arch_db:payment_pos_store.pos_store_payment_form
+msgid "<option value=\"\">Select a salesperson...</option>"
+msgstr "<option value=\"\">Seleccionar un vendedor...</option>"
+
+#. module: payment_pos_store
+#: model_terms:ir.ui.view,arch_db:payment_pos_store.pos_store_payment_form
+msgid "<small class=\"form-text text-muted\">Maximum 255 characters</small>"
+msgstr "<small class=\"form-text text-muted\">Máximo 255 caracteres</small>"
+
+#. module: payment_pos_store
+#: model_terms:ir.ui.view,arch_db:payment_pos_store.express_inline_form
+msgid ""
+"<small class=\"form-text text-muted\">Optional: Maximum 255 "
+"characters</small>"
+msgstr ""
+"<small class=\"form-text text-muted\">Opcional: Máximo 255 "
+"caracteres</small>"
+
+#. module: payment_pos_store
+#: model_terms:ir.ui.view,arch_db:payment_pos_store.pos_store_payment_form
+msgid ""
+"<span>\n"
+"                            You cannot use this payment method because you are not registered as a\n"
+"                            POS customer.\n"
+"                        </span>"
+msgstr ""
+"<span>\n"
+"                            No puede usar este método de pago porque no está registrado como cliente POS.\n"
+"                        </span>"
+
+#. module: payment_pos_store
+#: model_terms:ir.ui.view,arch_db:payment_pos_store.pos_store_payment_form
+msgid ""
+"<span>\n"
+"                            You cannot use this payment method because you have no POS\n"
+"                            configurations assigned.\n"
+"                        </span>"
+msgstr ""
+"<span>\n"
+"                            No puede usar este método de pago porque no tiene configuraciones de POS asignadas.\n"
+"                        </span>"
+
+#. module: payment_pos_store
+#: model_terms:ir.ui.view,arch_db:payment_pos_store.express_inline_form
+msgid ""
+"<strong>Warning!</strong>\n"
+"                    You cannot use this payment method because you are not registered as a POS customer."
+msgstr ""
+"<strong>Advertencia!</strong>\n"
+"                    No puede usar este método de pago porque no está registrado como cliente POS."
+
+#. module: payment_pos_store
+#: model_terms:ir.ui.view,arch_db:payment_pos_store.express_inline_form
+msgid ""
+"<strong>Warning!</strong>\n"
+"                    You cannot use this payment method because you have no POS configurations assigned."
+msgstr ""
+"<strong>Advertencia!</strong>\n"
+"                    No puede usar este método de pago porque no tiene configuraciones de POS asignadas."
+
+#. module: payment_pos_store
+#: model_terms:ir.ui.view,arch_db:payment_pos_store.express_inline_form
+#: model_terms:ir.ui.view,arch_db:payment_pos_store.pos_store_payment_form
+msgid "Add any special instructions or comments for your order..."
+msgstr ""
+"Añade cualquier instrucción especial o comentario para tu orden..."
+
+#. module: payment_pos_store
+#: model:ir.model.fields,field_description:payment_pos_store.field_sale_order__pos_config_ids
+msgid "Associated POS"
+msgstr "POS asociados"
+
+#. module: payment_pos_store
+#: model_terms:ir.ui.view,arch_db:payment_pos_store.express_checkout_form
+msgid "Close"
+msgstr "Cerrar"
+
+#. module: payment_pos_store
+#: model_terms:ir.ui.view,arch_db:payment_pos_store.express_checkout_form
+msgid "Confirm Payment"
+msgstr "Confirmar pago"
+
+#. module: payment_pos_store
+#: model:ir.model,name:payment_pos_store.model_res_partner
+msgid "Contact"
+msgstr "Contacto"
+
+#. module: payment_pos_store
+#: model:ir.model,website_form_label:payment_pos_store.model_res_partner
+msgid "Create a Customer"
+msgstr "Crear un cliente"
+
+#. module: payment_pos_store
+#: model:ir.model.fields,field_description:payment_pos_store.field_payment_method__display_name
+#: model:ir.model.fields,field_description:payment_pos_store.field_payment_transaction__display_name
+#: model:ir.model.fields,field_description:payment_pos_store.field_res_partner__display_name
+#: model:ir.model.fields,field_description:payment_pos_store.field_sale_order__display_name
+msgid "Display Name"
+msgstr "Nombre mostrado"
+
+#. module: payment_pos_store
+#. odoo-javascript
+#: code:addons/payment_pos_store/static/src/interactions/express_checkout.js:0
+msgid "Error processing POS store payment"
+msgstr "Error al procesar el pago en POS"
+
+#. module: payment_pos_store
+#. odoo-javascript
+#: code:addons/payment_pos_store/static/src/interactions/payment_form.js:0
+msgid "Error saving POS store order data"
+msgstr "Error al guardar los datos de la orden en POS"
+
+#. module: payment_pos_store
+#: model:ir.model.fields,field_description:payment_pos_store.field_payment_method__id
+#: model:ir.model.fields,field_description:payment_pos_store.field_payment_transaction__id
+#: model:ir.model.fields,field_description:payment_pos_store.field_res_partner__id
+#: model:ir.model.fields,field_description:payment_pos_store.field_sale_order__id
+msgid "ID"
+msgstr "ID"
+
+#. module: payment_pos_store
+#. odoo-python
+#: code:addons/payment_pos_store/models/payment_method.py:0
+msgid "No POS configuration assigned to this customer"
+msgstr "No hay configuración de POS asignada a este cliente"
+
+#. module: payment_pos_store
+#. odoo-python
+#: code:addons/payment_pos_store/controllers/payment.py:0
+msgid "No POS configuration assigned to this customer."
+msgstr "No hay configuración de POS asignada a este cliente."
+
+#. module: payment_pos_store
+#. odoo-python
+#: code:addons/payment_pos_store/controllers/payment.py:0
+msgid "No sale order found in session"
+msgstr "No se encontró ninguna orden de venta en la sesión"
+
+#. module: payment_pos_store
+#. odoo-python
+#: code:addons/payment_pos_store/models/sale_order.py:0
+msgid "No shipping method is selected."
+msgstr "No se ha seleccionado ningún método de envío."
+
+#. module: payment_pos_store
+#. odoo-python
+#: code:addons/payment_pos_store/models/payment_method.py:0
+msgid "Only POS store payment is available for POS customers"
+msgstr "Solo el pago en POS está disponible para clientes POS"
+
+#. module: payment_pos_store
+#: model:payment.method,name:payment_pos_store.payment_method_pos_store
+msgid "POS Store Payment"
+msgstr "Pago en tienda POS"
+
+#. module: payment_pos_store
+#: model:ir.model.fields,help:payment_pos_store.field_sale_order__pos_config_ids
+msgid "POS configurations associated with this order"
+msgstr "Configuraciones de POS asociadas a esta orden"
+
+#. module: payment_pos_store
+#. odoo-python
+#: code:addons/payment_pos_store/models/payment_transaction.py:0
+msgid ""
+"POS store payment cancellations must be processed manually at the store."
+msgstr ""
+"Los cancelamientos de pago en POS deben procesarse manualmente en el punto de venta."
+
+#. module: payment_pos_store
+#. odoo-python
+#: code:addons/payment_pos_store/models/payment_method.py:0
+msgid "POS store payment is only available for POS customers"
+msgstr "Pago en tienda POS solo está disponible para clientes POS"
+
+#. module: payment_pos_store
+#. odoo-python
+#: code:addons/payment_pos_store/controllers/payment.py:0
+msgid "POS store payment is only available for POS customers."
+msgstr "Pago en tienda POS solo está disponible para clientes POS."
+
+#. module: payment_pos_store
+#. odoo-python
+#: code:addons/payment_pos_store/models/payment_method.py:0
+msgid "POS store payment is only available for sale orders"
+msgstr "Pago en tienda POS solo está disponible para órdenes de venta"
+
+#. module: payment_pos_store
+#. odoo-python
+#: code:addons/payment_pos_store/models/payment_transaction.py:0
+msgid "POS store payments are captured automatically at the store."
+msgstr "Los pagos en tienda POS se capturan automáticamente en el punto de venta."
+
+#. module: payment_pos_store
+#. odoo-python
+#: code:addons/payment_pos_store/models/payment_transaction.py:0
+msgid "POS store refunds must be processed manually at the physical store."
+msgstr "Los reembolsos en tienda POS deben procesarse manualmente en el punto de venta."
+
+#. module: payment_pos_store
+#: model_terms:ir.ui.view,arch_db:payment_pos_store.express_checkout_form
+msgid "Pay in Store (POS)"
+msgstr "Pagar en tienda (POS)"
+
+#. module: payment_pos_store
+#: model:ir.model,name:payment_pos_store.model_payment_method
+msgid "Payment Method"
+msgstr "Método de pago"
+
+#. module: payment_pos_store
+#: model:ir.model,name:payment_pos_store.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Transacción de pago"
+
+#. module: payment_pos_store
+#. odoo-javascript
+#: code:addons/payment_pos_store/static/src/interactions/express_checkout.js:0
+#: code:addons/payment_pos_store/static/src/interactions/payment_form.js:0
+msgid "Please select a salesperson before proceeding with the payment."
+msgstr "Por favor, seleccione un vendedor antes de proceder con el pago."
+
+#. module: payment_pos_store
+#. odoo-python
+#: code:addons/payment_pos_store/controllers/payment.py:0
+msgid "Sale order not found"
+msgstr "Orden de venta no encontrada"
+
+#. module: payment_pos_store
+#: model:ir.model,name:payment_pos_store.model_sale_order
+msgid "Sales Order"
+msgstr "Orden de Venta"
+
+#. module: payment_pos_store
+#. odoo-python
+#: code:addons/payment_pos_store/controllers/payment.py:0
+msgid "Salesperson not found"
+msgstr "Vendedor no encontrado"
+
+#. module: payment_pos_store
+#. odoo-python
+#: code:addons/payment_pos_store/controllers/payment.py:0
+msgid "Selected salesperson is not available for this customer"
+msgstr "El vendedor seleccionado no está disponible para este cliente"
+
+#. module: payment_pos_store
+#: model_terms:ir.ui.view,arch_db:payment_pos_store.express_checkout_form
+msgid "Test Mode"
+msgstr "Modo de prueba"
+
+#. module: payment_pos_store
+#: model_terms:ir.ui.view,arch_db:payment_pos_store.express_inline_form
+#: model_terms:ir.ui.view,arch_db:payment_pos_store.pos_store_payment_form
+msgid "This order will be sent to the following POS:"
+msgstr "Esta orden será enviada al siguiente POS:"
+
+#. module: payment_pos_store
+#: model_terms:ir.ui.view,arch_db:payment_pos_store.express_checkout_form
+msgid "Unpublished"
+msgstr "No publicado"
+
+#. module: payment_pos_store
+#. odoo-python
+#: code:addons/payment_pos_store/models/sale_order.py:0
+msgid "Your cart is not ready to be paid, please verify previous steps."
+msgstr "Tu carrito no está listo para ser pagado, por favor, verifica los pasos anteriores."

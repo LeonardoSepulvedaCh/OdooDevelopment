@@ -69,74 +69,110 @@ class HelpdeskPactoWizard(models.TransientModel):
             ticket = self.env['helpdesk.ticket'].browse(ticket_id)
             res['ticket_id'] = ticket.id
             
-            # Si force_default_values está en True, solo cargar datos básicos del partner
-            if force_default:
-                if ticket.partner_id:
-                    partner_name = ticket.partner_id.name
-                    if 'pacto_nombre_cliente' in fields_list:
-                        res.setdefault('pacto_nombre_cliente', partner_name)
-                    if 'pacto_almacen_venta' in fields_list:
-                        res.setdefault('pacto_almacen_venta', partner_name)
-                
-                # Traer fecha de envío a comercial desde la fecha de creación del ticket
-                if ticket.create_date:
-                    if 'pacto_fecha_envio_comercial' in fields_list:
-                        # Convertir datetime a fecha
-                        fecha_creacion = ticket.create_date.date() if hasattr(ticket.create_date, 'date') else ticket.create_date
-                        res.setdefault('pacto_fecha_envio_comercial', fecha_creacion)
-                
-                # Traer fecha de compra desde la factura
-                if ticket.invoice_id and ticket.invoice_id.invoice_date:
-                    if 'pacto_fecha_compra' in fields_list:
-                        res.setdefault('pacto_fecha_compra', ticket.invoice_id.invoice_date)
-                
-                # Traer descripción desde los productos del ticket
-                if ticket.product_ids:
-                    if 'pacto_descripcion_bicicleta' in fields_list:
-                        productos_nombres = ', '.join(ticket.product_ids.mapped('name'))
-                        res.setdefault('pacto_descripcion_bicicleta', productos_nombres)
-                        # La descripción de entrega es la misma que la hurtada
-                        if 'pacto_descripcion_entrega' in fields_list:
-                            res.setdefault('pacto_descripcion_entrega', productos_nombres)
+            # Si force_default_values está en True o no hay datos guardados, cargar datos básicos
+            if force_default or not ticket.pacto_fecha_envio_comercial:
+                res.update(self._cargar_datos_basicos_ticket(ticket, fields_list))
             else:
                 # Si el ticket ya tiene datos del pacto, cargarlos
-                if ticket.pacto_fecha_envio_comercial:
-                    res.update(self._get_datos_ticket_to_wizard(ticket))
-                    # Asegurar que la descripción de entrega esté sincronizada con la hurtada
-                    if ticket.pacto_descripcion_bicicleta and 'pacto_descripcion_entrega' in fields_list:
-                        if not ticket.pacto_descripcion_entrega or ticket.pacto_descripcion_entrega != ticket.pacto_descripcion_bicicleta:
-                            res['pacto_descripcion_entrega'] = ticket.pacto_descripcion_bicicleta
-                else:
-                    # Si no hay datos guardados, pre-llenar con datos básicos
-                    if ticket.partner_id:
-                        partner_name = ticket.partner_id.name
-                        if 'pacto_nombre_cliente' in fields_list:
-                            res.setdefault('pacto_nombre_cliente', partner_name)
-                        if 'pacto_almacen_venta' in fields_list:
-                            res.setdefault('pacto_almacen_venta', partner_name)
-                    
-                    # Traer fecha de envío a comercial desde la fecha de creación del ticket
-                    if ticket.create_date:
-                        if 'pacto_fecha_envio_comercial' in fields_list:
-                            # Convertir datetime a fecha
-                            fecha_creacion = ticket.create_date.date() if hasattr(ticket.create_date, 'date') else ticket.create_date
-                            res.setdefault('pacto_fecha_envio_comercial', fecha_creacion)
-                    
-                    # Traer fecha de compra desde la factura
-                    if ticket.invoice_id and ticket.invoice_id.invoice_date:
-                        if 'pacto_fecha_compra' in fields_list:
-                            res.setdefault('pacto_fecha_compra', ticket.invoice_id.invoice_date)
-                    
-                    # Traer descripción desde los productos del ticket
-                    if ticket.product_ids:
-                        if 'pacto_descripcion_bicicleta' in fields_list:
-                            productos_nombres = ', '.join(ticket.product_ids.mapped('name'))
-                            res.setdefault('pacto_descripcion_bicicleta', productos_nombres)
-                            # La descripción de entrega es la misma que la hurtada
-                            if 'pacto_descripcion_entrega' in fields_list:
-                                res.setdefault('pacto_descripcion_entrega', productos_nombres)
+                res.update(self._get_datos_ticket_to_wizard(ticket))
+                # Asegurar que la descripción de entrega esté sincronizada con la hurtada
+                if (ticket.pacto_descripcion_bicicleta and 'pacto_descripcion_entrega' in fields_list and
+                    (not ticket.pacto_descripcion_entrega or ticket.pacto_descripcion_entrega != ticket.pacto_descripcion_bicicleta)):
+                    res['pacto_descripcion_entrega'] = ticket.pacto_descripcion_bicicleta
         
         return res
+
+    # Cargar datos básicos del ticket para pre-llenar el wizard
+    def _cargar_datos_basicos_ticket(self, ticket, fields_list):
+        datos = {}
+        datos.update(self._cargar_datos_partner(ticket, fields_list))
+        datos.update(self._cargar_fechas_ticket(ticket, fields_list))
+        datos.update(self._cargar_datos_producto(ticket, fields_list))
+        datos.update(self._cargar_valor_factura(ticket, fields_list))
+        return datos
+    
+    # Cargar datos del partner
+    def _cargar_datos_partner(self, ticket, fields_list):
+        datos = {}
+        if not ticket.partner_id:
+            return datos
+        
+        partner_name = ticket.partner_id.name
+        if 'pacto_nombre_cliente' in fields_list:
+            datos['pacto_nombre_cliente'] = partner_name
+        if 'pacto_almacen_venta' in fields_list:
+            datos['pacto_almacen_venta'] = partner_name
+        return datos
+    
+    # Cargar fechas del ticket
+    def _cargar_fechas_ticket(self, ticket, fields_list):
+        datos = {}
+        
+        # Fecha de envío a comercial
+        if ticket.create_date and 'pacto_fecha_envio_comercial' in fields_list:
+            fecha_creacion = ticket.create_date.date() if hasattr(ticket.create_date, 'date') else ticket.create_date
+            datos['pacto_fecha_envio_comercial'] = fecha_creacion
+        
+        # Fecha de compra desde la factura
+        if ticket.invoice_id and ticket.invoice_id.invoice_date and 'pacto_fecha_compra' in fields_list:
+            datos['pacto_fecha_compra'] = ticket.invoice_id.invoice_date
+        
+        return datos
+    
+    # Cargar datos del producto
+    def _cargar_datos_producto(self, ticket, fields_list):
+        datos = {}
+        if not (ticket.product_id and 'pacto_descripcion_bicicleta' in fields_list):
+            return datos
+        
+        producto_nombre = ticket.product_id.name
+        datos['pacto_descripcion_bicicleta'] = producto_nombre
+        
+        # La descripción de entrega es la misma que la hurtada
+        if 'pacto_descripcion_entrega' in fields_list:
+            datos['pacto_descripcion_entrega'] = producto_nombre
+        
+        return datos
+    
+    # Cargar valor de factura con IVA
+    def _cargar_valor_factura(self, ticket, fields_list):
+        datos = {}
+        if not (ticket.invoice_id and ticket.product_id and 'pacto_valor_factura_iva' in fields_list):
+            return datos
+        
+        valor_iva = self._calcular_valor_producto_con_iva(ticket)
+        if valor_iva > 0:
+            datos['pacto_valor_factura_iva'] = valor_iva
+        
+        return datos
+
+    # Calcular el valor con IVA del producto seleccionado en la factura
+    def _calcular_valor_producto_con_iva(self, ticket):
+        if not ticket.invoice_id or not ticket.product_id:
+            return 0.0
+        
+        # Buscar la línea de factura que corresponde al producto seleccionado
+        invoice_line = ticket.invoice_id.invoice_line_ids.filtered(
+            lambda line: line.product_id == ticket.product_id
+        )
+        
+        if not invoice_line:
+            return 0.0
+        
+        # Si hay múltiples líneas con el mismo producto, tomar la primera
+        invoice_line = invoice_line[0]
+        
+        # Obtener el precio unitario con IVA
+        if invoice_line.quantity > 0:
+            precio_unitario_con_iva = invoice_line.price_total / invoice_line.quantity
+        else:
+            return 0.0
+        
+        # Calcular el valor total basado en la cantidad del ticket
+        cantidad_ticket = ticket.product_qty if ticket.product_qty else 1.0
+        valor_total_con_iva = precio_unitario_con_iva * cantidad_ticket
+        
+        return valor_total_con_iva
 
     # Obtener los datos del ticket para cargarlos en el wizard.
     def _get_datos_ticket_to_wizard(self, ticket):

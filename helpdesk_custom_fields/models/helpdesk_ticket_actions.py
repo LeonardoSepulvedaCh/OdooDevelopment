@@ -7,15 +7,10 @@ _logger = logging.getLogger(__name__)
 class HelpdeskTicket(models.Model):
     _inherit = 'helpdesk.ticket'
 
-    # Sobrescribir create para asignar card_code y consecutivo
+    # Sobrescribir create para asignar consecutivo
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            if vals.get('partner_id') and not vals.get('card_code'):
-                partner = self.env['res.partner'].browse(vals['partner_id'])
-                if partner.card_code:
-                    vals['card_code'] = partner.card_code
-            
             # Generar consecutivo usando secuencias de Odoo si se especifica una serie
             if vals.get('serie'):
                 vals['consecutive_number'] = self._get_next_consecutive_number(vals['serie'])

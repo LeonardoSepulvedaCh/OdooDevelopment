@@ -12,6 +12,62 @@ COUNTRY_CODE_FIELD = 'country_id.code'
 
 class ContactRegistrationController(http.Controller):
 
+    # Construir nombre completo concatenando los campos de nombre
+    def _build_full_name(self, post):
+        name_parts = []
+        for field in ['first_name', 'second_name', 'first_surname', 'second_surname']:
+            value = post.get(field)
+            if value:
+                name_parts.append(value.strip())
+        return ' '.join(name_parts)
+
+    # Preparar valores para crear el contacto
+    def _prepare_partner_values(self, post):
+        partner_vals = {
+            'name': self._build_full_name(post),
+            'first_name': post.get('first_name', '').strip(),
+            'second_name': post.get('second_name', '').strip(),
+            'first_surname': post.get('first_surname', '').strip(),
+            'second_surname': post.get('second_surname', '').strip(),
+            'email': post.get('email'),
+            'vat': post.get('vat'),
+            'street': post.get('street', ''),
+            'city_id': int(post.get('city_id')) if post.get('city_id') else False,
+            'state_id': int(post.get('state_id')) if post.get('state_id') else False,
+            'zip': post.get('zip', ''),
+            'country_id': int(post.get('country_id')) if post.get('country_id') else False,
+            'l10n_latam_identification_type_id': int(post.get('l10n_latam_identification_type_id')),
+            'l10n_co_tax_regime_id': int(post.get('l10n_co_tax_regime_id')),
+            'pos_customer': True,
+        }
+        
+        # Agregar obligaciones fiscales si fueron seleccionadas
+        obligation_ids_raw = request.httprequest.form.getlist('l10n_co_edi_obligation_type_ids')
+        if obligation_ids_raw:
+            obligation_ids = [int(x) for x in obligation_ids_raw if x]
+            partner_vals['l10n_co_edi_obligation_type_ids'] = [(6, 0, obligation_ids)]
+        
+        return partner_vals
+
+    # Vincular el registro QR y asignar POS si existe
+    def _link_registration_and_pos(self, partner_vals, token):
+        if not token or token == 'generic':
+            return
+        
+        registration = request.env[CONTACT_REGISTRATION_MODEL].sudo().search([
+            ('token', '=', token),
+            ('active', '=', True)
+        ], limit=1)
+        
+        if not registration:
+            return
+        
+        partner_vals['registration_id'] = registration.id
+        
+        # Asignar POS si el registro tiene uno asociado
+        if registration.pos_config_id:
+            partner_vals['pos_config_ids'] = [(6, 0, [registration.pos_config_id.id])]
+
     # Ruta para mostrar el formulario de registro de contactos
     @http.route('/contact/register/<string:token>', type='http', auth='public', website=True)
     def contact_registration_form(self, token=None, **kwargs):
@@ -64,7 +120,6 @@ class ContactRegistrationController(http.Controller):
     # Ruta para procesar el envío del formulario de registro
     @http.route('/contact/register/submit', type='http', auth='public', methods=['POST'], csrf=True, website=True)
     def contact_registration_submit(self, **post):
-        
         try:
             # Validar campos requeridos
             required_fields = ['first_name', 'first_surname', 'email', 'vat', 
@@ -72,71 +127,27 @@ class ContactRegistrationController(http.Controller):
             missing_fields = [f for f in required_fields if not post.get(f)]
             
             if missing_fields:
-                return request.redirect('/contact/register/%s?error=missing_fields' % post.get('token', 'generic'))
+                token = post.get('token', 'generic')
+                return request.redirect(f'/contact/register/{token}?error=missing_fields')
             
-            # Construir nombre completo concatenando los campos
-            name_parts = []
-            if post.get('first_name'):
-                name_parts.append(post.get('first_name').strip())
-            if post.get('second_name'):
-                name_parts.append(post.get('second_name').strip())
-            if post.get('first_surname'):
-                name_parts.append(post.get('first_surname').strip())
-            if post.get('second_surname'):
-                name_parts.append(post.get('second_surname').strip())
+            # Preparar valores del contacto
+            partner_vals = self._prepare_partner_values(post)
             
-            full_name = ' '.join(name_parts)
-            
-            # Preparar valores para crear el contacto
-            partner_vals = {
-                'name': full_name,
-                'first_name': post.get('first_name', '').strip(),
-                'second_name': post.get('second_name', '').strip(),
-                'first_surname': post.get('first_surname', '').strip(),
-                'second_surname': post.get('second_surname', '').strip(),
-                'email': post.get('email'),
-                'vat': post.get('vat'),
-                'street': post.get('street', ''),
-                'city_id': int(post.get('city_id')) if post.get('city_id') else False,
-                'state_id': int(post.get('state_id')) if post.get('state_id') else False,
-                'zip': post.get('zip', ''),
-                'country_id': int(post.get('country_id')) if post.get('country_id') else False,
-                'l10n_latam_identification_type_id': int(post.get('l10n_latam_identification_type_id')),
-                'l10n_co_tax_regime_id': int(post.get('l10n_co_tax_regime_id')),
-                'pos_customer': True,
-            }
-            
-            # Agregar obligaciones fiscales si fueron seleccionadas
-            obligation_ids_raw = request.httprequest.form.getlist('l10n_co_edi_obligation_type_ids')
-            if obligation_ids_raw:
-                obligation_ids = [int(x) for x in obligation_ids_raw if x]
-                partner_vals['l10n_co_edi_obligation_type_ids'] = [(6, 0, obligation_ids)]
-            
-            # Vincular con el registro QR si existe
+            # Vincular con el registro QR y asignar POS
             token = post.get('token')
-            if token and token != 'generic':
-                registration = request.env[CONTACT_REGISTRATION_MODEL].sudo().search([
-                    ('token', '=', token),
-                    ('active', '=', True)
-                ], limit=1)
-                if registration:
-                    partner_vals['registration_id'] = registration.id
+            self._link_registration_and_pos(partner_vals, token)
             
             # Crear el contacto
             request.env['res.partner'].sudo().create(partner_vals)
             
             # Redirigir con mensaje de éxito
-            return request.redirect('/contact/register/%s?success=1' % (token or 'generic'))
+            return request.redirect(f'/contact/register/{token or "generic"}?success=1')
             
         except Exception as e:
-            # Registrar la excepción detallada en el servidor
             _logger.exception("Error al crear contacto desde formulario público: %s", e)
-            
-            # Revertir la transacción de la base de datos
             request.env.cr.rollback()
-            
-            # Redirigir con código de error controlado (sin exponer detalles)
-            return request.redirect('/contact/register/%s?error=registration_failed' % post.get('token', 'generic'))
+            token = post.get('token', 'generic')
+            return request.redirect(f'/contact/register/{token}?error=registration_failed')
 
     # Ruta genérica de registro sin token específico
     @http.route('/contact/register/generic', type='http', auth='public', website=True)

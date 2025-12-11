@@ -4,7 +4,6 @@
     "category": "Rutavity/Helpdesk",
     "summary": "Campos Personalizados para el módulo de Helpdesk adaptados al flujo de trabajo de Rutavity",
     "description": """Campos Personalizados para el módulo de Helpdesk:
-    - Código del cliente (Card_Code)
     - Motivo
     - Tipo de cliente
     - Grupos de seguridad para usuarios y gestores

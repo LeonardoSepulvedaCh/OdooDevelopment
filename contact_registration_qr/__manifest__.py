@@ -16,6 +16,8 @@
         'l10n_co',
         'l10n_co_magnetic_media',
         'website',
+        'base_address_extended',
+        'pos_partner_visibility',
     ],
     'data': [
         'security/ir.model.access.csv',
@@ -24,7 +26,8 @@
     ],
     'assets': {
         'web.assets_frontend': [
-            'contact_registration_qr/static/src/css/registration_form.css',
+            'contact_registration_qr/static/src/scss/registration_form.scss',
+            'contact_registration_qr/static/src/js/registration_form.js',
         ],
     },
     'installable': True,

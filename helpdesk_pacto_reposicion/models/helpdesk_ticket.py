@@ -262,8 +262,8 @@ class HelpdeskTicket(models.Model):
         if not self.partner_id:
             raise UserError(_('El ticket debe tener un cliente asignado para crear una orden de venta.'))
         
-        if not self.product_ids:
-            raise UserError(_('El ticket debe tener productos relacionados para crear una orden de venta.'))
+        if not self.product_id:
+            raise UserError(_('El ticket debe tener un producto relacionado para crear una orden de venta.'))
         
         sale_order_vals = {
             'partner_id': self.partner_id.id,
@@ -272,14 +272,18 @@ class HelpdeskTicket(models.Model):
         
         sale_order = self.env['sale.order'].create(sale_order_vals)
         
-        sale_order_line = self.env['sale.order.line']
-        for product in self.product_ids:
-            line_vals = {
-                'order_id': sale_order.id,
-                'product_id': product.id,
-                'product_uom_qty': 1,
-            }
-            sale_order_line.create(line_vals)
+        # Crear línea de orden de venta con el producto y su cantidad
+        line_vals = {
+            'order_id': sale_order.id,
+            'product_id': self.product_id.id,
+            'product_uom_qty': self.product_qty or 1,
+        }
+        
+        # Aplicar descuento del pacto si cumple con las validaciones mínimas
+        if self.pacto_beneficio_aplica and self.pacto_porcentaje_aprobacion > 0:
+            line_vals['discount'] = self.pacto_porcentaje_aprobacion
+        
+        self.env['sale.order.line'].create(line_vals)
         
         self.write({
             'sale_order_id': sale_order.id
@@ -333,14 +337,14 @@ class HelpdeskTicket(models.Model):
             if not self.pacto_fecha_compra:
                 self.pacto_fecha_compra = self.invoice_id.invoice_date
 
-    @api.onchange('product_ids')
-    def _onchange_product_ids_pacto(self):
-        if self.is_pacto_reposicion and self.product_ids:
+    @api.onchange('product_id')
+    def _onchange_product_id_pacto(self):
+        if self.is_pacto_reposicion and self.product_id:
             if not self.pacto_descripcion_bicicleta:
-                productos_nombres = ', '.join(self.product_ids.mapped('name'))
-                self.pacto_descripcion_bicicleta = productos_nombres
+                producto_nombre = self.product_id.name
+                self.pacto_descripcion_bicicleta = producto_nombre
                 if not self.pacto_descripcion_entrega:
-                    self.pacto_descripcion_entrega = productos_nombres
+                    self.pacto_descripcion_entrega = producto_nombre
 
     def _limpiar_campos_pacto(self):
         self.write({

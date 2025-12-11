@@ -14,31 +14,19 @@ class HelpdeskPactoMixinComputed(models.AbstractModel):
     )
     def _compute_pacto_puntos(self):
         for record in self:
-            record.pacto_puntos_registro_web = (
-                self.PUNTOS_REGISTRO_WEB if record.pacto_registro_web_30dias == 'si' else 0
-            )
-            record.pacto_puntos_factura = (
-                self.PUNTOS_FACTURA if record.pacto_factura_legal == 'si' else 0
-            )
-            record.pacto_puntos_documento = (
-                self.PUNTOS_DOCUMENTO if record.pacto_documento_identidad == 'si' else 0
-            )
+            record.pacto_puntos_registro_web = self._calcular_puntos_criterio(record.pacto_registro_web_30dias, self.PUNTOS_REGISTRO_WEB)
+            record.pacto_puntos_factura = self._calcular_puntos_criterio(record.pacto_factura_legal, self.PUNTOS_FACTURA)
+            record.pacto_puntos_documento = self._calcular_puntos_criterio(record.pacto_documento_identidad, self.PUNTOS_DOCUMENTO)
             record.pacto_puntos_testigos = self.PUNTOS_TESTIGOS.get(record.pacto_testigos_hurto, 0)
-            record.pacto_puntos_carta = (
-                self.PUNTOS_CARTA if record.pacto_carta_datos_personales == 'si' else 0
-            )
-            record.pacto_puntos_firma = (
-                self.PUNTOS_FIRMA if record.pacto_firma_pacto_vigente == 'si' else 0
-            )
-            record.pacto_puntos_denuncio = (
-                self.PUNTOS_DENUNCIO if record.pacto_presenta_denuncio == 'si' else 0
-            )
-            record.pacto_puntos_tiempo = (
-                self.PUNTOS_TIEMPO if record.pacto_tiempo_reporte == 'si' else 0
-            )
-            record.pacto_puntos_violencia = (
-                self.PUNTOS_VIOLENCIA if record.pacto_hurto_con_violencia == 'si' else 0
-            )
+            record.pacto_puntos_carta = self._calcular_puntos_criterio(record.pacto_carta_datos_personales, self.PUNTOS_CARTA)
+            record.pacto_puntos_firma = self._calcular_puntos_criterio(record.pacto_firma_pacto_vigente, self.PUNTOS_FIRMA)
+            record.pacto_puntos_denuncio = self._calcular_puntos_criterio(record.pacto_presenta_denuncio, self.PUNTOS_DENUNCIO)
+            record.pacto_puntos_tiempo = self._calcular_puntos_criterio(record.pacto_tiempo_reporte, self.PUNTOS_TIEMPO)
+            record.pacto_puntos_violencia = self._calcular_puntos_criterio(record.pacto_hurto_con_violencia, self.PUNTOS_VIOLENCIA)
+    
+    # Calcular puntos para un criterio de validación simple (si/no)
+    def _calcular_puntos_criterio(self, valor, puntos):
+        return puntos if valor == 'si' else 0
 
     # Calcula la puntuación total obtenida.
     @api.depends(

@@ -21,6 +21,22 @@ class HelpdeskTicket(models.Model):
             else:
                 ticket.available_product_ids = [(5, 0, 0)]
     
+    # Calcular cantidad disponible del producto en la factura
+    @api.depends('invoice_id', 'invoice_id.invoice_line_ids', 'invoice_id.invoice_line_ids.product_id', 'invoice_id.invoice_line_ids.quantity', 'product_id')
+    def _compute_product_qty_available(self):
+        for ticket in self:
+            qty_available = 0.0
+            if ticket.invoice_id and ticket.product_id:
+                # Buscar la línea de factura que corresponde al producto seleccionado
+                product_id = ticket.product_id
+                invoice_line = ticket.invoice_id.invoice_line_ids.filtered(
+                    lambda line, prod=product_id: line.product_id == prod
+                )
+                if invoice_line:
+                    # Sumar las cantidades si hay múltiples líneas con el mismo producto
+                    qty_available = sum(invoice_line.mapped('quantity'))
+            ticket.product_qty_available = qty_available
+    
     # Calcular todos los tiempos de resolución (total y laboral). Calcula: Tiempo total (segundos, horas, días) y Tiempo laboral (segundos considerando calendario de trabajo y festivos). Usa el calendario del empleado asociado al usuario asignado al ticket. Si no hay usuario asignado, usa el calendario de la compañía. Excluye fines de semana y festivos definidos en resource.calendar.leaves.
     @api.depends('create_date', 'date_closed')
     def _compute_resolution_time(self):

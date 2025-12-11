@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Add POS store payment method to existing Rutavity provider -->
+        <record id="payment_rutavity.payment_provider_rutavity" model="payment.provider">
+            <field name="payment_method_ids"
+                eval="[(4, ref('payment_pos_store.payment_method_pos_store'))]" />
+            <field name="express_checkout_form_view_id"
+                ref="payment_pos_store.express_checkout_form" />
+            <field name="allow_express_checkout" eval="True" />
+        </record>
+    </data>
+
+</odoo>

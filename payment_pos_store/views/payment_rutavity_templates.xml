@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Override express checkout to show all providers that support it -->
+    <template id="express_checkout_multiple" inherit_id="payment.express_checkout">
+        <xpath expr="//form[@name='o_payment_express_checkout_form']" position="replace">
+            <form name="o_payment_express_checkout_form" class="container"
+                  t-att-data-reference-prefix="reference_prefix"
+                  t-att-data-amount="amount"
+                  t-att-data-minor-amount="minor_amount"
+                  t-att-data-currency-id="currency and currency.id"
+                  t-att-data-currency-name="currency.name.lower()"
+                  t-att-data-merchant-name="merchant_name"
+                  t-att-data-partner-id="partner_id"
+                  t-att-data-payment-method-unknown-id="payment_method_unknown_id"
+                  t-att-data-access-token="payment_access_token"
+                  t-att-data-shipping-info-required="shipping_info_required"
+                  t-att-data-delivery-amount="delivery_amount"
+                  t-att-data-transaction-route="transaction_route"
+                  t-att-data-shipping-address-update-route="shipping_address_update_route"
+                  t-att-data-express-checkout-route="express_checkout_route"
+                  t-att-data-landing-route="landing_route"
+            >
+                <!-- Render all providers that have express checkout configured -->
+                <t t-foreach="providers_sudo" t-as="provider_sudo">
+                    <t t-set="express_checkout_form_xml_id"
+                       t-value="provider_sudo.express_checkout_form_view_id.xml_id"
+                    />
+                    <t t-if="express_checkout_form_xml_id">
+                        <div class="mb-2">
+                            <t t-call="{{express_checkout_form_xml_id}}"/>
+                        </div>
+                    </t>
+                </t>
+            </form>
+        </xpath>
+    </template>
+
+    <!-- Inherit redirect_form from payment_rutavity to add POS store payment method support -->
+    <template id="redirect_form_inherit_pos_store" inherit_id="payment_rutavity.redirect_form">
+        <xpath expr="//t[@t-if]" position="after">
+            <t t-elif="payment_method_code == 'pos_store'">
+                <t t-call="payment_pos_store.redirect_form_pos_store" />
+            </t>
+        </xpath>
+    </template>
+
+    <!-- POS store specific redirect form -->
+    <template id="redirect_form_pos_store">
+        <form name="o_payment_redirect_form" t-att-action="api_url" method="post">
+            <input type="hidden" name="reference" t-att-value="reference" />
+        </form>
+    </template>
+
+    <!-- Inherit inline_form from payment_rutavity to add POS store payment method support -->
+    <template id="inline_form_inherit_pos_store" inherit_id="payment_rutavity.inline_form">
+        <xpath expr="//t[@t-if]" position="after">
+            <t t-elif="payment_method_code == 'pos_store'">
+                <t t-call="payment_pos_store.inline_form_pos_store" />
+            </t>
+        </xpath>
+    </template>
+
+    <!-- POS store specific inline form -->
+    <template id="inline_form_pos_store">
+        <div id="rutavity-pos-store-container">
+            <t t-call="payment_pos_store.pos_store_payment_form" />
+        </div>
+    </template>
+
+    <!-- POS store payment form template -->
+    <template id="pos_store_payment_form">
+        <div class="row gap-md-0">
+            <t t-set="sales" t-value="env['sale.order'].browse(sale_order_id)" />
+            <t t-set="partner" t-value="sales.sudo().partner_id" />
+
+            <!-- Show warning if partner is not a POS customer -->
+            <t t-if="not partner.pos_customer">
+                <div class="col-12 col-md mt-0 mb-0">
+                    <div class="alert alert-warning mb-0" role="alert">
+                        <span>
+                            You cannot use this payment method because you are not registered as a
+                            POS customer.
+                        </span>
+                    </div>
+                </div>
+            </t>
+
+            <!-- Show warning if partner has no POS configurations -->
+            <t t-elif="not partner.pos_config_ids">
+                <div class="col-12 col-md mt-0 mb-0">
+                    <div class="alert alert-warning mb-0" role="alert">
+                        <span>
+                            You cannot use this payment method because you have no POS
+                            configurations assigned.
+                        </span>
+                    </div>
+                </div>
+            </t>
+
+            <!-- Show POS configurations if available -->
+            <t t-else="">
+                <div class="col-12 mt-0 mb-3">
+                    <div class="alert alert-info mb-0" role="alert">
+                        This order will be sent to the following POS: 
+                        <strong t-out="', '.join(partner.pos_config_ids.mapped('name'))" />
+                    </div>
+                </div>
+
+                <!-- Salesperson selection for POS store payment -->
+                <div class="col-12 col-md-6 mt-0 mb-3">
+                    <label for="pos_store_salesperson" class="form-label fw-bold text-dark">
+                        <i class="fa fa-user text-primary me-2"></i>
+                        <span>Salesperson <span class="text-danger">*</span></span>
+                    </label>
+                    <select
+                        id="pos_store_salesperson"
+                        name="pos_store_salesperson"
+                        class="form-select"
+                        t-att-data-partner-id="partner.id">
+                        <option value="">Select a salesperson...</option>
+                    </select>
+                </div>
+
+                <!-- Comments textarea for POS store payment -->
+                <div class="col-12 col-md-6 mt-0 mb-3">
+                    <label for="pos_store_comments" class="form-label fw-bold text-dark">
+                        <i class="fa fa-comment text-primary me-2"></i>
+                        <span>Observations (Optional)</span>
+                    </label>
+                    <textarea
+                        id="pos_store_comments"
+                        name="pos_store_comments"
+                        class="form-control"
+                        rows="3"
+                        placeholder="Add any special instructions or comments for your order..."
+                        maxlength="255"></textarea>
+                    <small class="form-text text-muted">Maximum 255 characters</small>
+                </div>
+            </t>
+        </div>
+    </template>
+
+    <!-- Express checkout form for POS Store -->
+    <template id="express_checkout_form">
+        <t t-set="pos_store_method" t-value="env.ref('payment_pos_store.payment_method_pos_store', raise_if_not_found=False)"/>
+        
+        <!-- Get sale order and partner to check POS customer status -->
+        <t t-set="sales" t-value="env['sale.order'].browse(sale_order_id)" />
+        <t t-set="partner" t-value="sales.sudo().partner_id" />
+        
+        <!-- Only show if partner is a valid POS customer -->
+        <t t-if="partner and partner.pos_customer and partner.pos_config_ids and sale_order_id">
+            <div name="o_express_checkout_container"
+                 t-attf-id="o_pos_store_express_checkout_container_{{provider_sudo.id}}"
+                 t-att-data-provider-id="provider_sudo.id"
+                 t-att-data-provider-code="provider_sudo.code"
+                 t-att-data-payment-method-code="pos_store_method and 'pos_store' or ''"
+                 t-att-data-payment-method-id="pos_store_method and pos_store_method.id or 0"
+            >
+                <button type="button"
+                        class="btn btn-primary w-100"
+                        data-bs-toggle="modal"
+                        t-attf-data-bs-target="#o_payment_pos_store_modal_{{provider_sudo.id}}"
+                >
+                        Pay in Store (POS)
+                        <span t-if="not provider_sudo.is_published"
+                              class="badge rounded-pill text-bg-danger ms-1"
+                        >
+                              Unpublished
+                        </span>
+                </button>
+                <div t-attf-id="o_payment_pos_store_modal_{{provider_sudo.id}}"
+                     class="modal fade mt-5"
+                     tabindex="-1"
+                     aria-labelledby="o_payment_pos_store_modal_label"
+                     aria-hidden="true"
+                >
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="o_payment_pos_store_modal_label">
+                                    Pay in Store (POS)
+                                </h5>
+                                <span t-if="provider_sudo.state == 'test'"
+                                      class="badge rounded-pill text-bg-warning ms-1"
+                                >
+                                    Test Mode
+                                </span>
+                                <button type="button"
+                                        class="btn-close"
+                                        data-bs-dismiss="modal"
+                                        aria-label="Close"
+                                />
+                            </div>
+                            <div class="modal-body">
+                                <t t-call="payment_pos_store.express_inline_form">
+                                    <t t-set="provider_id" t-value="provider_sudo.id"/>
+                                </t>
+                                <div class="float-end mt-2" 
+                                     t-att-data-provider-id="provider_sudo.id"
+                                     t-att-data-provider-code="provider_sudo.code">
+                                    <t t-call="payment.submit_button">
+                                        <t t-set="submit_button_label">Confirm Payment</t>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Express inline form for POS Store -->
+    <template id="express_inline_form">
+        <div>
+            <t t-set="sales" t-value="env['sale.order'].browse(sale_order_id)" />
+            <t t-set="partner" t-value="sales.sudo().partner_id" />
+
+            <!-- Show warning if partner is not a POS customer -->
+            <t t-if="not partner.pos_customer">
+                <div class="alert alert-warning" role="alert">
+                    <strong>Warning!</strong>
+                    You cannot use this payment method because you are not registered as a POS customer.
+                </div>
+            </t>
+
+            <!-- Show warning if partner has no POS configurations -->
+            <t t-elif="not partner.pos_config_ids">
+                <div class="alert alert-warning" role="alert">
+                    <strong>Warning!</strong>
+                    You cannot use this payment method because you have no POS configurations assigned.
+                </div>
+            </t>
+
+            <!-- Show POS store payment form -->
+            <t t-else="">
+                <div class="alert alert-info" role="alert">
+                    This order will be sent to the following POS: 
+                    <strong t-out="', '.join(partner.pos_config_ids.mapped('name'))" />
+                </div>
+
+                <div class="row">
+                    <!-- Salesperson selection -->
+                    <div class="col-12 col-md-6 mb-3">
+                        <label for="pos_store_salesperson" class="form-label fw-bold">
+                            <i class="fa fa-user text-primary me-2"></i>
+                            Salesperson <span class="text-danger">*</span>
+                        </label>
+                        <select
+                            id="pos_store_salesperson"
+                            name="pos_store_salesperson"
+                            class="form-select"
+                            t-att-data-partner-id="partner.id"
+                            required="required">
+                            <option value="">Select a salesperson...</option>
+                        </select>
+                    </div>
+
+                    <!-- Comments textarea -->
+                    <div class="col-12 col-md-6 mb-3">
+                        <label for="pos_store_comments" class="form-label fw-bold">
+                            <i class="fa fa-comment text-primary me-2"></i>
+                            Observations (Optional)
+                        </label>
+                        <textarea
+                            id="pos_store_comments"
+                            name="pos_store_comments"
+                            class="form-control"
+                            rows="3"
+                            placeholder="Add any special instructions or comments for your order..."
+                            maxlength="255"></textarea>
+                        <small class="form-text text-muted">Optional: Maximum 255 characters</small>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </template>
+</odoo>

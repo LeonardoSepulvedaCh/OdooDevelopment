@@ -3,11 +3,19 @@
     <record id="view_partner_form_inherit" model="ir.ui.view">
         <field name="name">res.partner.form.inherit</field>
         <field name="model">res.partner</field>
-        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="inherit_id" ref="base.view_partner_form" />
         <field name="arch" type="xml">
             <xpath expr="//group[last()]" position="after">
                 <group>
-                    <field name="pos_customer"/>
+                    <group>
+                        <field name="pos_customer" />
+                        <field name="pos_config_ids"
+                            invisible="not pos_customer"
+                            widget="many2many_tags"
+                            required="pos_customer"
+                            options="{'no_create': True}"
+                            domain="[]" />
+                    </group>
                 </group>
             </xpath>
         </field>

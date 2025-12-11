@@ -40,9 +40,14 @@
                             <field name="registration_url" widget="url" readonly="1"/>
                         </group>
                         <group>
+                            <field name="pos_config_id" options="{'no_create': True}"/>
                             <field name="create_date" readonly="1"/>
                         </group>
                     </group>
+                    
+                    <div class="alert alert-info mt-3" role="alert" invisible="not pos_config_id">
+                        <i class="fa fa-info-circle"/> Los contactos registrados mediante este QR se asignarán automáticamente al POS: <strong><field name="pos_config_id" readonly="1" nolabel="1" class="fw-bold"/></strong>
+                    </div>
                 </sheet>
             </form>
         </field>
@@ -55,6 +60,7 @@
         <field name="arch" type="xml">
             <list string="Registros QR">
                 <field name="name"/>
+                <field name="pos_config_id" optional="show"/>
                 <field name="token"/>
                 <field name="partner_count" string="Registros"/>
                 <field name="create_date"/>
@@ -71,6 +77,7 @@
             <search string="Buscar Registros QR">
                 <field name="name"/>
                 <field name="token"/>
+                <field name="pos_config_id"/>
                 <filter string="Activos" name="active" domain="[('active', '=', True)]"/>
                 <filter string="Inactivos" name="inactive" domain="[('active', '=', False)]"/>
             </search>

@@ -5,6 +5,9 @@ from odoo.exceptions import ValidationError, UserError
 class HelpdeskTicket(models.Model):
     _inherit = 'helpdesk.ticket'
 
+    # Constantes
+    _CONFIG_PARAMETER_MODEL = 'ir.config_parameter'
+
     # Validar que la serie sea obligatoria para equipos de garantías
     @api.constrains('serie', 'team_id')
     def _check_serie_required_for_warranty_team(self):
@@ -23,7 +26,7 @@ class HelpdeskTicket(models.Model):
                     'El campo "Factura" es obligatorio para tickets del equipo de garantías.'
                 )
     
-    # Validar que solo usuarios autorizados puedan mover tickets entre etapas. Validación de permisos: Usuarios básicos solo pueden mover de "Nuevo" a "Pendiente de Revisión". Gestores pueden mover a cualquier etapa.
+    # Validar que solo usuarios autorizados puedan mover tickets entre etapas. Validación de permisos: Usuarios básicos solo pueden mover de "Nuevo" a "Pendiente de Revisión". Gestores pueden mover a cualquier etapa. Operadores de bodega pueden mover de "Por Realizar (Despacho)" a etapas finales.
     @api.constrains('stage_id')
     def _check_user_can_move_ticket(self):
         for ticket in self:
@@ -33,11 +36,20 @@ class HelpdeskTicket(models.Model):
             if ticket._user_is_manager():
                 continue
             
+            if ticket._user_is_warehouse_operator():
+                if not ticket._is_warehouse_operator_transition_allowed():
+                    ticket._raise_warehouse_operator_transition_error()
+                continue
+            
             ticket._validate_stage_transition()
     
     # Verificar si el usuario actual es gestor
     def _user_is_manager(self):
         return self.env.user.has_group('helpdesk_custom_fields.group_helpdesk_custom_manager')
+    
+    # Verificar si el usuario actual es operador de bodega
+    def _user_is_warehouse_operator(self):
+        return self.env.user.has_group('helpdesk_custom_fields.group_helpdesk_warehouse_operator')
     
     # Validar que la transición de etapa sea permitida para usuarios sin permisos de gestor
     def _validate_stage_transition(self):
@@ -52,7 +64,7 @@ class HelpdeskTicket(models.Model):
     
     # Obtener la configuración de nombres de etapas del sistema
     def _get_stage_validation_config(self):
-        config_params = self.env['ir.config_parameter'].sudo()
+        config_params = self.env[self._CONFIG_PARAMETER_MODEL].sudo()
         
         return {
             'new': config_params.get_param('helpdesk_custom_fields.stage_new_name', default='Nuevo'),
@@ -102,12 +114,51 @@ class HelpdeskTicket(models.Model):
             'Contacta al administrador del sistema para obtener los permisos necesarios.'
         )
     
+    # Verificar si la transición es permitida para operadores de bodega
+    def _is_warehouse_operator_transition_allowed(self):
+        self.ensure_one()
+        stage_config = self._get_stage_validation_config()
+        old_stage_name = self._get_previous_stage_name()
+        current_stage_name = self.stage_id.name
+        
+        # Operador de bodega puede mover de "Por Realizar (Despacho)" a etapas finales
+        allowed_target_stages = [
+            stage_config['closed'],      # Resuelto
+            stage_config['rejected'],    # Rechazado
+        ]
+        
+        # También verificar si existe una etapa "Cancelado"
+        cancelado_stage_name = self.env[self._CONFIG_PARAMETER_MODEL].sudo().get_param(
+            'helpdesk_custom_fields.stage_cancelled_name', 
+            default='Cancelado'
+        )
+        allowed_target_stages.append(cancelado_stage_name)
+        
+        return (
+            old_stage_name == stage_config['dispatch'] and 
+            current_stage_name in allowed_target_stages
+        )
+    
+    # Lanzar error cuando la transición no es permitida para operadores de bodega
+    def _raise_warehouse_operator_transition_error(self):
+        self.ensure_one()
+        stage_config = self._get_stage_validation_config()
+        current_stage_name = self.stage_id.name
+        
+        raise UserError(
+            f'No tienes permisos para mover tickets a la etapa "{current_stage_name}". '
+            'Los operadores de bodega solo pueden mover tickets desde '
+            f'"{stage_config["dispatch"]}" a las etapas: '
+            f'"{stage_config["closed"]}", "{stage_config["rejected"]}" o "Cancelado". '
+            'Contacta al administrador del sistema para obtener más permisos.'
+        )
+    
     # Validar que exista un acta de garantía antes de finalizar el ticket
     @api.constrains('stage_id')
     def _check_warranty_certificate_attachment(self):
         for ticket in self:
             if ticket.stage_id and ticket.is_warranty_team:
-                closed_stage_name = self.env['ir.config_parameter'].sudo().get_param(
+                closed_stage_name = self.env[self._CONFIG_PARAMETER_MODEL].sudo().get_param(
                     'helpdesk_custom_fields.stage_closed_name', 
                     default='Done'
                 )
@@ -124,19 +175,40 @@ class HelpdeskTicket(models.Model):
                             'antes de finalizar el ticket.'
                         )
 
-    # Validar que los productos seleccionados pertenezcan a la factura
-    @api.constrains('product_ids', 'invoice_id')
-    def _check_products_from_invoice(self):
+    # Validar que el producto seleccionado pertenezca a la factura
+    @api.constrains('product_id', 'invoice_id')
+    def _check_product_from_invoice(self):
         for ticket in self:
-            if ticket.product_ids and ticket.invoice_id:
+            if ticket.product_id and ticket.invoice_id:
                 invoice_products = ticket.invoice_id.invoice_line_ids.mapped('product_id')
                 
-                invalid_products = ticket.product_ids - invoice_products
-                
-                if invalid_products:
-                    product_names = ', '.join(invalid_products.mapped('name'))
+                if ticket.product_id not in invoice_products:
                     raise ValidationError(
-                        f'Los siguientes productos no pertenecen a la factura seleccionada: {product_names}. '
+                        f'El producto "{ticket.product_id.name}" no pertenece a la factura seleccionada. '
                         'Solo puede seleccionar productos que estén en las líneas de la factura.'
+                    )
+    
+    # Validar que la cantidad del producto no exceda la cantidad en la factura
+    @api.constrains('product_id', 'product_qty', 'invoice_id')
+    def _check_product_qty_available(self):
+        for ticket in self:
+            if ticket.product_id and ticket.invoice_id and ticket.product_qty > 0:
+                # Obtener cantidad disponible en la factura
+                product_id = ticket.product_id
+                invoice_lines = ticket.invoice_id.invoice_line_ids.filtered(
+                    lambda line, prod=product_id: line.product_id == prod
+                )
+                
+                if not invoice_lines:
+                    raise ValidationError(
+                        f'El producto "{ticket.product_id.name}" no se encuentra en la factura seleccionada.'
+                    )
+                
+                total_qty_available = sum(invoice_lines.mapped('quantity'))
+                
+                if ticket.product_qty > total_qty_available:
+                    raise ValidationError(
+                        f'La cantidad ingresada ({ticket.product_qty}) excede la cantidad disponible '
+                        f'en la factura ({total_qty_available}) para el producto "{ticket.product_id.name}".'
                     )
 

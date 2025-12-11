@@ -19,8 +19,7 @@ class HelpdeskTicket(models.Model):
             ('carrier', 'TRANSPORTADORA'),
             ('independent', 'INDEPENDIENTE'),
             ('own_transport', 'TRANSPORTE PROPIO'),
-            ('cash_on_delivery', 'CONTRA ENTREGA'),
-            ('not_applicable', 'NO APLICA')
+            ('cash_on_delivery', 'CONTRA ENTREGA')
         ],
         string='Medio de transporte (retorno)',
         tracking=True
@@ -78,8 +77,7 @@ class HelpdeskTicket(models.Model):
             ('carrier', 'TRANSPORTADORA'),
             ('independent', 'INDEPENDIENTE'),
             ('own_transport', 'TRANSPORTE PROPIO'),
-            ('cash_on_delivery', 'CONTRA ENTREGA'),
-            ('not_applicable', 'NO APLICA')
+            ('cash_on_delivery', 'CONTRA ENTREGA')
         ],
         string='Medio de transporte (despacho)',
         tracking=True

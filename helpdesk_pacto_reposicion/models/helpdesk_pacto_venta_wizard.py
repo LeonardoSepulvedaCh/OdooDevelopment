@@ -41,8 +41,8 @@ class HelpdeskPactoVentaWizard(models.TransientModel):
             if 'partner_id' in fields_list and ticket.partner_id:
                 res['partner_id'] = ticket.partner_id.id
                 
-            if 'product_ids' in fields_list and ticket.product_ids:
-                res['product_ids'] = [(6, 0, ticket.product_ids.ids)]
+            if 'product_ids' in fields_list and ticket.product_id:
+                res['product_ids'] = [(6, 0, [ticket.product_id.id])]
         
         return res
 
@@ -69,7 +69,7 @@ class HelpdeskPactoVentaWizard(models.TransientModel):
         
         sale_order = self.env['sale.order'].create(sale_order_vals)
         
-        SaleOrderLine = self.env['sale.order.line']
+        sale_order_line = self.env['sale.order.line']
         for product in self.product_ids:
             line_vals = {
                 'order_id': sale_order.id,
@@ -77,7 +77,11 @@ class HelpdeskPactoVentaWizard(models.TransientModel):
                 'product_uom_qty': 1,
             }
             
-            SaleOrderLine.create(line_vals)
+            # Aplicar descuento del pacto si cumple con las validaciones mínimas
+            if self.ticket_id.pacto_beneficio_aplica and self.ticket_id.pacto_porcentaje_aprobacion > 0:
+                line_vals['discount'] = self.ticket_id.pacto_porcentaje_aprobacion
+            
+            sale_order_line.create(line_vals)
         
         self.ticket_id.write({
             'sale_order_ids': [(4, sale_order.id)]

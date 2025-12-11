@@ -14,7 +14,7 @@ class HelpdeskPactoMixin(models.AbstractModel):
     )
     
     pacto_descripcion_bicicleta = fields.Char(string='Descripción bicicleta hurtada')  
-    pacto_cod_base_liquidacion = fields.Char(string='Código base de liquidación')
+    pacto_cod_base_liquidacion = fields.Char(string='Código base de liquidación', help='Código de la bicicleta hurtada al cliente (Código de Barras).')
     pacto_fecha_compra = fields.Date(string='Fecha de compra')
     pacto_fecha_registro_web = fields.Date(string='Fecha registro en página web')
     pacto_descripcion_entrega = fields.Char(string='Descripción bicicleta a entregar')

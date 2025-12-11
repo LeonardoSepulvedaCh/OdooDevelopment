@@ -47,6 +47,11 @@ class ContactRegistration(models.Model):
         string='Activo',
         default=True
     )
+    pos_config_id = fields.Many2one(
+        'pos.config',
+        string='Punto de Venta',
+        help='POS que se asignará automáticamente a los contactos registrados mediante este QR'
+    )
 
     # Genera un token único seguro
     @api.model

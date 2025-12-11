@@ -85,12 +85,7 @@
                                             <select class="form-select s_website_form_input" name="serie" required="true" id="warranty_serie">
                                                 <option value="">Seleccione una serie</option>
                                                 <option value="pqrs">PQRS</option>
-                                                <option value="ticket_cuc">Ticket Cucuta</option>
-                                                <option value="ticket_med">Ticket Medellín</option>
-                                                <option value="ticket_bog">Ticket Bogotá</option>
-                                                <option value="ticket_bga">Ticket Bucaramanga</option>
-                                                <option value="ticket_baq">Ticket Barranquilla</option>
-                                                <option value="ticket_cal">Ticket Cali</option>
+                                                <option value="ticket">Ticket</option>
                                                 <option value="other">Otro</option>
                                             </select>
                                         </div>
@@ -113,17 +108,32 @@
                                     </div>
                                 </div>
                                 
-                                <!-- Productos -->
-                                <div class="mb-0 py-2 s_website_form_field col-12" data-type="many2many" data-name="Field" id="warranty_products_field" style="display: none;">
+                                <!-- Producto -->
+                                <div class="mb-0 py-2 s_website_form_field col-12" data-type="many2one" data-name="Field" id="warranty_product_field" style="display: none;">
                                     <div class="row s_col_no_resize s_col_no_bgcolor">
-                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="warranty_products">
-                                            <span class="s_website_form_label_content">Productos</span>
+                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="warranty_product">
+                                            <span class="s_website_form_label_content">Producto</span>
+                                            <span class="s_website_form_mark"> *</span>
                                         </label>
                                         <div class="col-sm">
-                                            <div id="warranty_products_container" class="border rounded p-2">
-                                                <small class="text-muted">Seleccione una factura primero</small>
-                                            </div>
-                                            <small class="form-text text-muted">Seleccione los productos relacionados con el ticket</small>
+                                            <select class="form-select s_website_form_input" name="product_id" id="warranty_product">
+                                                <option value="">Seleccione un producto</option>
+                                            </select>
+                                            <small class="form-text text-muted">Seleccione el producto relacionado con la garantía</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Cantidad del producto -->
+                                <div class="mb-0 py-2 s_website_form_field col-12" data-type="float" data-name="Field" id="warranty_product_qty_field" style="display: none;">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="warranty_product_qty">
+                                            <span class="s_website_form_label_content">Cantidad</span>
+                                            <span class="s_website_form_mark"> *</span>
+                                        </label>
+                                        <div class="col-sm">
+                                            <input type="number" class="form-control s_website_form_input" name="product_qty" id="warranty_product_qty" min="0.01" step="0.01" value="1.0"/>
+                                            <small class="form-text text-muted" id="warranty_product_qty_help">Disponible: -</small>
                                         </div>
                                     </div>
                                 </div>

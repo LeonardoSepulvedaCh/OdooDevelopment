@@ -32,6 +32,14 @@
             <field name="comment">El gestor tiene acceso completo incluyendo eliminar tickets y mover tickets a través de todas las etapas del flujo (Despacho, Rechazado, Resuelto).</field>
         </record>
 
+        <!-- Grupo: Operador de Bodega -->
+        <record id="group_helpdesk_warehouse_operator" model="res.groups">
+            <field name="name">Operador de Bodega</field>
+            <field name="privilege_id" ref="res_groups_privilege_helpdesk_custom"/>
+            <field name="implied_ids" eval="[(4, ref('group_helpdesk_custom_user'))]"/>
+            <field name="comment">El operador de bodega puede mover tickets desde "Por Realizar (Despacho)" a "Resuelto", "Cancelado" o "Rechazado".</field>
+        </record>
+
         <!-- Regla de registro: Los usuarios básicos no pueden eliminar tickets -->
         <record id="helpdesk_ticket_unlink_rule" model="ir.rule">
             <field name="name">Helpdesk Ticket: Usuario no puede eliminar</field>
@@ -53,6 +61,18 @@
             <field name="perm_write" eval="True"/>
             <field name="perm_create" eval="True"/>
             <field name="perm_unlink" eval="True"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+
+        <!-- Regla de registro: Los operadores de bodega tienen acceso de lectura y escritura -->
+        <record id="helpdesk_ticket_warehouse_operator_rule" model="ir.rule">
+            <field name="name">Helpdesk Ticket: Operador de bodega acceso lectura/escritura</field>
+            <field name="model_id" ref="helpdesk.model_helpdesk_ticket"/>
+            <field name="groups" eval="[(4, ref('group_helpdesk_warehouse_operator'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
             <field name="domain_force">[(1, '=', 1)]</field>
         </record>
 
