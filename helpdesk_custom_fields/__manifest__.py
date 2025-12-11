@@ -11,6 +11,7 @@
     "author": "@LeonardoSepulvedaCh",
     "depends": [
         "helpdesk",
+        "helpdesk_stock",
         "website_helpdesk",
         "contacts_birthday_alert",
         "account",
