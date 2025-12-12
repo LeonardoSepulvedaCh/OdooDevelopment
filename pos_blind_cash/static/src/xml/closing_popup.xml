@@ -2,12 +2,17 @@
 <templates id="template" xml:space="preserve">
     <t t-inherit="point_of_sale.ClosePosPopup" t-inherit-mode="extension">
         
+        <!-- Deshabilitar el campo de entrada manual de efectivo cuando se fuerza el uso de denominaciones -->
+        <xpath expr="//div[@t-if='pos.config.cash_control' and hasclass('mb-3')]//Input" position="attributes">
+            <attribute name="readonly">pos.config.force_cash_denomination_usage</attribute>
+        </xpath>
+
         <!-- Ocultar el div de total de órdenes en el header -->
         <xpath expr="//t[@t-set-slot='header']//div[@class='total-orders fw-bolder align-middle my-1']" position="attributes">
             <attribute name="t-if">!pos.config.hide_closing_summary</attribute>
         </xpath>
         
-        <!-- Ocultar todo el contenido interno de payment-methods-overview -->
+        <!-- Ocultar el contenido interno de payment-methods-overview -->
         <xpath expr="//div[@class='payment-methods-overview']/div[@t-if='pos.config.cash_control']" position="replace">
             <div t-if="pos.config.cash_control and !pos.config.hide_closing_summary" class="w-100 mb-3">
                 <t t-set="diff" t-value="getDifference(props.default_cash_details.id)" />

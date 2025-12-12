@@ -12,7 +12,9 @@ class PosOrder(models.Model):
         # Si está configurada la facturación automática en el POS config
         if ui_order.get('pos_session_id'):
             session = self.env['pos.session'].browse(ui_order['pos_session_id'])
-            if session.config_id.auto_invoice:
+            # No generar factura automática si es un reembolso (amount_total negativo)
+            is_refund = ui_order.get('amount_total', 0) < 0
+            if session.config_id.auto_invoice and not is_refund:
                 fields['to_invoice'] = True
         
         return fields

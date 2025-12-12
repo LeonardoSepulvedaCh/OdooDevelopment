@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    
+    <t t-name="point_of_sale.ProductScreen" t-inherit="point_of_sale.ProductScreen" t-inherit-mode="extension">
+        <!-- Ocultar el botón "Create Manually" -->
+        <xpath expr="//button[@role='button'][contains(@t-on-click, 'editProduct')]" position="replace"/>
+    </t>
+    
+</templates>
+

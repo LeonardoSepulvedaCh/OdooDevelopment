@@ -15,7 +15,10 @@
     ],
     'assets': {
         'point_of_sale._assets_pos': [
+            'pos_blind_cash/static/src/xml/opening_control_popup.xml',
             'pos_blind_cash/static/src/xml/closing_popup.xml',
+            'pos_blind_cash/static/src/js/opening_control_popup.js',
+            'pos_blind_cash/static/src/js/closing_popup.js',
         ],
     }
 }

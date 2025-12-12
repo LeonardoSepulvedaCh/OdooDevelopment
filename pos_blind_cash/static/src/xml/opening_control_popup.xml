@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-inherit="point_of_sale.OpeningControlPopup" t-inherit-mode="extension">
+        
+        <!-- Deshabilitar el campo de entrada manual cuando se fuerza el uso de denominaciones -->
+        <xpath expr="//div[hasclass('opening-cash-section')]//Input" position="attributes">
+            <attribute name="readonly">pos.config.force_cash_denomination_usage</attribute>
+        </xpath>
+
+    </t>
+</templates>
+
+

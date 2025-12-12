@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//setting[@id='other_devices']" position="after">
                 <setting string="Facturación Automática" help="Activa la facturación automática por venta.">
-                    <field name="auto_invoice"/>
+                    <field name="auto_invoice" readonly="1"/>
                 </setting>
             </xpath>
         </field>
